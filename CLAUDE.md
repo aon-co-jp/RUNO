@@ -37,6 +37,14 @@ https://github.com/aon-co-jp
 
 ## HANDOFF
 
+- **2026-07-20 (再追記) ラベル表示名変更**: ユーザー指示により、
+  `README.md`の一覧表ヘッダーにあるラベル「設計思想＆開発方針＆開発
+  環境ルール」を「WEBアプリ設計思想、開発方針、開発環境ルール」へ改名
+  (表示ラベルのみ、リンク先の`CLAUDE.md`というファイル名自体は変更
+  なし)。姉妹実装である`aruaru-tokyo`(`/open-aruaru-runo-iLumi`)・
+  `runo.tokyo`(`/runo`)側の同名ラベル(`src/i18n.rs`の
+  `LABEL_CLAUDE_JA`)も同時に改名し、それぞれ実機確認の上push済み。
+
 - **2026-07-20 (続き) open-directxを索引に追加、RUNOへ再改名反映**:
   ユーザー指示により`open-directx`・`open-cuda`・`aruaru-llm`を索引に含めるよう
   確認。`open-cuda`・`aruaru-llm`は既に掲載済みだったため対応不要。`open-directx`は

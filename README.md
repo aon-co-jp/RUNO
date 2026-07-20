@@ -22,7 +22,7 @@ CLAUDE.md・PORTING.md・役割の要約)をまとめて一覧できることだ
 各プロジェクトの役割説明は、それぞれのリポジトリの実際の
 `README.md`/`CLAUDE.md`の記載に基づく要約です(推測での記載はしていません)。
 
-| プロジェクト | GitHub | README | PORTING | 設計思想＆開発方針＆開発環境ルール | 役割 |
+| プロジェクト | GitHub | README | PORTING | WEBアプリ設計思想、開発方針、開発環境ルール | 役割 |
 |---|---|---|---|---|---|
 | RCosmo | [aon-co-jp/RCosmo](https://github.com/aon-co-jp/RCosmo) | [README](https://github.com/aon-co-jp/RCosmo/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/RCosmo/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/RCosmo/blob/main/CLAUDE.md) | Rust製GraphQL Federationプラットフォーム(Poem/Tauri/Cosmoは非依存・互換自前実装)。WunderGraph Cosmoの有料版機能をOSS・Pure Rustで実現し、独自の自己学習AIを搭載(外部LLM契約不要)。姉妹リポジトリ`poem-cosmo-tauri`と並行開発。 |
 | RFrontEnd | [aon-co-jp/RFrontEnd](https://github.com/aon-co-jp/RFrontEnd) | [README](https://github.com/aon-co-jp/RFrontEnd/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/RFrontEnd/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/RFrontEnd/blob/main/CLAUDE.md) | HTML5/CSS3/TypeScript/React相当を、既存実装のコードを一切流用せず一から開発する複数プロジェクト(RHTML/RCSS/RTypeScript等)を束ねる親リポジトリ。 |
