@@ -1,4 +1,4 @@
-# 開発方針＆開発環境ルール(open-aruaru-runo-iLumi)
+# 開発方針＆開発環境ルール(aon、旧称: open-aruaru-runo-iLumi)
 
 作業ドライブは`F:\open-runo`。この節は
 [`open-raid-z`](https://github.com/aon-co-jp/open-raid-z)の`CLAUDE.md`を

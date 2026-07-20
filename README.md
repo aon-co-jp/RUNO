@@ -1,4 +1,4 @@
-# open-aruaru-runo-iLumi
+# aon (旧称: open-aruaru-runo-iLumi)
 
 🏢 GitHub organization: **[aon-co-jp](https://github.com/aon-co-jp)**
 
@@ -39,7 +39,7 @@ CLAUDE.md・PORTING.md・役割の要約)をまとめて一覧できることだ
 | open-raid-z | [aon-co-jp/open-raid-z](https://github.com/aon-co-jp/open-raid-z) | [README](https://github.com/aon-co-jp/open-raid-z/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/open-raid-z/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/open-raid-z/blob/main/CLAUDE.md) | Rust製の実マウント可能なRAID-Z/Z2/Z3ストレージプール実装(ZFS「風」のCoW/チェックサム/スナップショット。ZFS自体・OpenZFSへの依存やオンディスク互換性はなし)。**エコシステム開発ルールの正本**リポジトリ。 |
 | open-web-server | [aon-co-jp/open-web-server](https://github.com/aon-co-jp/open-web-server) | [README](https://github.com/aon-co-jp/open-web-server/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/open-web-server/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/open-web-server/blob/main/CLAUDE.md) | Rust + tokio/hyper自前実装のWebサーバー — 課金アイテム・金融データを「消失させない」ために設計。`open-runo`・`aruaru-db`と4層防御通信で連携するミッションクリティカル向け。 |
 | rs-to-readme | [aon-co-jp/rs-to-readme](https://github.com/aon-co-jp/rs-to-readme) | [README](https://github.com/aon-co-jp/rs-to-readme/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/rs-to-readme/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/rs-to-readme/blob/main/CLAUDE.md) | Rustクレートの`Cargo.toml`メタデータからREADME.mdを自動生成するCLIツール([crates.io](https://crates.io/crates/rs-to-readme)公開)。 |
-| **open-aruaru-runo-iLumi**(このリポジトリ) | [aon-co-jp/open-aruaru-runo-iLumi](https://github.com/aon-co-jp/open-aruaru-runo-iLumi) | [README](https://github.com/aon-co-jp/open-aruaru-runo-iLumi/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/open-aruaru-runo-iLumi/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/open-aruaru-runo-iLumi/blob/main/CLAUDE.md) | このエコシステム全体の「プロジェクトシリーズ索引」を担うメタリポジトリ。個別のコード実装は持たない。 |
+| **aon**(このリポジトリ、旧称: open-aruaru-runo-iLumi) | [aon-co-jp/open-aruaru-runo-iLumi](https://github.com/aon-co-jp/aon) | [README](https://github.com/aon-co-jp/aon/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/aon/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/aon/blob/main/CLAUDE.md) | このエコシステム全体の「プロジェクトシリーズ索引」を担うメタリポジトリ。個別のコード実装は持たない。 |
 
 > 📝 **正直な開示**: 上表はローカル作業ドライブ`F:\open-runo`配下に
 > 実在し、`.git/config`のリモートURLで`aon-co-jp`上の存在を確認できた
