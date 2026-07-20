@@ -3,11 +3,15 @@
 🏢 GitHub organization: **[aon-co-jp](https://github.com/aon-co-jp)**
 
 このリポジトリは、`aon-co-jp` organization配下に分散する複数プロジェクト
-(`F:\open-runo`をローカルの作業ドライブとするエコシステム)全体の
-**「プロジェクトシリーズ索引」を担うメタリポジトリ**です。このリポジトリ
+全体の**「プロジェクトシリーズ索引」を担うメタリポジトリ**です。このリポジトリ
 自体は個別の実装コードを持たず、各プロジェクトへの入口(README・
 CLAUDE.md・PORTING.md・役割の要約)をまとめて一覧できることだけを目的と
-しています。
+しています。ローカルの作業ドライブは旧`F:\open-runo`から新レイアウト
+`F:\runo`へ移行途上(2026-07時点)で、プロジェクトによってどちらの
+ドライブにcloneされているかが異なる。本リポジトリ自身は現在
+`F:\runo\RUNO`が正のクローン(`F:\open-runo\aon`に同一originの重複clone
+が未整理のまま残存。詳細は`CLAUDE.md`参照)。VPS(conoha)側は`/root/RUNO`
+が正で`/root/aon`は旧クローン。
 
 対応する実装は [`aruaru-tokyo`](https://github.com/aon-co-jp/aruaru-tokyo)
 (Rust + [Poem](https://github.com/poem-web/poem)製)側にもあり、
@@ -17,8 +21,9 @@ CLAUDE.md・PORTING.md・役割の要約)をまとめて一覧できることだ
 
 ## プロジェクトシリーズ一覧
 
-`F:\open-runo`配下で実際にgitリポジトリとして存在し、GitHub
-(`aon-co-jp`)上にリモートが確認できるプロジェクトを掲載しています。
+`F:\open-runo`または移行先の`F:\runo`配下で実際にgitリポジトリとして
+存在し、GitHub(`aon-co-jp`)上にリモートが確認できるプロジェクトを
+掲載しています。
 各プロジェクトの役割説明は、それぞれのリポジトリの実際の
 `README.md`/`CLAUDE.md`の記載に基づく要約です(推測での記載はしていません)。
 
@@ -42,16 +47,21 @@ CLAUDE.md・PORTING.md・役割の要約)をまとめて一覧できることだ
 | rs-to-readme | [aon-co-jp/rs-to-readme](https://github.com/aon-co-jp/rs-to-readme) | [README](https://github.com/aon-co-jp/rs-to-readme/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/rs-to-readme/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/rs-to-readme/blob/main/CLAUDE.md) | Rustクレートの`Cargo.toml`メタデータからREADME.mdを自動生成するCLIツール([crates.io](https://crates.io/crates/rs-to-readme)公開)。 |
 | **RUNO**(このリポジトリ、旧称: open-aruaru-runo-iLumi → aon) | [aon-co-jp/RUNO](https://github.com/aon-co-jp/RUNO) | [README](https://github.com/aon-co-jp/RUNO/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/RUNO/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/RUNO/blob/main/CLAUDE.md) | このエコシステム全体の「プロジェクトシリーズ索引」を担うメタリポジトリ。個別のコード実装は持たない。 |
 
-> 📝 **正直な開示**: 上表はローカル作業ドライブ`F:\open-runo`配下に
-> 実在し、`.git/config`のリモートURLで`aon-co-jp`上の存在を確認できた
-> プロジェクトのみを掲載しています。`poem-cosmo-tauri`のように
-> ドキュメント上は言及されるものの本ドライブ上にローカルclone・実体が
-> 確認できなかったプロジェクトは、確認が取れ次第この表へ追加します。
+> 📝 **正直な開示**: 上表はローカル作業ドライブ(`F:\open-runo`または
+> 移行先の`F:\runo`)配下に実在し、`.git/config`のリモートURLで
+> `aon-co-jp`上の存在を確認できたプロジェクトのみを掲載しています。
+> `poem-cosmo-tauri`のようにドキュメント上は言及されるものの本ドライブ上に
+> ローカルclone・実体が確認できなかったプロジェクトは、確認が取れ次第
+> この表へ追加します。VPS(conoha)上の実体(`/root/RUNO`等)については
+> この索引では未追跡です。
 
 ## Overview (English)
 
 This repository is a **meta index for the entire `aon-co-jp` project
-ecosystem** rooted at the local working drive `F:\open-runo`. It holds no
+ecosystem**, historically rooted at the local working drive `F:\open-runo`
+and currently mid-migration to a new drive layout at `F:\runo` (as of
+2026-07; which drive a given project lives on varies per project — see
+`CLAUDE.md`). It holds no
 implementation code of its own — its sole purpose is to provide a single
 place listing, for every sibling project actually present as a Git
 repository under `aon-co-jp`, its README, PORTING.md (if any), development
