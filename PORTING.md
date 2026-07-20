@@ -1,4 +1,4 @@
-# PORTING.md(aon、旧称: open-aruaru-runo-iLumi)
+# PORTING.md(RUNO、旧称: open-aruaru-runo-iLumi → aon)
 
 このリポジトリは`F:\open-runo`エコシステム全体の**メタ索引**であり、
 移植対象となる実装コード・お引越し可能な機能を一切持たない。

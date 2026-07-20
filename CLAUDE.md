@@ -1,4 +1,4 @@
-# 開発方針＆開発環境ルール(aon、旧称: open-aruaru-runo-iLumi)
+# 開発方針＆開発環境ルール(RUNO、旧称: open-aruaru-runo-iLumi → aon)
 
 作業ドライブは`F:\open-runo`。この節は
 [`open-raid-z`](https://github.com/aon-co-jp/open-raid-z)の`CLAUDE.md`を
@@ -14,7 +14,7 @@
 個別のコード実装は持たない。** `aon-co-jp` organization配下に分散する
 各プロジェクト(RCosmo/RFrontEnd/RPoem/aruaru-db/aruaru-llm/aruaru-tokyo/
 audiocafe-tokyo-rust/audiocafe.tokyo/e-gov.info/karu.tokyo/open-cuda/
-open-easy-web/open-raid-z/open-web-server/rs-to-readme等)への入口
+open-directx/open-easy-web/open-raid-z/open-web-server/rs-to-readme等)への入口
 (README・PORTING.md・CLAUDE.md・役割の要約)を、`README.md`に一箇所へ
 まとめて掲載することだけを目的とする。
 
@@ -37,6 +37,17 @@ https://github.com/aon-co-jp
 
 ## HANDOFF
 
+- **2026-07-20 (続き) open-directxを索引に追加、RUNOへ再改名反映**:
+  ユーザー指示により`open-directx`・`open-cuda`・`aruaru-llm`を索引に含めるよう
+  確認。`open-cuda`・`aruaru-llm`は既に掲載済みだったため対応不要。`open-directx`は
+  ローカルドライブに実体(git clone)が無く、`git ls-remote`で疎通確認したところ
+  GitHub上に空リポジトリとして存在するのみ(refなし)と判明したため、その旨を
+  正直に明記した行を追加(内容が無いため役割は推測で埋めない)。
+  また、このリポジトリ自体がユーザーにより`aon`→`RUNO`へ再度改名されたため、
+  README.md/CLAUDE.md/PORTING.md内の自己参照リンク・表示名をすべて
+  `aon-co-jp/RUNO`へ更新し、リモートURLも`git remote set-url`で切替・push済み。
+  ローカルディレクトリ名`F:\open-runo\aon`は使用中のためリネーム未実施
+  (実害なし、次回機会があれば`RUNO`へ変更する)。
 - **2026-07-20 新規作成**: 空リポジトリとしてclone済みの状態から、
   README.md(全プロジェクト一覧、各`.git/config`のリモートURLで実在を
   確認したもののみ掲載)・本CLAUDE.md・PORTING.mdを新規作成。
