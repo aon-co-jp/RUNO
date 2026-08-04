@@ -1,0 +1,7 @@
+# このリポジトリはF:\runo直下のドキュメント(CLAUDE.md/README.md/PORTING.md)のみを
+# 管理する。配下の各プロジェクトは個別のGitHubリポジトリのため対象外。
+/*/
+!/.gitignore
+runo-scan-cache.json
+ssh_test.log
+DEVELOPMENT.md
