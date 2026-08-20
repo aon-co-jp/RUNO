@@ -12,6 +12,102 @@
 
 ---
 
+## 2026-08-20 チェックポイント(利用制限接近のため記録、大規模マルチリポジトリセッション)
+
+ユーザー指示「リミットなので、README/CLAUDE/PORTINGを日本語で編集して
+push・コミットして停止して」により、本セッションの到達点をここに記録する。
+
+**このセッションで作業したリポジトリ(概要)**:
+- **open-english**: モデル重み配置・同期バックアップUI、Facebook経由
+  入口ページ、クロスプラットフォーム自動アップデート(Windows/Linux/
+  macOS)+自動ロールバック、無料枠情報バナー(Google/DeepSeek/ChatGPT/
+  Gemini/Claude)、1日利用回数制限メッセージ、スマホ計算ワーカー
+  (PhoneAccelWorker、NNAPI検出+PC URL自動検出)、PS/Switch/Wii/WiiU
+  ロードマップ(許可待ちとして明文化)。**重大なデータ損失バグを発見・
+  修正**(Windows自動更新で会話履歴DBが消失する実害バグ、実インストーラー
+  経由のE2E検証まで完了)。
+- **aruaru-llm**: アイドル検知バックグラウンド基盤、NPU/USB検出、
+  タスク配布API、自己更新機構、open-cuda連携の運用ルール整理。
+- **open-cuda・open-directx**: 常駐サービス化の是非を事実ベースで
+  調査(本家DirectX/CUDAもランタイムライブラリ方式と確認、実装見送り)、
+  open-directxにLLM推論用の固定2x2 GEMMコンピュートシェーダーを実装・
+  実機検証、FlexQ風INT6量子化を実装。
+- **aruaru-db**: 自動アップデート機能(GitHub Releases検知+ヘルスチェック
+  +ロールバック)を実装・実E2E検証(モックAPI経由)。Raft(openraft)・
+  Multi-Raft・HTAP(OLAPキャッシュ)が既に実装済みと判明、TiFlash/
+  CockroachDB Serverless/Neon型の3パターンを統合した「トライブリッド」
+  実装に着手中(セッション中断、要再開)。
+- **world-lab**: ワークユニット永続化(aruaru-db実DB、プロセス再起動を
+  跨いだ復元を実機検証済み)、コーディネータをRPoem(Tomcat相当)+
+  open-web-server(Apache相当)ベースへ再構築(既存の暗号化・リプレイ
+  対策資産を保持したまま、SupervisedTenantRegistry経由でプロセス管理)。
+  「4層4重通信」は過大と判断し見送り(正直な理由付き)。
+- **dream-os**: `aruaru_persistence.rs`のドキュメント不整合(認証要否の
+  誤記)を発見・修正。
+- **open-easy-web・open-web-server・RPoem・rs-sync・open-raid-z**:
+  自動更新機能の実装・完成、インストーラー整理(open-easy-webはサービス
+  登録方式に統合)。
+- **多言語翻訳**: 上記の変更を、各リポジトリの既存多言語ドキュメント
+  (英語・中国語・独伊仏露烏ヘブライペルシャ語等、リポジトリごとに
+  対応言語は異なる)へ反映。
+
+**進行中・要再開のタスク**:
+1. `aruaru-db`のトライブリッド実装(TiFlash非同期HTAP+CockroachDB
+   Serverless層分離+Neonブランチング機能の統合)——特にNeon型
+   ブランチング(Git-on-SQLとの親和性が高い)を優先。
+2. 一部リポジトリでpush待ちのコミットが残っている可能性がある
+   (各リポジトリの`git log --oneline origin/<branch>..HEAD`で確認)。
+
+**正直な開示**: このセッションは非常に長時間・多数のバックグラウンド
+エージェントを並行実行しており、一部エージェントが「委任した」等の
+空応答で実作業をしていないケースが複数回発生し、都度直接指示して
+やり直させる対応を行った。次回セッション再開時は、まず各リポジトリの
+`git status`/`git log`で実際の到達点を裏取りしてから続行すること
+(このエコシステム共通の運用ルール通り)。
+
+---
+
+## 2026-08-04(さらに続き) チェックポイント(多言語ページ展開＋open-directx/open-cuda/aruaru-llm連携強化、セッション末尾のため記録)
+
+ユーザー指示「今日はここまでにします」により本セッションを終了。次回
+再開の起点は以下の通り。
+
+**今回完了した作業(コミット・push済み)**:
+1. **多言語ページ展開**(`audiocafe-tokyo-php`・`audiocafe-tokyo-rust`・
+   `open-web-server`): `aruaru`/`aruaru-lady`を11言語→18言語へ拡張、
+   `rakuten-mobile`にヘブライ語を追加、3サイトとも18言語で統一。日本語
+   ページ(Rust版)に多言語ナビを新設。本番デプロイ中に2つの実バグ
+   (`open-web-server`のルーティングが多言語ページへの到達を阻んでいた、
+   過去HANDOFFの「rakuten-mobile本番反映済み」という記述が実は誤りで
+   VPS上に実ファイルが存在しなかった)を発見・修正し、実インターネット
+   経由で全言語ページの200応答を確認済み。
+2. **open-directx**: D3D11グラフィックスパイプラインのピクセル位置↔NDC
+   座標変換式を実機(NVIDIA GT 730)で検証するテストを追加、実測誤差1
+   (UNORM丸め範囲内)で一致確認。push済み(`3424340`)。
+3. **open-cuda**: `open-cuda-llm`にQKV融合GEMM＋プリフィル/デコード
+   分離を実装。実GPT-2 124M重みで変更前後の生成トークン列が完全一致
+   することを実証(挙動を変えない最適化であることの証明)。push済み
+   (`d8a49c7`)。
+4. **aruaru-llm**: `real-vulkan` featureを新設し実推論をVulkanへ
+   ディスパッチする配線を追加。実機検証の結果、**`open-cuda`側
+   `Linear::forward`が`matmul.spv`を`sgemm`へ渡していないため
+   `GemmPath::VulkanGeneric`が機能しない(即座にエラー)という未解決の
+   実バグを発見**——性能比較のベンチマークはまだ実施できていない。
+   push済み(`0327661`)。`open-cuda/CLAUDE.md`にも次回最優先課題として
+   記録済み。
+
+**次回再開の起点(優先順位順)**:
+1. **`open-cuda`の`Linear::forward`にSPIR-V(`matmul.spv`)配線を追加**
+   (`crates/open-cuda-llm/src/lib.rs`、`open-cuda/CLAUDE.md`2026-08-04
+   〈続き〉エントリ参照)——これが解消して初めて`aruaru-llm`側の
+   実Vulkan/CPU速度比較ベンチマークが実施できる。
+2. 上記完了後、`aruaru-llm`(`--features real-vulkan`)で実機再検証:
+   CPU版とVulkan版の生成トークン列一致・実速度差の計測。
+3. `open-directx`側の残課題(DXILチェーンクラスのDXBC側への追従、
+   テクスチャサンプリング・スワップチェーン拡張、AMD/Intel実機検証)。
+
+---
+
 ## 複数リポジトリ横断セッションチェックポイント(2026-08-04追加)
 
 > 以下は`F:\runo`ローカル作業ドライブでのセッション(どのリポジトリ・
