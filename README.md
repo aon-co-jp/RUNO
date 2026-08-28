@@ -6,12 +6,7 @@
 全体の**「プロジェクトシリーズ索引」を担うメタリポジトリ**です。このリポジトリ
 自体は個別の実装コードを持たず、各プロジェクトへの入口(README・
 CLAUDE.md・PORTING.md・役割の要約)をまとめて一覧できることだけを目的と
-しています。ローカルの作業ドライブは旧`F:\open-runo`から新レイアウト
-`F:\runo`へ移行途上(2026-07時点)で、プロジェクトによってどちらの
-ドライブにcloneされているかが異なる。本リポジトリ自身は現在
-`F:\runo\RUNO`が正のクローン(`F:\open-runo\aon`に同一originの重複clone
-が未整理のまま残存。詳細は`CLAUDE.md`参照)。VPS(conoha)側は`/root/RUNO`
-が正で`/root/aon`は旧クローン。
+しています。ローカルの作業ドライブは`F:\runo`。
 
 対応する実装は [`aruaru-tokyo`](https://github.com/aon-co-jp/aruaru-tokyo)
 (Rust + [Poem](https://github.com/poem-web/poem)製)側にもあり、
@@ -21,9 +16,8 @@ CLAUDE.md・PORTING.md・役割の要約)をまとめて一覧できることだ
 
 ## プロジェクトシリーズ一覧
 
-`F:\open-runo`または移行先の`F:\runo`配下で実際にgitリポジトリとして
-存在し、GitHub(`aon-co-jp`)上にリモートが確認できるプロジェクトを
-掲載しています。
+`F:\runo`配下で実際にgitリポジトリとして存在し、GitHub(`aon-co-jp`)上に
+リモートが確認できるプロジェクトを掲載しています。
 各プロジェクトの役割説明は、それぞれのリポジトリの実際の
 `README.md`/`CLAUDE.md`の記載に基づく要約です(推測での記載はしていません)。
 
@@ -40,28 +34,24 @@ CLAUDE.md・PORTING.md・役割の要約)をまとめて一覧できることだ
 | e-gov.info | [aon-co-jp/e-gov](https://github.com/aon-co-jp/e-gov) | [README](https://github.com/aon-co-jp/e-gov/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/e-gov/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/e-gov/blob/main/CLAUDE.md) | 行政のデジタル化と、個人〜貿易商社まで対応するオンライン貿易・不動産プラットフォームを、LINEアプリ・WEBサイト・コンビニ端末という複数の入口から利用できる形で統合するプロジェクト。**まだサンプル・デモンストレーション段階**(READMEに明記)。 |
 | karu.tokyo | [aon-co-jp/karu-tokyo](https://github.com/aon-co-jp/karu-tokyo) | [README](https://github.com/aon-co-jp/karu-tokyo/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/karu-tokyo/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/karu-tokyo/blob/main/CLAUDE.md) | `karu.tokyo`のTOPページ。Rust + Poem製、DB非依存の1バイナリ完結サーバー。軽井沢・あきる野市・東京の観光とリモートワーク、IT・AI・AUDIO・貿易産業を紹介。 |
 | open-cuda | [aon-co-jp/open-cuda](https://github.com/aon-co-jp/open-cuda) | — (README.mdは無く`README-Japan.md`等が代わりに存在) | — (PORTING.mdは未整備) | — (CLAUDE.mdは未整備) | OmniGPU設計文書(`OmniGPU-Design.md`)等を含むGPUランタイム関連プロジェクト(現時点で標準構成のREADME.md/CLAUDE.md/PORTING.mdは未整備)。 |
-| open-directx | [aon-co-jp/open-directx](https://github.com/aon-co-jp/open-directx) | — (リポジトリ自体は存在するが空、README.md未整備) | — (未整備) | — (未整備) | ローカルドライブ(`F:\open-runo`)には実体(git clone)が無く、GitHub上に空リポジトリとして存在するのみを確認(2026-07-20、`git ls-remote`で疎通確認、refなし)。DirectX関連プロジェクトと推測されるが、内容が無いため役割は未確認・推測で埋めない。 |
+| open-directx | [aon-co-jp/open-directx](https://github.com/aon-co-jp/open-directx) | — (リポジトリ自体は存在するが空、README.md未整備) | — (未整備) | — (未整備) | ローカルドライブには実体(git clone)が無く、GitHub上に空リポジトリとして存在するのみを確認(`git ls-remote`で疎通確認、refなし)。DirectX関連プロジェクトと推測されるが、内容が無いため役割は未確認・推測で埋めない。 |
 | open-easy-web | [aon-co-jp/open-easy-web](https://github.com/aon-co-jp/open-easy-web) | [README](https://github.com/aon-co-jp/open-easy-web/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/open-easy-web/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/open-easy-web/blob/main/CLAUDE.md) | 「第二のKUSANAGI」——アプリのアップロード後にIPアドレスで起動し、ドメイン登録・HTTPS化を簡単に自動適用できる運用ツール(Rust → WebAssembly、フレームワーク不使用)。 |
 | open-raid-z | [aon-co-jp/open-raid-z](https://github.com/aon-co-jp/open-raid-z) | [README](https://github.com/aon-co-jp/open-raid-z/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/open-raid-z/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/open-raid-z/blob/main/CLAUDE.md) | Rust製の実マウント可能なRAID-Z/Z2/Z3ストレージプール実装(ZFS「風」のCoW/チェックサム/スナップショット。ZFS自体・OpenZFSへの依存やオンディスク互換性はなし)。**エコシステム開発ルールの正本**リポジトリ。 |
 | open-web-server | [aon-co-jp/open-web-server](https://github.com/aon-co-jp/open-web-server) | [README](https://github.com/aon-co-jp/open-web-server/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/open-web-server/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/open-web-server/blob/main/CLAUDE.md) | Rust + tokio/hyper自前実装のWebサーバー — 課金アイテム・金融データを「消失させない」ために設計。`open-runo`・`aruaru-db`と4層防御通信で連携するミッションクリティカル向け。 |
 | rs-to-readme | [aon-co-jp/rs-to-readme](https://github.com/aon-co-jp/rs-to-readme) | [README](https://github.com/aon-co-jp/rs-to-readme/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/rs-to-readme/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/rs-to-readme/blob/main/CLAUDE.md) | Rustクレートの`Cargo.toml`メタデータからREADME.mdを自動生成するCLIツール([crates.io](https://crates.io/crates/rs-to-readme)公開)。 |
 | **RUNO**(このリポジトリ、旧称: open-aruaru-runo-iLumi → aon) | [aon-co-jp/RUNO](https://github.com/aon-co-jp/RUNO) | [README](https://github.com/aon-co-jp/RUNO/blob/main/README.md) | [PORTING](https://github.com/aon-co-jp/RUNO/blob/main/PORTING.md) | [CLAUDE.md](https://github.com/aon-co-jp/RUNO/blob/main/CLAUDE.md) | このエコシステム全体の「プロジェクトシリーズ索引」を担うメタリポジトリ。個別のコード実装は持たない。 |
 
-> 📝 **正直な開示**: 上表はローカル作業ドライブ(`F:\open-runo`または
-> 移行先の`F:\runo`)配下に実在し、`.git/config`のリモートURLで
-> `aon-co-jp`上の存在を確認できたプロジェクトのみを掲載しています。
-> `poem-cosmo-tauri`のようにドキュメント上は言及されるものの本ドライブ上に
-> ローカルclone・実体が確認できなかったプロジェクトは、確認が取れ次第
-> この表へ追加します。VPS(conoha)上の実体(`/root/RUNO`等)については
-> この索引では未追跡です。
+> 📝 **正直な開示**: 上表はローカル作業ドライブ(`F:\runo`)配下に実在し、
+> `.git/config`のリモートURLで`aon-co-jp`上の存在を確認できた
+> プロジェクトのみを掲載しています。`poem-cosmo-tauri`のようにドキュメント
+> 上は言及されるものの本ドライブ上にローカルclone・実体が確認できなかった
+> プロジェクトは、確認が取れ次第この表へ追加します。VPS(conoha)上の実体に
+> ついてはこの索引では未追跡です。
 
 ## Overview (English)
 
 This repository is a **meta index for the entire `aon-co-jp` project
-ecosystem**, historically rooted at the local working drive `F:\open-runo`
-and currently mid-migration to a new drive layout at `F:\runo` (as of
-2026-07; which drive a given project lives on varies per project — see
-`CLAUDE.md`). It holds no
+ecosystem**, rooted at the local working drive `F:\runo`. It holds no
 implementation code of its own — its sole purpose is to provide a single
 place listing, for every sibling project actually present as a Git
 repository under `aon-co-jp`, its README, PORTING.md (if any), development
