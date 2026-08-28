@@ -148,11 +148,29 @@ open-englishに限らず全リポジトリへ展開して」への対応。QR確
   [open-easy-web/CLAUDE.md](open-easy-web/CLAUDE.md)の2026-08-28
   HANDOFF参照。
 
+- **RS-Blog**: `qr`/`otp_qr`の2方式を追加(**「パスワード無し」は
+  意図的に非実装**——公開ブログの管理者アカウントであり、投稿の
+  改ざん・削除が可能なためコンテンツ完全性を優先し、open-easy-webと
+  同じ判断基準を適用)。RS-Blogは登録アカウント制を持たず単一の
+  管理者(`RSBLOG_ADMIN_EMAIL`)のみのため、open-easy-webの
+  「TOTP登録済みアカウントのみqr可」という前提条件は不要とし、QR単体
+  ログインは事前準備なしに常時利用可能な設計にした。`src/auth.rs`に
+  `login_mode`(otp/qr/otp_qr)・QRログインセッション一式、
+  `src/main.rs`に管理API+`qr-confirm.html`を追加。`cargo build`成功
+  (警告0件)、`cargo test`**26件全green**(新規11件、実HTTP経由の
+  統合テスト3件を含む)。実バイナリを起動してのcurl検証も実施
+  (`GET /`・`GET /api/auth/login-mode`・`POST /api/auth/qr-login/start`
+  のモード別403・`GET /qr-confirm.html`・未ログインでの
+  `POST /api/auth/login-mode`401・SMTP未設定時の`request-otp`503、
+  いずれも期待通り)。GitHubへcommit・push済み(`15fe134`)。
+  **VPS本番デプロイは未実施**(v0.1.0時点でRS-Blog自体がまだVPS本番
+  稼働していないため対象外)。詳細は
+  [RS-Blog/CLAUDE.md](RS-Blog/CLAUDE.md)の2026-08-28 HANDOFF参照。
+
 ### 未着手(次回再開ポイント、優先度は次回ユーザーに確認)
 
-認証機能(`auth.rs`/`totp.rs`)を持つことを確認済みの残り6リポジトリ:
+認証機能(`auth.rs`/`totp.rs`)を持つことを確認済みの残り5リポジトリ:
 
-- **RS-Blog**
 - **RS-EC**
 - **RS-Ops**
 - **open-gitea**
@@ -162,26 +180,28 @@ open-englishに限らず全リポジトリへ展開して」への対応。QR確
 いずれも`server/src/auth.rs`または`totp.rs`を保有していることは
 確認済みだが、各リポジトリの認証設計(セッション方式・OTP実装・
 TOTP有無)は個別に異なる可能性が高く、着手前に各リポジトリの
-既存`auth.rs`実装を読んでから、open-english/open-easy-webと同じ
-パターン(`start_qr_login`/`confirm_qr_login`/`qr_login_status`/
+既存`auth.rs`実装を読んでから、open-english/open-easy-web/RS-Blogと
+同じパターン(`start_qr_login`/`confirm_qr_login`/`qr_login_status`/
 `finish_qr_login`+`qr-confirm.html`+`login_mode`管理API)を、
 そのリポジトリの既存設計に合わせて移植する、という進め方を踏襲する
 こと。「パスワード無し」モードを実装してよいかどうかは、そのアプリが
-扱う操作の重要度に応じて都度判断すること(open-easy-webでの前例
-=VPS管理アプリでは非実装、という判断基準を参考にする)。
+扱う操作の重要度に応じて都度判断すること(open-easy-web=VPS管理
+アプリでは非実装、RS-Blog=公開ブログ管理者アカウントでも非実装、
+という前例を判断基準として参考にする)。
 
 ### 次回セッション開始時にそのまま使える再開メッセージ
 
 ```
 ログイン4択方式(パスワード無し/email OTP/QR撮影のみ/email OTP+QR撮影)の
-横展開を再開してください。open-english・open-easy-webは完了済み
+横展開を再開してください。open-english・open-easy-web・RS-Blogは完了済み
 (`F:\runo\PORTING.md`の「2026-08-28 ログイン方式4択…横展開チェック
-ポイント」節参照)。残りはRS-Blog/RS-EC/RS-Ops/open-gitea/open-redmine/
-rs-syncの6リポジトリです。まず着手するリポジトリを1つ選んで(優先度を
-指定するか、私に選ばせてください)、そのリポジトリのserver/src/auth.rs
-を読んでから、open-easy-webと同じパターン(QR確認ログイン+login_mode
-管理API+qr-confirm.html)を移植してください。「パスワード無し」モードを
-実装するかどうかは、そのアプリが扱う操作の重要度に応じて判断してください。
+ポイント」節参照)。残りはRS-EC/RS-Ops/open-gitea/open-redmine/rs-syncの
+5リポジトリです。まず着手するリポジトリを1つ選んで(優先度を指定するか、
+私に選ばせてください)、そのリポジトリのsrc/auth.rs(または
+server/src/auth.rs)を読んでから、open-easy-web/RS-Blogと同じパターン
+(QR確認ログイン+login_mode管理API+qr-confirm.html)を移植してください。
+「パスワード無し」モードを実装するかどうかは、そのアプリが扱う操作の
+重要度に応じて判断してください。
 ```
 
 ## 2026-08-04(続き) チェックポイント(複数GitHubアカウント・Gitea/GitBucket連携・マルチデバイス同期の強化着手)
