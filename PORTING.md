@@ -119,6 +119,85 @@ push・コミットして停止して」により、本セッションの到達�
 到達点と次回再開ポイントの一覧。各詳細は各リポジトリの`CLAUDE.md`の
 HANDOFFセクション参照。
 
+## 2026-08-28 VPS(ConoHa、`ssh conoha`)ディレクトリ構成整理
+
+**背景**: ユーザー指示「`/root`の下にrepositoryフォルダを作りリポジトリ
+はそこに移動、`/root`の下にURLフォルダを作りWEBサイトはそこに移動、
+シンボリックリンクを貼って全てのVPSとGithubのプログラムに対して編集
+して」への対応。ハードリンクはLinuxの仕様上ディレクトリには作成
+できない(ファイル単位のみ)ことをユーザーへ説明し、シンボリックリンク
+のみで進める・ドメイン兼リポジトリのフォルダは両方(`/root/repository`
+に実体+`/root/url`にもシンボリックリンク)に置く・1サービスずつ停止→
+移動→シンボリックリンク作成→起動→実HTTP確認、という方針で合意の上
+実施した。
+
+### 実施内容
+
+1. **`/root/repository/`(27件、gitリポジトリ)・`/root/url/`(10件、
+   ドメイン兼リポジトリ8件+非リポジトリのWEB/デモ用ディレクトリ2件
+   `easy-web.tokyo`・`open-raid-z-demo-disks`)を新設**。旧`/root/<名前>`
+   には全てシンボリックリンクを残し、systemdユニット・nginx alias等の
+   既存の絶対パス参照はすべて透過的に機能する(実際に編集が必要だった
+   設定ファイルは無かった——`open-web-server`の`domains.toml`はポート・
+   パスプレフィックスのみでファイルパス不使用、nginx側の唯一の
+   `/root/`参照〈aruaru.tokyoの動画ファイルalias〉もシンボリックリンク
+   越しにそのまま機能、cron〈`sync-repos.sh`〉・certbot設定にも該当
+   パス参照は無かったことを確認済み)。
+2. **移動対象外(意図的に現状維持)**: `aon.co.jp`・`audiocafe.tokyo`
+   (実サイトは`/var/www/audiocafe.tokyo`、この`/root/audiocafe.tokyo`は
+   未使用の古いclone)・`aruaru-db-data`(データディレクトリ、コードでは
+   ない)・`disabled-vhosts-backup`・`dream-os`・`easy-web`(`.tokyo`
+   無し)・`gitbucket-test`・`gitea-test`・`mirror-cache`・`open-aruaru`・
+   `open-aruaru-core`・トップレベルの`open-cg-cad-demo`/`open-english-demo`
+   (実体はいずれも`easy-web.tokyo`配下にあり、こちらは無関係な残骸)・
+   `open-mqa`・`RFrontEnd`(`.git`が無く正規のcloneではない)・
+   `rs-gitbucket`・トップレベルの`rs-sync-demo`(実サービスは
+   `/root/rs-sync`を指すため無関係)・`world-lab`。いずれも稼働中の
+   systemdサービスから参照されておらず、リポジトリともWEBサイトの実体
+   とも言い切れないため今回は触れていない。
+3. **予期しない発見・修復(今回の移動作業とは別の既存問題)**: サービス
+   停止のたびに`target/release/<binary>`の実在を確認したところ、
+   **このVPS全体で12個のサービスが、実体は既にディスクから削除済み
+   (過去のディスク容量整理等の影響と推測)なのにプロセスだけ稼働を
+   続けている「ゴースト状態」だったことが判明**——今回サービスを
+   一度停止したことで初めて表面化した(今回の移動作業が原因ではなく、
+   移動のために止めたことで顕在化した)。対象:
+   `open-gitea`・`fbi.tokyo`・`e-gov.info`・`karu.tokyo`・`icpo.tokyo`・
+   `runo.tokyo`・`open-redmine`・`RS-Blog`・`RS-EC`・`open-cg-cad`/
+   `open-cg-cad-demo`・`open-kagaku`(いずれも現在チェックアウト済みの
+   ソースのまま`cargo build --release`で再ビルド、`git pull`はしていない
+   ——今回の目的はインフラ修復であり、無関係な機能更新を混在させない
+   ため)。**`RS-Ops`はソースディレクトリ自体
+   (`/root/runo.tokyo/RS-Ops`)が消失していたため、GitHubから再clone→
+   ビルド→起動**して復旧した。全12件、再ビルド後に`systemctl is-active`
+   +実際にTCPポートでlistenしていることを確認済み。
+4. **`open-web-server`(全ドメインのリバースプロキシ)は当初Phase 6
+   〈最後〉に予定していたが、RPoem等の相対パスsibling依存
+   (`../../open-web-server/crates/...`)を解決するため、実際には
+   `open-gitea`再ビルドの前段で先行して移動した**。
+5. **実HTTP検証**: 移動・再ビルド後、`aon.tokyo`・`aruaru.tokyo`・
+   `e-gov.info`・`fbi.tokyo`・`icpo.tokyo`・`karu.tokyo`・`nasa.tokyo`・
+   `runo.tokyo`・`easy-web.tokyo`(および`/rsync`・`/open-redmine`・
+   `/rs-sync`・`/rs-link-fusion`配下)・`runo.tokyo/RS-Ops`が実際に
+   `https://`経由で200を返すことを確認。`easy-web.tokyo/open-gitea/`の
+   404は移動前から存在した仕様(バックエンド自体がルートパスで404を
+   返す)であり回帰ではないことを確認済み。
+6. **GitHub側の「VPS上の作業パス」記載更新(5リポジトリ、CLAUDE.mdの
+   現状記述のみ——HANDOFFの日付付き履歴エントリは当時の事実の記録
+   として書き換えていない)**: `RS-Blog`・`RS-EC`・`open-redmine`・
+   `rs-link-fusion`・`e-gov.info`(ドメイン兼リポジトリのため
+   `/root/url/e-gov.info`併設にも言及)。各リポジトリで無関係な既存の
+   未コミット差分(`open-redmine`のREADME/installスクリプト、
+   `rs-link-fusion`の`Cargo.lock`)には触れず、`CLAUDE.md`のみを個別に
+   commit・push済み。
+7. **未実施(次回以降の課題)**: 他の全リポジトリ(`RS-Guard`・
+   `RS-JSON`・`RS-SmartTCP`・`aruaru-db`・`audiocafe-tokyo-rust`・
+   `open-gitea`・`open-web-server`・`rs-sync`・`open-raid-z`等)の
+   CLAUDE.md内にも`/root/`への言及はあるが、いずれも日付付きの過去の
+   作業記録(HANDOFFエントリ)であり「現状」を宣言する文ではないと
+   判断し今回は変更していない——今後これらのファイルへ「現状」節を
+   新設する場合は新パス(`/root/repository/<名前>`)を使うこと。
+
 ## 2026-08-28 ログイン方式4択(パスワード無し/email OTP/QR撮影のみ/email OTP+QR撮影)の横展開チェックポイント
 
 **背景**: ユーザー指示「ログインは、1.パスワード無し 2.email OTP
