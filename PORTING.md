@@ -11,6 +11,39 @@
 
 ---
 
+## 2026-08-29 チェックポイント(aruaru-db 管理面の抜本再設計、セッション末尾のため記録)
+
+**対象リポジトリ**: `aruaru-db`(集中)、`RPoem`(SET の相方、次フェーズ P5 で本格関与)。
+
+**到達点**: aruaru-db の `/admin/*` REST を**完全撤廃**する抜本再設計に着手。
+「REST を 1 本ずつ GraphQL mutation へ」は *稼働中プロセスの生状態をフィールド
+単位でライブ書き換えするアンチパターン* の移送にすぎない、というユーザー指摘を
+受けた方針転換。正本の設計文書
+[`repository/aruaru-db/docs/CONTROL_PLANE_REDESIGN.md`](repository/aruaru-db/docs/CONTROL_PLANE_REDESIGN.md)
+を新設(設計哲学12か条・4バケツ仕分け・目標 HTTP 面・aruaru.yaml スキーマ・
+フェーズ P0〜P6・付録 A=TiDB/TiFlash 調査・付録 B=REST 撤廃を可能にする
+Cosmo の技術)。
+
+進捗: P0(設計)/P1(宣言的設定基盤 `aruaru-server::config` + `--config` +
+ホットリロード)/P2(`query.parallel` 4フィールド化、`follower_read.target_lag_ms`
+完全ホットリロード)/P3 一部(`/admin/parallel*`・`/v1/keys/self-issue` 撤廃 →
+GraphQL `explainDistributed`・`parallelJobs`・`selfIssueKey`)まで完了・push 済み。
+各スライスで `cargo test` 失敗0。
+
+**次回再開の起点**: **[repository/aruaru-db/CLAUDE.md](repository/aruaru-db/CLAUDE.md)
+冒頭「🛑 復活用メッセージ」** をまず読む。P3 本体は `closed-timestamp` の
+GraphQL 化から(`AdminCtx.closed_ts` 注入、`object_table`/`keyring` と同じ
+パターン)。`wal-service`・`sharded-store` も同様。`ephemeral-query`・
+`multi-raft` は trait 注入のリファクタが要る。
+
+**ユーザーの不変の要求**: (1) SET(RPoem + aruaru-db)全体から REST API を
+例外なく完全撤廃・中途半端禁止、(2) RPoem は Cosmo 互換で REST 不要・APIキー
+完全自動ライフサイクル、(3) aruaru-db は CockroachDB×Snowflake ハイブリッド
+変種の実在DB(TiDB 等)の技術を取り込む、(4) 必要なら多言語で再調査し
+再設計・再実装・再テストを実用的になるまで数回繰り返す。
+
+---
+
 ## 2026-08-20 チェックポイント(利用制限接近のため記録、大規模マルチリポジトリセッション)
 
 ユーザー指示「リミットなので、README/CLAUDE/PORTINGを日本語で編集して
