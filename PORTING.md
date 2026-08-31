@@ -208,11 +208,36 @@ Snowflake ハイブリッド変種(TiDB 等、**関連全て**)の実装理論�
    **これでP3本体(closed-timestamp・wal-service・sharded-store・
    ephemeral-query・multi-raft)が全て完了**。
 
+### 続き2(2026-08-31、要求③実装トラック着手・完了分)
+
+4. ✅ **A.6-1 HLC**: `aruaru-dist::hlc`(CockroachDB/Spanner方式、物理+
+   論理成分をAtomicU64へパックしCASループでロックフリー実装)。9テスト
+   全green(並行呼び出しでの重複無し検証込み)。`closed_ts`等への実配線は
+   未実施。commit `c806846`。
+5. ✅ **A.6-2 ColumnarApplier(本命)+ 実プロセス配線**: TiFlash型HTAPの
+   核心=Raft-Learner上の行→列非同期変換レプリカ。`Applier` trait実装
+   (行ストアミラー適用+テーブル全体を`table_format`〈Databend方式〉の
+   blockへ列変換してcommit、min/max統計+主キーbloom filter)。
+   `--columnar-learner`起動フラグを新設し、**実際にleader/columnar-
+   learnerの2プロセスを起動し、CREATE TABLE→INSERT→UPDATEの各commitが
+   binary Raft経由で別プロセスの列レプリカへ反映されることを実HTTPで
+   確認**(replicationCount/snapshotIdの遷移、誤トークンでの401)。
+   commit `56ef06c`→`27be65c`。
+6. ✅ **A.6-4段階1 deletion vector + 枝刈り配線**: `BlockMeta.
+   deletion_vector`(Delta Lake方式の論理削除、`BTreeSet<u64>`)。
+   `with_deleted`/`is_deleted`/`live_row_count`。**`prune_range`/
+   `prune_equality`が全行削除済みblockを実際に読み飛ばすよう配線**
+   (「宣言しただけ」で終わらせず読み取り側を完成)。旧block JSONとの
+   `serde(default)`後方互換込み、計8テスト。commit `b6aaaac`→`84b321e`。
+   **残る配線**: `ColumnarApplier`の書き込み側からdeletion vectorを
+   呼ぶ経路(A.6-4段階2 Merge-on-Reseへ格上げ時)。
+
 ### 次にすべきこと(aruaru-db、他アカウントでの再開ポイント)
 
-1. **③ 実装トラック着手**: A.6-2 `ColumnarApplier`(Raft-Learner 上の
-   行→列非同期レプリカ、**本命**)、A.6-1 `hlc.rs`、A.6-4 deletion vector、
-   `aruaru.yaml: htap` セクションの実装(§5 / A.7)。
+1. A.6-4段階2(base+deltaのMerge-on-Read、`ColumnarApplier`をdelta蓄積
+   方式へ格上げ)、HLCを`closed_ts`/`wal_service`/`multi_raft`へ配線、
+   `aruaru.yaml: htap`セクションの実装(§5・A.7、この際`--columnar-
+   learner`を宣言的設定経由の起動へ統合することも検討)。
 2. `disaster_backup.email` reconcile(feature ゲート)、Tauri/Android/web
    の残りクライアント移行、P4(`admin_routes` 撤去 + `/raft/*` バイナリ化)。
 
@@ -223,8 +248,11 @@ GraphQL 化・REST 撤廃 + 日英ドキュメント整合)→ `33ae605`(付録A
 一次資料 / Paimon・Fluss)→ `250956d`(付録A: HLC アルゴリズム・Photon
 adaptive execution)→ `c30a6b5`(続き11: 実プロセスHTTP E2E完了)→
 `8bfec95`(続き12: ephemeral-query GraphQL化・REST撤廃)→
-`afb4826`(続き13: multi-raft GraphQL化・REST撤廃、P3本体完了)。
-**VPS未反映**
+`afb4826`(続き13: multi-raft GraphQL化・REST撤廃、P3本体完了)→
+`c806846`(続き14: A.6-1 HLC実装)→`56ef06c`(続き15: A.6-2 ColumnarApplier
+本体)→`27be65c`(続き16: ColumnarApplier実プロセス配線・実HTTP検証)→
+`b6aaaac`(続き17: A.6-4段階1 deletion vector)→`84b321e`(続き18: prune
+系APIへのdeletion vector配線)。**VPS未反映**
 (次回`git pull`で`8bfec95`まで追従させること)。
 
 ---
