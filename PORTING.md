@@ -11,6 +11,73 @@
 
 ---
 
+## 2026-08-29 チェックポイント(open-english + aruaru-llm: AI音声認識(ASR)精度の抜本改善、セッション末尾のため記録)
+
+**対象リポジトリ**: `open-english`(branch `master`、集中)、`aruaru-llm`
+(branch `main`、`POST /v1/transcribe` 新設)。関連参照のみ:
+`open-directx` / `open-cuda` / `open-cpu`(既存の推論基盤、今回コード変更なし)。
+
+**正本**: `open-english/docs/SPEECH_RECOGNITION_REDESIGN.md`(英日・多言語で
+Google/GitHub 調査した結果 + 3 フェーズ設計 + 試作駆動の進め方 + 受け入れ
+基準)。各リポジトリの詳細は `open-english/CLAUDE.md` / `aruaru-llm/CLAUDE.md`
+の 2026-08-29 HANDOFF。
+
+### 到達点
+
+- **P1(クライアントのみ・新規依存ゼロ、`open-english/app.js`)= 実装済み**:
+  P1-α `speechLangTag()`(BCP-47 言語タグ、ja/en 固定を廃止)、
+  P1-β `refineTranscript(alts, langTag)`(n-best → 1 回の LLM 訂正、
+  空/過長は却下して 1-best へ)、P1-β2 `lastTrainerUtterance()`(直前
+  トレーナー発話で contextual biasing)、P1-γ `speechTranslationHelper()`
+  (話した内容を母国語へ翻訳して補助表示)。
+- **P2-α(ブラウザ内 Whisper、transformers.js)= 実装済み**: 実行段
+  カスケード WebGPU → WebNN(npu/gpu/cpu)→ WASM(スレッド数は
+  `/v1/cpu-runtime` = open-cpu ヒント)。マイク押下で Web Speech API と
+  `MediaRecorder` を並行起動、認識終了時に Whisper 候補 + Web Speech
+  n-best を融合。モデル/ランタイムは `fetch-whisper-model.ps1` +
+  `whisper-model-installer.exe` + `server` の `maybe_fetch_whisper_model()`
+  で同一オリジン配信。未配置なら静かに無効化 → Web Speech API 単独
+  (回帰ゼロ)。
+- **2026-08-29 多言語再調査を反映**: transformers.js の dtype 落とし穴
+  (WebGPU + q8 デコーダは出力が壊れる)→ **fp32 encoder + q4 decoder の
+  ハイブリッド**へ修正。tfjs は 3.8.1 固定(v4-next はタイムスタンプ
+  回帰)。幻覚対策の `condition_on_previous_text:false` 等を追加。
+- **P2-β(`aruaru-llm` の `POST /v1/transcribe`、whisper.cpp)= API 骨格
+  のみ実装済み**: エンドポイント + `GET /v1/runtime` の `whisper` 段 +
+  `whisper-transcribe` Cargo feature(既定オフ、`nllb-translate` と同じ
+  隔離)。既定ビルド + 実 HTTP は検証済み(97 テスト全 green)。
+
+### 次にすべきこと(他アカウントでの再開ポイント)
+
+1. **P2-β の方針変更を実装(`aruaru-llm`)**: `whisper-rs` の Windows/MSVC
+   ビルド不能は既知の上流ブロッカー(`0.16.0` でも
+   `WHISPER_DONT_GENERATE_BINDINGS=1` でも解消せず)。`whisper-rs` 直
+   リンクをやめ、**whisper.cpp のプレビルド CLI(`whisper-cli.exe`)を
+   子プロセス起動**する方式へ `src/transcribe.rs` の feature ブロックを
+   差し替える(`pg_dump` / `adb` と同じパターン)。CLI パスは
+   `ARUARU_LLM_WHISPER_CLI`。`Cargo.toml` の `whisper-rs` optional dep は
+   削除。エンドポイント・feature 名・`/v1/runtime` の `whisper` 段は維持。
+2. **P2-γ(`open-english`)**: Silero VAD(ブラウザで ORT-web 実行、
+   無音除去が幻覚対策として最も効く)を必須項目として導入。Web Speech
+   API + ブラウザ Whisper + サーバー `/v1/transcribe` の 3 経路 n-best を
+   `refineTranscript()` へ束ねる完全ハイブリッド融合を配線。Moonshine
+   (27M、日本語版あり)を低遅延経路の候補に。
+3. **P3**: Parakeet-TDT-0.6B-v3 / Canary-1B-v2 / Omnilingual ASR を
+   `aruaru-llm` の選択可能エンジンに。評価は Open ASR Leaderboard を
+   `docs/asr-eval/` 基準に。
+4. **実機検証(ユーザー依頼分)**: 実マイクでの WER/CER 計測、
+   `fetch-whisper-model.ps1` の HF/jsdelivr 取得可否。
+
+### コミット
+
+- `open-english@master`: `c26d7ca`(P2-α)、`623856c`・`9609f37`
+  (HANDOFF)、`125da19`(多言語再調査 + dtype 修正)、本チェックポイントの
+  README/CLAUDE/PORTING 更新。
+- `aruaru-llm@main`: `78a85e3`(P2-β `/v1/transcribe`)、`bc32230`
+  (方針変更メモ)、本チェックポイントの README/PORTING 更新。
+
+---
+
 ## 2026-08-29 チェックポイント(aruaru-db 管理面の抜本再設計、セッション末尾のため記録)
 
 **対象リポジトリ**: `aruaru-db`(集中)、`RPoem`(SET の相方、次フェーズ P5 で本格関与)。
