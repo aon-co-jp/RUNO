@@ -197,17 +197,23 @@ Snowflake ハイブリッド変種(TiDB 等、**関連全て**)の実装理論�
    (`aruaru-server`)が実装、`Mutation.ephemeralQuery`新設。実プロセス
    E2E(federatedQueryでテーブル作成→ephemeralQueryが実際に子プロセス
    を起動しSELECT結果を返す)まで確認済み。commit `c30a6b5`→`8bfec95`。
+3. ✅ **`multi-raft` の GraphQL 化(P3 本体、最終スライス)**:
+   `EngineApplier`を`aruaru-server::cluster`から`aruaru-dist::
+   engine_applier`へ移設し、`aruaru-graphql`が`MultiRaftCluster
+   <EngineApplier>`を具体型のまま共有(trait object化は不要と判明)。
+   `Query.multiRaftScatterQuery`・`Mutation.multiRaftSplit`/
+   `multiRaftMerge`新設。実プロセスE2E(split→scatter→merge の
+   range数遷移1→2→1を実HTTPで確認、旧REST`/admin/multi-raft/*`は
+   トークン付きで404)まで確認済み。commit `afb4826`。
+   **これでP3本体(closed-timestamp・wal-service・sharded-store・
+   ephemeral-query・multi-raft)が全て完了**。
 
 ### 次にすべきこと(aruaru-db、他アカウントでの再開ポイント)
 
-1. **`multi-raft` の GraphQL 化**: `MultiRaftCluster<crate::cluster::
-   EngineApplier>`のtrait object化 or `EngineApplier`のクレート移設
-   (`ephemeral-query`で確立した「型・trait を aruaru-dist へ移設」
-   パターンを踏襲できる見込み)。
-2. **③ 実装トラック着手**: A.6-2 `ColumnarApplier`(Raft-Learner 上の
+1. **③ 実装トラック着手**: A.6-2 `ColumnarApplier`(Raft-Learner 上の
    行→列非同期レプリカ、**本命**)、A.6-1 `hlc.rs`、A.6-4 deletion vector、
    `aruaru.yaml: htap` セクションの実装(§5 / A.7)。
-3. `disaster_backup.email` reconcile(feature ゲート)、Tauri/Android/web
+2. `disaster_backup.email` reconcile(feature ゲート)、Tauri/Android/web
    の残りクライアント移行、P4(`admin_routes` 撤去 + `/raft/*` バイナリ化)。
 
 ### コミット(push 済み `origin/main`)
@@ -216,7 +222,9 @@ Snowflake ハイブリッド変種(TiDB 等、**関連全て**)の実装理論�
 GraphQL 化・REST 撤廃 + 日英ドキュメント整合)→ `33ae605`(付録A: 中国語
 一次資料 / Paimon・Fluss)→ `250956d`(付録A: HLC アルゴリズム・Photon
 adaptive execution)→ `c30a6b5`(続き11: 実プロセスHTTP E2E完了)→
-`8bfec95`(続き12: ephemeral-query GraphQL化・REST撤廃)。**VPS未反映**
+`8bfec95`(続き12: ephemeral-query GraphQL化・REST撤廃)→
+`afb4826`(続き13: multi-raft GraphQL化・REST撤廃、P3本体完了)。
+**VPS未反映**
 (次回`git pull`で`8bfec95`まで追従させること)。
 
 ---
