@@ -68,33 +68,143 @@ Google/GitHub 調査した結果 + 3 フェーズ設計 + 試作駆動の進め�
   へ移設(`systemctl cat` に出なくなった、`request-otp` が `{"sent":true}`
   で SMTP 継続動作を確認)。
 
+### 到達点(続き、2026-08-29 セッション後半)
+
+- **P2-γ VAD = ✅ 2 段実装済み**(`open-english/app.js`):
+  - 第一段 `trimSilenceVad()`(依存ゼロ・DLゼロの RMS ベース、30ms/10ms
+    フレーム、適応しきい値でトリム)。VPS 実ブラウザで 3s 合成音→1.44s 確認。
+  - 第二段 `sileroVadTrim()` = **Silero VAD(ONNX v5、`onnx-community/
+    silero-vad` ~2.2MB)**。transformers.js は `InferenceSession` を公開
+    しないので standalone `onnxruntime-web@1.22.0`(非 jsep wasm 一式)を
+    `/vendor/ort-vad/` へ**完全隔離**して vendor。512 サンプルごとに発話
+    確率 → ヒステリシス + 最小発話長 + ギャップ連結で発話区間へまとめ
+    **内部の無音も落とす**。`vadTrim()` = Silero → RMS フォールバック
+    (必ず有効 PCM、回帰ゼロ)。**VPS 実ブラウザ検証**: セッションロード
+    849ms、I/O 名自動検出(`input`/`state`/`sr`→`output`/`stateN`)、
+    推論 89ms/3s、合成音は非発話と正しく判定(誤検出なし)。
+- **P2-β contextual biasing = ✅**: `/v1/transcribe` に `prompt` フィールド
+  (`aruaru-llm`、末尾1000字に切詰 → `whisper-cli --prompt`)。`open-english`
+  の `serverTranscribePcm()` が `lastTrainerUtterance()` を送る。
+- **評価ハーネス(§5)= ✅ 実装済み**: `open-english/tools/asr-bench/wer.mjs`
+  (依存ゼロ Node、`--ref`/`--hyp`/`--keywords`/`--md`。NFKC 正規化 →
+  語 or 文字 Levenshtein、`lang`+空白率で CJK 自動判定、kw-recall =
+  R-WER 近似、`missing` = 取りこぼし数、言語別内訳。自己テスト済み)+
+  `split-bench.mjs`(`window.__asrBench` → `hyp-*.jsonl`)+ `app.js` の
+  `localStorage["openEnglish.asrBench"]="1"` ダンプ + `docs/asr-eval/`
+  (README・`refs.example.jsonl`・`keywords.example.jsonl`・`.gitignore`)。
+
 ### 次にすべきこと(他アカウントでの再開ポイント)
 
-1. **P2-γ の残り = Silero VAD(`open-english`)**: ブラウザで ORT-web 実行、
-   認識前に無音区間を落とす(§3.6 の多言語調査で「幻覚対策として最も
-   効果が高い」と一致)。`@ricky0123/vad-web` または
-   `onnx-community/silero-vad` を vendor して `blobToPcm16k()` の後段に
-   挟む。Moonshine(27M、日本語版あり)を低遅延経路の候補エンジンに。
-2. **実機 E2E**: (a) 利用者 PC に プレビルド `whisper-cli` + `ggml-base.bin`
-   を置いて `POST /v1/transcribe` を実 HTTP で書き起こし検証、(b) 実マイクで
-   Web Speech / ブラウザ Whisper / サーバー の 3 経路同時の WER/CER 計測。
-3. **P3**: Parakeet-TDT-0.6B-v3 / Canary-1B-v2 / Omnilingual ASR を
-   `aruaru-llm` の選択可能エンジンに。評価は Open ASR Leaderboard を
-   `docs/asr-eval/` 基準に。
+1. **実機 E2E(最優先、実マイクが要る)**: `open-english` をブラウザで開き
+   `localStorage.setItem("openEnglish.asrBench","1")` → 各発話を話す →
+   `copy(JSON.stringify(window.__asrBench))` → `split-bench.mjs` →
+   `wer.mjs --md` で WER/CER を出し `docs/asr-eval/README.md` の結果ログへ。
+   同時に、利用者 PC へ プレビルド `whisper-cli` + `ggml-base.bin` を置いて
+   `POST /v1/transcribe` の実書き起こしと Silero の実発話セグメント抽出を確認。
+2. **Moonshine を低遅延エンジン候補に**(`open-english`): 27M・量子化 ONNX
+   ~50MB、日本語版 `moonshine-tiny-ja-ONNX` あり。Whisper より軽速。
+   `getWhisperPipeline()` 相当を Moonshine 用に足し、融合リストへ 4 本目として。
+3. **P3(`aruaru-llm`)**: Parakeet-TDT-0.6B-v3 / Canary-1B-v2 / Omnilingual
+   ASR を `/v1/transcribe` の選択可能エンジンに(`whisper-cli` と同じ
+   「プレビルドバイナリを子プロセス」パターンで)。評価は Open ASR
+   Leaderboard(多言語 + long-form)を `docs/asr-eval/` 基準に。
 
 ### コミット(すべて push 済み)
 
-- `open-english@master`: `c26d7ca`(P2-α)→ `623856c` `9609f37`(HANDOFF)→
-  `125da19`(多言語再調査 + dtype)→ `6142108`(README/PORTING/CLAUDE 日英)
-  → `45a2247`(Linux fetch スクリプト + STATIC_FILES)→ `086f91a`(ORT jsep のみ)
-  → `2358454`(vendor/model パスをアプリベース相対に)→ `e30a46b`(P2-α VPS
-  配信記録)→ `706b716`(§P2-β 更新)→ `fcf517f`(Mixed Content 解消)→
-  `83ae376`(ユーザー判断 2 件対応済み)→ `6671dde`(P2-γ 3 経路融合)。
-- `aruaru-llm@main`: `78a85e3`(P2-β `/v1/transcribe` API)→ `bc32230`
-  (方針変更メモ)→ `06edeb0`(README-English/PORTING 日英)→ `24bcfd1`
-  (**P2-β 方針変更を実装** = whisper-cli 子プロセス、feature 撤去、100 テスト)
-  → `4e9ddb4`(README/CLAUDE/PORTING を CLI 方式へ全面更新)。
+- `open-english@master`: `c26d7ca`(P2-α)→ … → `6671dde`(P2-γ 3 経路融合)
+  → `571c8de`(評価ハーネス)→ `1eeef9f`(RMS VAD + PCM 一回デコード)→
+  `da8d960`(Silero VAD)→ `2f85996`(standalone ORT loader)→ `3310bd4`
+  (ORT を非 jsep で完全隔離)→ `6914a0a`(Silero VPS 検証記録)→ `ec28ffa`
+  (serverTranscribePcm が prompt を送る)。
+- `aruaru-llm@main`: `78a85e3`(P2-β API)→ … → `24bcfd1`(**方針変更実装** =
+  whisper-cli 子プロセス、feature 撤去、100 テスト)→ `4e9ddb4`(README/
+  CLAUDE/PORTING を CLI 方式へ)→ `b98b928`(`/v1/transcribe` に `prompt`)。
 - `RUNO@main`(旧 runo): 本チェックポイント。
+- **VPS(easy-web.tokyo)反映済み**: `/root/easy-web.tokyo/open-english` を
+  最新へ、`open-english-server` 再ビルド・再起動、Whisper モデル + ORT +
+  Silero VAD + vendor 一式を配信(全ルート 200)。`aruaru-llm` は利用者 PC
+  側で動く設計のため VPS には配置しない(コードは GitHub 上)。
+
+---
+
+## 2026-08-29 チェックポイント(aruaru-db: REST 完全撤廃 P3 本体 + 付録A「2026最新設計」再構成、並列セッションで実施)
+
+**対象リポジトリ**: `aruaru-db`(branch `main`)。**この ASR セッションと
+並列**でバックグラウンドエージェントが実施。再開起点は
+`aruaru-db/CLAUDE.md` 冒頭「🛑 復活用メッセージ」+ HANDOFF「続き10」、
+正本は `aruaru-db/docs/CONTROL_PLANE_REDESIGN.md`。
+
+### ユーザーの不変要求(逸脱禁止)
+①SET 全体から REST を例外なく完全撤廃・中途半端禁止 ②RPoem は
+WunderGraph Cosmo 互換・API キー完全自動ライフサイクル ③CockroachDB×
+Snowflake ハイブリッド変種(TiDB 等、**関連全て**)の実装理論・技術を
+取り込む ④世界中の言語で再調査し実用的になるまで再設計・再実装・
+再テストを反復。**実装 P3 より ③ の調査・再設計を優先**。
+
+### 到達点(push 済み `origin/main` `23ff114..250956d`)
+
+- **③④ = ✅ 完了**: 英日独露中で 15 検索(一次論文・公式 doc・GitHub)。
+  `docs/CONTROL_PLANE_REDESIGN.md` 付録 A を **59 → 約480行**へ全面再構成。
+  TiDB/TiKV+TiFlash(DeltaTree=B+木×LSM、FFI push、**read-index SI 検証
+  アルゴリズム**)・CockroachDB(Range/HLC/Pebble/closed ts/protected ts、
+  MVCC range key)・YugabyteDB(DocDB/IntentsDB)・Snowflake(不変16MB
+  マイクロパーティション/pruning/time travel)・**Neon vs Aurora**
+  (safekeeper Paxos `flushLsn[n-quorum]` / pageserver materialize)・
+  SingleStore(Universal Storage 5機能)・ClickHouse(MergeTree granule /
+  **SharedMergeTree + Keeper**)・Iceberg/Delta/Hudi/**Paimon・Fluss**
+  (deletion vector の RoaringBitmap レイアウト、MoR、record-level index、
+  merge engine)・Photon/DuckDB(FSST/ALP、adaptive kernel 選択)を
+  **実装方法(アーキ/データ構造/アルゴリズム)まで**、出典 URL 併記。
+  取り込み判断を明記: **取り込む** = HLC(アルゴリズム明記)/
+  **Raft-Learner 上の行→列非同期変換レプリカ(本命、`ColumnarApplier` 案)** /
+  read-index+MVCC SI 検証 / deletion vector+MoR(段階的)。**条件付き保留**
+  = 型認識軽量圧縮。**取り込まない(理由明記)** = Aurora 型モノリシック
+  ストレージ。A.7 に `aruaru.yaml: htap` セクション案 + execution-config
+  配布案、A.8 に「2026 業界の現実(単一エンジン HTAP は専用OLTP+専用
+  OLAP+CDC に対しシェアを取れていない)」。
+- **① P3 本体 = 3/5 群完了**: `closed-timestamp` / `wal-service` /
+  `sharded-store` を GraphQL 化し REST 撤廃(`admin.rs` からルート・
+  ハンドラ・構造体7個・`now_nanos()` 削除、`AdminCtx` へ `Arc` 注入 =
+  `object_table`/`keyring` と同一パターン、safekeeper 列挙 off-by-one
+  是正)。**着手前に grep で Tauri/Android/web クライアントの当該 REST
+  参照が皆無なことを確認**。タイムスタンプ・LSN は GraphQL では String。
+  `/closed-timestamp/{receive,publish}` は B4(ノード間 side transport、
+  既にバイナリ)として残置。
+- **次スライスへ(技術的理由を doc §8 P3・CLAUDE.md 続き10 に明記)**:
+  `ephemeral-query`(`current_exe()`+`Command` で自プロセス再起動する
+  `aruaru-server` バイナリ固有 → `Arc<dyn EphemeralRunner>` trait 注入が
+  必要)、`multi-raft`(`MultiRaftCluster<crate::cluster::EngineApplier>`
+  が server-local ジェネリック → trait object 化 or applier のクレート
+  移設が必要)。状態注入だけで済んだ 3 群とは規模が別、というのが
+  「回した」理由。
+- **検証**: `cargo build --release -p aruaru-graphql -p aruaru-server`
+  成功(11分17秒、既存 `build_cluster`/`propose_commit` の 2 警告のみ)。
+  `cargo test -p aruaru-dist -p aruaru-graphql -p aruaru-server` 失敗 0
+  (72 + 16 + 13、**新規 3 テスト**が closed_timestamp / wal_service /
+  sharded_store を GraphQL だけで完結させ共有状態への実読み書きを検証)。
+- **README.md / README-Japan.md / README-English.md / PORTING.md §7 /
+  CLAUDE.md** を日英で整合。
+
+### 次にすべきこと(aruaru-db、他アカウントでの再開ポイント)
+
+1. **実プロセス HTTP E2E(未達)**: 実 `aruaru-server` を起動して新
+   GraphQL を `/graphql` へ実 HTTP、撤廃した REST パスが実際に 404 に
+   なる確認。
+2. **`ephemeral-query` / `multi-raft` の GraphQL 化**: 上記 trait 注入
+   リファクタから。
+3. **③ 実装トラック着手**: A.6-2 `ColumnarApplier`(Raft-Learner 上の
+   行→列非同期レプリカ、**本命**)、A.6-1 `hlc.rs`、A.6-4 deletion vector、
+   `aruaru.yaml: htap` セクションの実装(§5 / A.7)。
+4. `disaster_backup.email` reconcile(feature ゲート)、Tauri/Android/web
+   の残りクライアント移行、P4(`admin_routes` 撤去 + `/raft/*` バイナリ化)。
+
+### コミット(push 済み `origin/main`)
+
+`6e5b3e0`(付録A 2026最新設計へ全面拡充)→ `efeebab`(**P3 本体** 3 群
+GraphQL 化・REST 撤廃 + 日英ドキュメント整合)→ `33ae605`(付録A: 中国語
+一次資料 / Paimon・Fluss)→ `250956d`(付録A: HLC アルゴリズム・Photon
+adaptive execution)。**VPS 反映済み**: `/root/repository/aruaru-db` ・
+`/root/aruaru-db` を `250956d` へ `git pull`。
 
 ---
 
