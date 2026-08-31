@@ -185,17 +185,29 @@ Snowflake ハイブリッド変種(TiDB 等、**関連全て**)の実装理論�
 - **README.md / README-Japan.md / README-English.md / PORTING.md §7 /
   CLAUDE.md** を日英で整合。
 
+### 続き(2026-08-31、別アカウント/別セッションで再開・完了分)
+
+1. ✅ **実プロセス HTTP E2E**: 実 `aruaru-server` を起動し
+   `closedTimestamp`/`walService`/`shardedStore*`/`selfIssueKey` を
+   `/graphql` へ実 HTTP で確認、旧 REST パスが正しいトークン付きで
+   実際に `404`(トークン無しの `401` に惑わされないことも確認)。
+2. ✅ **`ephemeral-query` の GraphQL 化**: `EphemeralRunner` trait +
+   型を `aruaru-dist::ephemeral` へ移設(`admin_shared.rs`/
+   `keyring.rs`と同パターン)、`ProcessEphemeralRunner`
+   (`aruaru-server`)が実装、`Mutation.ephemeralQuery`新設。実プロセス
+   E2E(federatedQueryでテーブル作成→ephemeralQueryが実際に子プロセス
+   を起動しSELECT結果を返す)まで確認済み。commit `c30a6b5`→`8bfec95`。
+
 ### 次にすべきこと(aruaru-db、他アカウントでの再開ポイント)
 
-1. **実プロセス HTTP E2E(未達)**: 実 `aruaru-server` を起動して新
-   GraphQL を `/graphql` へ実 HTTP、撤廃した REST パスが実際に 404 に
-   なる確認。
-2. **`ephemeral-query` / `multi-raft` の GraphQL 化**: 上記 trait 注入
-   リファクタから。
-3. **③ 実装トラック着手**: A.6-2 `ColumnarApplier`(Raft-Learner 上の
+1. **`multi-raft` の GraphQL 化**: `MultiRaftCluster<crate::cluster::
+   EngineApplier>`のtrait object化 or `EngineApplier`のクレート移設
+   (`ephemeral-query`で確立した「型・trait を aruaru-dist へ移設」
+   パターンを踏襲できる見込み)。
+2. **③ 実装トラック着手**: A.6-2 `ColumnarApplier`(Raft-Learner 上の
    行→列非同期レプリカ、**本命**)、A.6-1 `hlc.rs`、A.6-4 deletion vector、
    `aruaru.yaml: htap` セクションの実装(§5 / A.7)。
-4. `disaster_backup.email` reconcile(feature ゲート)、Tauri/Android/web
+3. `disaster_backup.email` reconcile(feature ゲート)、Tauri/Android/web
    の残りクライアント移行、P4(`admin_routes` 撤去 + `/raft/*` バイナリ化)。
 
 ### コミット(push 済み `origin/main`)
@@ -203,8 +215,9 @@ Snowflake ハイブリッド変種(TiDB 等、**関連全て**)の実装理論�
 `6e5b3e0`(付録A 2026最新設計へ全面拡充)→ `efeebab`(**P3 本体** 3 群
 GraphQL 化・REST 撤廃 + 日英ドキュメント整合)→ `33ae605`(付録A: 中国語
 一次資料 / Paimon・Fluss)→ `250956d`(付録A: HLC アルゴリズム・Photon
-adaptive execution)。**VPS 反映済み**: `/root/repository/aruaru-db` ・
-`/root/aruaru-db` を `250956d` へ `git pull`。
+adaptive execution)→ `c30a6b5`(続き11: 実プロセスHTTP E2E完了)→
+`8bfec95`(続き12: ephemeral-query GraphQL化・REST撤廃)。**VPS未反映**
+(次回`git pull`で`8bfec95`まで追従させること)。
 
 ---
 
