@@ -42,39 +42,59 @@ Google/GitHub 調査した結果 + 3 フェーズ設計 + 試作駆動の進め�
   (WebGPU + q8 デコーダは出力が壊れる)→ **fp32 encoder + q4 decoder の
   ハイブリッド**へ修正。tfjs は 3.8.1 固定(v4-next はタイムスタンプ
   回帰)。幻覚対策の `condition_on_previous_text:false` 等を追加。
-- **P2-β(`aruaru-llm` の `POST /v1/transcribe`、whisper.cpp)= API 骨格
-  のみ実装済み**: エンドポイント + `GET /v1/runtime` の `whisper` 段 +
-  `whisper-transcribe` Cargo feature(既定オフ、`nllb-translate` と同じ
-  隔離)。既定ビルド + 実 HTTP は検証済み(97 テスト全 green)。
+- **P2-β(`aruaru-llm` の `POST /v1/transcribe`)= ✅ 完了(方針変更込み)**:
+  `whisper-rs` 直リンクは Windows/MSVC ビルド不能(`0.16.0` でも
+  `WHISPER_DONT_GENERATE_BINDINGS=1` でも解消せず、issue 2026-04-21)→
+  **whisper.cpp のプレビルド CLI(`whisper-cli`)を子プロセス起動**する
+  方式へ全面書き換え(`pg_dump` / `adb` と同じ)。Cargo feature 撤去。
+  `is_available()` = `cli_present && model_present` の実行時判定。
+  `cargo test --release` **100 passed / 1 ignored**。実 CLI + 実 GGML
+  での E2E のみ未達。
+- **P2-α を VPS 本番(`easy-web.tokyo/open-english/`)へ実配信・実ブラウザ
+  検証済み**: Linux 用 `installer/unix/fetch-whisper-model.sh` 新設、
+  ORT は jsep 統合ビルドのみ、`app.js` の vendor/model パスをアプリの
+  ベース(`/` or `/open-english/`)からの相対に。`open-english-server`
+  再ビルド・再起動、モデル配信ルート全 200、`loadWhisperModule()` 成功。
+- **P2-γ(`open-english`)= ✅ 3 経路融合を配線済み**: `serverTranscribeBlob()`
+  新設。可否は `lastRuntimeInfo.whisper`(`GET /v1/runtime`)で判定、
+  到達不可なら静かにスキップ。`finalizeVoiceInput()` が
+  `Promise.all([whisperTranscribeBlob, serverTranscribeBlob])` で並行実行し
+  `serverAlts.concat(whisperAlts).concat(speechAlts)` を `refineTranscript()`
+  へ。VPS 配信済み、実ブラウザで関数定義・f32→base64 往復を確認。
+- **付随のサービス向上(ユーザー確認の上)**: (a) HTTPS 配信時に
+  aruaru-llm の平文 HTTP プローブをやめ Mixed Content エラーを解消
+  (実ブラウザで消失を確認)、(b) VPS の `open-english.service` の平文
+  SMTP パスワードを `/etc/open-english.env`(mode 600)+ `EnvironmentFile=`
+  へ移設(`systemctl cat` に出なくなった、`request-otp` が `{"sent":true}`
+  で SMTP 継続動作を確認)。
 
 ### 次にすべきこと(他アカウントでの再開ポイント)
 
-1. **P2-β の方針変更を実装(`aruaru-llm`)**: `whisper-rs` の Windows/MSVC
-   ビルド不能は既知の上流ブロッカー(`0.16.0` でも
-   `WHISPER_DONT_GENERATE_BINDINGS=1` でも解消せず)。`whisper-rs` 直
-   リンクをやめ、**whisper.cpp のプレビルド CLI(`whisper-cli.exe`)を
-   子プロセス起動**する方式へ `src/transcribe.rs` の feature ブロックを
-   差し替える(`pg_dump` / `adb` と同じパターン)。CLI パスは
-   `ARUARU_LLM_WHISPER_CLI`。`Cargo.toml` の `whisper-rs` optional dep は
-   削除。エンドポイント・feature 名・`/v1/runtime` の `whisper` 段は維持。
-2. **P2-γ(`open-english`)**: Silero VAD(ブラウザで ORT-web 実行、
-   無音除去が幻覚対策として最も効く)を必須項目として導入。Web Speech
-   API + ブラウザ Whisper + サーバー `/v1/transcribe` の 3 経路 n-best を
-   `refineTranscript()` へ束ねる完全ハイブリッド融合を配線。Moonshine
-   (27M、日本語版あり)を低遅延経路の候補に。
+1. **P2-γ の残り = Silero VAD(`open-english`)**: ブラウザで ORT-web 実行、
+   認識前に無音区間を落とす(§3.6 の多言語調査で「幻覚対策として最も
+   効果が高い」と一致)。`@ricky0123/vad-web` または
+   `onnx-community/silero-vad` を vendor して `blobToPcm16k()` の後段に
+   挟む。Moonshine(27M、日本語版あり)を低遅延経路の候補エンジンに。
+2. **実機 E2E**: (a) 利用者 PC に プレビルド `whisper-cli` + `ggml-base.bin`
+   を置いて `POST /v1/transcribe` を実 HTTP で書き起こし検証、(b) 実マイクで
+   Web Speech / ブラウザ Whisper / サーバー の 3 経路同時の WER/CER 計測。
 3. **P3**: Parakeet-TDT-0.6B-v3 / Canary-1B-v2 / Omnilingual ASR を
    `aruaru-llm` の選択可能エンジンに。評価は Open ASR Leaderboard を
    `docs/asr-eval/` 基準に。
-4. **実機検証(ユーザー依頼分)**: 実マイクでの WER/CER 計測、
-   `fetch-whisper-model.ps1` の HF/jsdelivr 取得可否。
 
-### コミット
+### コミット(すべて push 済み)
 
-- `open-english@master`: `c26d7ca`(P2-α)、`623856c`・`9609f37`
-  (HANDOFF)、`125da19`(多言語再調査 + dtype 修正)、本チェックポイントの
-  README/CLAUDE/PORTING 更新。
-- `aruaru-llm@main`: `78a85e3`(P2-β `/v1/transcribe`)、`bc32230`
-  (方針変更メモ)、本チェックポイントの README/PORTING 更新。
+- `open-english@master`: `c26d7ca`(P2-α)→ `623856c` `9609f37`(HANDOFF)→
+  `125da19`(多言語再調査 + dtype)→ `6142108`(README/PORTING/CLAUDE 日英)
+  → `45a2247`(Linux fetch スクリプト + STATIC_FILES)→ `086f91a`(ORT jsep のみ)
+  → `2358454`(vendor/model パスをアプリベース相対に)→ `e30a46b`(P2-α VPS
+  配信記録)→ `706b716`(§P2-β 更新)→ `fcf517f`(Mixed Content 解消)→
+  `83ae376`(ユーザー判断 2 件対応済み)→ `6671dde`(P2-γ 3 経路融合)。
+- `aruaru-llm@main`: `78a85e3`(P2-β `/v1/transcribe` API)→ `bc32230`
+  (方針変更メモ)→ `06edeb0`(README-English/PORTING 日英)→ `24bcfd1`
+  (**P2-β 方針変更を実装** = whisper-cli 子プロセス、feature 撤去、100 テスト)
+  → `4e9ddb4`(README/CLAUDE/PORTING を CLI 方式へ全面更新)。
+- `RUNO@main`(旧 runo): 本チェックポイント。
 
 ---
 
