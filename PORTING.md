@@ -11,6 +11,71 @@
 
 ---
 
+## 2026-09-01(続き2) チェックポイント(open-cuda + aruaru-llm + open-english: Attentionスキップ軽量パス実装 + 「open-cudaは必須の相方」明文化)
+
+**背景**: 直前チェックポイント(d631cf1)の「未着手・次回検討候補」に
+明記されていた **open-cuda + aruaru-llm + open-english の3リポジトリに
+またがる開発** ——「線形アダプタ折りたたみで潰した層のAttentionを、
+出力をゼロで捨てるだけでなく推論時に丸ごとスキップする軽量パス」——を
+実装した。あわせてユーザー指示「aruaru-llmを使うリポジトリは全て
+open-cudaも一緒にSETUPすべきことを日英で明記、またはインストーラー
+同梱」へ対応した。
+
+### 実施内容
+
+1. **Attentionスキップ軽量パス(3リポジトリスライス)**:
+   - **open-cuda**(`crates/open-cuda-llm/src/lib.rs`、正本): `DecoderLayer`
+     へ`skip_attention: bool`(既定`false`、`linear_adapter`のみ`true`)。
+     `forward_step`/`forward_prefill`が`skip_attention`時にln_1・QKV射影・
+     softmax・P·V・attn_out・KVキャッシュpushを一切実行せず残差だけを
+     FFNへ渡す。`linear_adapter`の`qkv`/`attn_out`はゼロ出力なので
+     **ビット単位で数値等価**(生成トークン列が1トークンも変わらない)。
+     `AdapterFoldReport`へ`attention_compute_skipped: bool`追加。
+   - **aruaru-llm**: `FoldResult`/`FoldLayersResponse`へ
+     `attention_compute_skipped: Option<bool>`(線形アダプタ版のみ
+     `Some(true)`)、`POST /v1/models/fold-layers`レスポンスへ反映、
+     disclosure文(日英)更新。
+   - **open-english**: `index.html`のfold-layers開示文へ日英併記で追記、
+     `app.js`がレスポンスの新フィールドをステータス欄へ表示。
+   - **検証**: open-cuda `cargo test -p open-cuda-llm --release --
+     --test-threads=1` **35件全green**(新規bitwise等価テスト
+     `linear_adapter_attention_skip_is_bitwise_identical_to_computing_zeroed_attention`
+     ——skip有無で`generate()`出力がバイト完全一致することを確認)。
+     aruaru-llm `cargo test --release -- --test-threads=1` **101件全green**。
+     open-english `node --check` OK + 実ブラウザで白画面なし・新開示文が
+     DOMに存在を確認。
+   - **残課題**: skip版の実速度向上幅(CPU/GPU実測)は未取得——
+     open-cuda側に`--ignored`ベンチ
+     `manual_bench_attention_skip_vs_computed_zeroed_attention`を用意済み、
+     次回開発機で実行。
+
+2. **「open-cudaは必須の相方」明文化**: 調査の結論——**open-cudaは
+   `aruaru-llm`バイナリへ静的リンクされるため別途同梱・別プロセス
+   起動は不要**。`fetch-aruaru-llm.ps1`/`.sh`が取得するリリース済み
+   `aruaru-llm`実行ファイルに`opencuda-*`(GEMM・Attention・GPT-2
+   デコーダ・埋め込み・音声認識)が既に含まれる。ソースからビルドする
+   場合のみ隣に`open-cuda`のcloneが必要(CIは`release.yml`が自動clone)。
+   Vulkan/DirectX GPUバックエンドだけは`aruaru-llm`側のGPUビルド
+   (`installgpu`タスク、既定オフ)使用時のみ有効。
+   `aruaru-llm/README.md`・`README-English.md`に「open-cudaは必須の
+   相方(SET)」節を新設(正本)、`open-english/installer/{windows,unix}/
+   fetch-aruaru-llm.{ps1,sh}`のコメントにも日英併記で追記。
+
+### 次にすべきこと
+
+1. 稼働中の`aruaru-llm`がある環境で、open-englishのfold-layersボタン→
+   レスポンスの`attention_compute_skipped`表示の実HTTP検証。
+2. skip版の実速度向上幅の実測(`open-cuda`側`--ignored`ベンチ、
+   NVIDIA GT 730の開発機で)。
+3. 前回チェックポイントの残課題(2)(高性能統合GPUでの再実測)、(3)
+   (日本語較正データの品質定量評価)は引き続き未着手。
+
+### コミット
+
+- open-cuda / aruaru-llm / open-english / RUNO(本チェックポイント)。
+
+---
+
 ## 2026-09-01 チェックポイント(open-cuda + aruaru-llm + open-english: Model Folding残タスク4項目完了、セッション末尾のため記録)
 
 **背景**: 直前セッションで実装した「Model Folding」(層冗長性検出+
