@@ -15,17 +15,24 @@
 
 ユーザー指示「123の順番で」の3項目を順に実施した。
 
-**項目1 — open-cuda-llm ローダーの F16/BF16/FP8 対応(完了・push待ち→push済み)**:
-`GptModel::load` の `tensor_f32` を F32 のみから **F16・BF16(`half`
-クレート)・FP8 E4M3・FP8 E5M2(OCP仕様準拠の自前デコーダ)→f32 変換**へ
-拡張(open-cuda `9c4ff39`)。これにより対話FT済み GPT-2 互換モデル
-(DialoGPT-small、F16 配布)を実際にロードできる。aruaru-llm 側は
-`model_catalog` に `dialogpt-small` + `tokenizer_hf_repo`(gpt2 の
-tokenizer 流用)を追加(aruaru-llm `ef4004f`)。推論経路は F32 のまま
-(配布フォーマット拡張であり FP8 演算カーネルではない)。合成dtypeテスト
-+ 実 DialoGPT-small F16 の実機 E2E + `/v1/models/select` ホットスワップ
-実HTTP検証済み。詳細は `open-cuda/CLAUDE.md`・`aruaru-llm/CLAUDE.md` の
-2026-09-02 エントリ。
+**項目1 — open-cuda-llm ローダー拡張 + FP8/F8 演算カーネル(完了・push済み)**:
+- 第一段(open-cuda `9c4ff39` / aruaru-llm `ef4004f`): `tensor_f32` を
+  F32 のみから **F16・BF16(`half`)・FP8 E4M3・FP8 E5M2(OCP仕様準拠の
+  自前デコーダ)→f32 変換**へ拡張。対話FT済み GPT-2 互換モデル
+  (DialoGPT-small、F16 配布)を実際にロード可能に。`model_catalog` へ
+  `dialogpt-small` + `tokenizer_hf_repo`(gpt2 の tokenizer 流用)追加。
+- **第二段(ユーザー追加要望「FP8とF8演算カーネルを実装」「対応外dtype
+  のエラーを修正」、open-cuda `b9fae40` / aruaru-llm `b9eb255`)**:
+  `opencuda-blas` に FP8(E4M3/E5M2)量子化 API + **`sgemm_fp8_weight`
+  (dequant-on-the-fly GEMM = FP8 演算カーネルの実体)**。`tensor_f32` が
+  F64 + 全整数/真偽 dtype(BOOL/U8..U64/I8..I64)も**直接キャストで**
+  読めるようになり「対応外エラー」は真に未知の dtype のみへ。
+  `GptModel::enable_fp8_weights`(opt-in)+ aruaru-llm 側
+  `ARUARU_LLM_ENABLE_FP8_WEIGHTS=e4m3|e5m2` 配線。**正直な開示**:
+  GT730 に FP8 Tensor Core が無く softwareパスで、利益は重みメモリ 1/4
+  であり速度ではない。opencuda-blas 42 / open-cuda-llm 43 / aruaru-llm
+  101 passed、clippy 0件、実 HTTP E2E(distilgpt2 で配線ログ発火 →
+  `/v1/generate` がコヒーレントな英文、f32 版と僅かに異なる継続)確認済み。
 
 **項目2 — Model Folding 残課題(前回=続き2 で Attentionスキップ軽量パス
 完了済み)**: 高性能統合GPUでの再実測はこの機に該当GPUが無く未達、
@@ -46,19 +53,37 @@ Positions` を追加。8ユニットテスト green、aruaru-dist 91 / aruaru-ba
 (leader + `--columnar-learner`)で in-place UPDATE → deletionVectorPositions 1、
 DELETE → 2、blockCount は書き直されず維持、liveRowCount が行ストアミラーに
 追従することを実証。詳細は `aruaru-db/CLAUDE.md` の続き20 エントリ。
-**残り(要求③実装トラック)**: HLC(続き14 で `hlc.rs` 実装済み・未配線
-——`as_nanos()` が Unix ナノ秒 `pt` を `<<16` すると u64 オーバーフロー
-する設計課題があり、`closed_ts`/`wal_service`/`multi_raft` への配線は
-エンコード方式の設計判断を伴う別スライスとして次回)、`aruaru.yaml: htap`
-セクション(§5・A.7)、`Query.htapReplicas` 相当の枝刈り込み観測 API、
-A.6-3(Raft index + MVCC SI 検証)。
+**項目3 追加 — HLC タイムスタンプの設計ミス修正(ユーザー指摘
+「オーバーフローする設計を一から設計し直して新規設計書をまず完成させて」、
+aruaru-db `0ead341`)**:
+`hlc.rs` の `as_nanos()` が実 Unix ナノ秒 `pt` を `<<16` して u64
+オーバーフローしていた。一次資料調査(CockroachDB は物理/論理を別
+フィールドでパックしない、compact 版は物理を ms/µs 粒度へ落とす)に
+基づき **`docs/HLC_TIMESTAMP_REDESIGN.md` を新設**、案B(物理を
+65.536µs 粒度へ切り捨てて下位 16bit に論理を収める=左シフトなし=
+オーバーフローなし=厳密単調)を採用。`hlc.rs` 全面書き換え(13テスト)、
+`closed_ts` 系の「now 既定値」を HLC ordinal へ配線(`AdminState`/
+`AdminCtx` 共有、`closed_ts_receive` で `observe_ordinal`)。
+aruaru-dist 95 / aruaru-graphql 19 / aruaru-server 13 passed、
+実 HTTP E2E で `closedTsAdvance`(now 省略)が実 Unix ナノ秒スケールの
+単調 ordinal `1788327316574937600` を返し、旧 REST は 404 を確認。
 
-**VPS**: open-english(項目2、続き2)は既にデプロイ済み。aruaru-llm /
-open-cuda はアーキテクチャ上 VPS へデプロイしない(aruaru-llm は利用者PC
-上で動作、open-cuda はライブラリ)。aruaru-db は `/root/aruaru-db` へ
-`git pull` + `systemctl restart aruaru-server` で反映
-(続き19 の `ln -sf /root/open-raid-z /root/repository/open-raid-z`
-パス不整合対応が必要になる場合あり)。
+**残り(要求③実装トラック)**: `aruaru.yaml: htap` セクション(§5・A.7、
+`columnar_replicas`/`read_consistency`/`delta`)+ `--columnar-learner` の
+宣言的設定経由起動への統合、`Query.htapReplicas` 相当の枝刈り込み
+観測 API、A.6-3(Raft index + MVCC SI 検証)、HLC の案A全面移行・
+`max_offset` スキュー上限(`docs/HLC_TIMESTAMP_REDESIGN.md` P-HLC-3、将来)。
+
+**VPS(ユーザー指示「aruaru-llm/open-cuda も VPS 対象にして」)**:
+- open-english(項目2、続き2)は既にデプロイ済み。
+- **aruaru-llm を新規に VPS デプロイ**(`/root/aruaru-llm`、open-cuda を
+  隣に clone してビルド、systemd `aruaru-llm.service`)——従来「利用者PC
+  上で動作、VPS 非対象」としていた方針をユーザー指示で変更。open-cuda は
+  aruaru-llm へ path 依存でビルド時に取り込まれる(単体サービスは無い)。
+- aruaru-db は `/root/aruaru-db` へ `git pull` + `cargo build --release
+  -p aruaru-server` + `systemctl restart aruaru-server`(続き19 の
+  `ln -sf /root/open-raid-z /root/repository/open-raid-z` パス不整合対応が
+  必要な場合あり)。
 
 ---
 
