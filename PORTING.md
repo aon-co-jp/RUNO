@@ -11,6 +11,62 @@
 
 ---
 
+## 2026-09-02(続き22) チェックポイント(aruaru-db 次フェーズ一括 + open-cuda AWQ/FP8ベンダー分岐、ビルドまで)
+
+ユーザー指示「次フェーズ … 進めて」→「ビルドまでで記録」。実プロセス
+HTTP E2E は未実施、`cargo test` / `cargo build --workspace` の成功までが
+検証範囲。全スライスをリポジトリ別にコミット済み・未push分あり。
+
+### aruaru-db(復活用メッセージ項目4 の (a)〜(d) を一括実装)
+- **(a) `aruaru.yaml: htap` セクション**: `config::HtapConfig`
+  (`columnar_replicas` / `read_consistency` / `delta.compaction_threshold`、
+  static 扱い = reconcile で restart_required)。`ColumnarApplier::
+  with_compaction_threshold`。`--columnar-learner` を `--config` 経由の
+  `htap.delta.compaction_threshold` へ統合。`aruaru.example.yaml` 更新。
+- **(b) `Query.htapReplicas` 相当の枝刈り込み観測 API**:
+  `ColumnarApplier::prune_range_preview` / `prune_equality_preview`
+  (MoR ビュー〈base+delta+deletion vector〉を `disproves`/bloom へ流し
+  `HtapPrunePreview` を返す)。`GET /columnar/:table/prune?column&op&value`。
+- **(c) A.6-3 Raft index + MVCC SI 検証**: `Applier::apply_at(index, cmd)`
+  (既定は `apply` 委譲、既存実装無変更)。`ColumnarApplier` が
+  `applied_index` / `applied_commit_seq` を記録。`read_at_index` が未達で
+  `Err(StaleRead)`、達していれば `HtapReplicaView`。`GET /columnar/:table`
+  に `appliedIndex`/`appliedCommitSeq`、`?required_index=&
+  required_commit_seq=` 指定で未達なら 409 CONFLICT。
+- **(d) HLC `max_offset`**: `Hlc::max_offset_nanos`(0=無効)+
+  `try_update` / `try_observe_ordinal`(壁時計+max_offset 超のリモートは
+  `Err(ClockSkew)`、permissive `update` はリモート無視でローカル進行のみ)。
+  `config::follower_read.max_offset_ms`(動的、reconcile で HLC へ反映)、
+  `closed_ts_receive` が `try_observe_ordinal` で遠すぎるリモート拒否。
+  **案A 全面移行は `docs/HLC_TIMESTAMP_REDESIGN.md` P-HLC-3 として将来**。
+- 検証: `cargo test -p aruaru-dist -p aruaru-server -p aruaru-graphql`
+  失敗0、`cargo build --workspace` 成功(既存警告2件のみ)。
+
+### open-cuda(直前エントリ「残課題」2件)
+- **AWQ(interleave INT4)逆量子化ロード**: `open-cuda-llm::load_conv1d_awq`。
+  `qweight [in, out/pack]` / `qzeros [in/group, out/pack]` /
+  `scales [in/group, out]`、ニブル並び `AWQ_ORDER=[0,2,4,6,1,3,5,7]`、
+  zero は実値、`w=(q-z)*scale`。`load_conv1d_maybe_quant` が
+  `quant_method="awq"` で分岐(GPTQ 経路は従来どおり awq を拒否)。
+- **Hopper/Ada ベンダー FP8 GEMM 分岐(コンパイルのみ)**:
+  `GpuDevice::supports_fp8_tensor_core()`(既定 false)+
+  `GemmPath::Fp8Tensor` + `select_fp8_gemm_path`。`sgemm_fp8_weight_vendor`
+  はスタブ(明示エラー)、`sgemm_fp8_weight` は warn を出して既存の
+  ソフトウェア dequant 経路へフォールバック(AVX-512 と同じ方針)。
+- 検証: `cargo test -p open-cuda-llm --release` 46 / `opencuda-blas` 43、
+  clippy 警告0、`cargo build --workspace --release` 成功。
+
+### 次回再開ポイント
+1. aruaru-db: `--columnar-learner` 2プロセス構成での実 HTTP E2E
+   (`/columnar/:table/prune`、`?required_index=` の 409、
+   `follower_read.max_offset_ms` を設定した `closed_ts_receive` 拒否)。
+2. aruaru-db: `Query.htapReplicas` を GraphQL(`AdminCtx`)へ正式公開。
+3. open-cuda: Hopper/Ada 実機での `sgemm_fp8_weight_vendor` 実装、
+   AWQ 実配布モデルでの E2E。
+4. aruaru-db 復活用メッセージ項目5(disaster_backup.email reconcile)以降。
+
+---
+
 ## 2026-09-02 チェックポイント(open-cuda / aruaru-llm / aruaru-db 横断: F16/BF16/FP8ローダー + DialoGPT-small カタログ + aruaru-db A.6-4 段階2 Merge-on-Read)
 
 ユーザー指示「123の順番で」の3項目を順に実施した。
