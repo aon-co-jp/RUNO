@@ -11,6 +11,70 @@
 
 ---
 
+## 2026-09-02(続き25) チェックポイント(aruaru-db: 真の別プロセス learner E2E + `disaster_backup.email` reconcile 配線)
+
+残タスク3件のうち、この環境で完結できる2件を消化。
+
+### (1) `--columnar-learner` 真の別プロセス learner の実 HTTP E2E(検証・バグ無し)
+- leader(単一 voter)+ columnar learner を release バイナリで 2 プロセス起動。
+- leader へ `POST /admin/cluster/propose` で CREATE + 5 INSERT → RaftWriter
+  経由 commit → バイナリトランスポートで learner へ複製。
+- learner の `columnar_pod`:
+  `GET /columnar/gear` → `appliedIndex=6`(**同居モードの 0 と違い、`apply_at`
+  が実 Raft ログインデックスを記録**)、`GET .../prune?...gt&25` →
+  `skippedBlocks=2`、`GET .../gear?required_index=99999` → **409**
+  (`stale:true`)、`required_index=6` → 200、DELETE 後
+  `deletionVectorPositions=1`。バグは見つからず。
+
+### (2a) `disaster_backup.email` の reconcile 配線(feature = "disaster_email_backup")
+- `config::reconcile` に feature ゲート付きブロックを追加。`aruaru.yaml:
+  disaster_backup.enabled: true` + 必須7フィールドで `DisasterEmailBackupConfig`
+  を構築 → `AdminState::set_disaster_email_backup`(新設・REST と共通)で
+  保管 + 稼働中 `RaftWriter` へ注入。`PartialEq` で冪等、欠落は warn のみ。
+- `aruaru-dist::DisasterEmailBackupConfig::from_parts(...)` 追加。
+- **pre-existing バグ修正**: feature 配下の REST ハンドラ 2 本の
+  `check_admin_auth(req)`(1 引数)が `KeyGuardian` 追加以降コンパイル不能
+  だった → `check_admin_auth(req, &state.keyring)`。
+- テスト: `disaster_backup_email_reconcile_wires_config_and_is_idempotent`。
+
+### 検証
+- 既定: `cargo test -p aruaru-server` 13、`cargo build --workspace` 成功。
+- feature: `cargo test -p aruaru-server -p aruaru-dist --features
+  disaster_email_backup` → aruaru-server 14 / aruaru-dist 108 passed。
+
+### 未着手(制約により不可、正直な開示)
+- **HLC 案A 全面移行(P-HLC-3)**: P3 で GraphQL 化したばかりの API の再全面
+  変更。過大なため保留。
+- **open-cuda Hopper/Ada `sgemm_fp8_weight_vendor`**: H100/RTX40 + cuBLASLt
+  FP8 が必要。開発機は GT 730 のため実装・検証とも不可能。
+- **AWQ 実配布モデル E2E**: GPT-2 アーキテクチャの AWQ 公開モデルが事実上
+  存在しない。合成テンソルの厳密一致テストが loader の検証上限。
+
+### English summary
+Two of three remaining next-phase items done in this environment. **(1)** The
+true separate-process `--columnar-learner` path was verified end-to-end over
+real HTTP: leader replicates via the binary transport to a learner process
+whose `columnar_pod` now reports a real Raft log index (`appliedIndex=6`, vs
+0 in co-located mode); `?required_index=99999` → 409, `?required_index=6` →
+200; pruning and the deletion vector work. No bugs. **(2a)**
+`disaster_backup.email` is wired into `config::reconcile` (feature
+`disaster_email_backup`): declarative `aruaru.yaml` block → builds
+`DisasterEmailBackupConfig` and injects into the live `RaftWriter` via a new
+shared `AdminState::set_disaster_email_backup`; idempotent via `PartialEq`.
+Fixed a pre-existing compile break in the two feature-gated REST handlers
+(stale 1-arg `check_admin_auth`). Tests: default `cargo test -p
+aruaru-server` 13 + `cargo build --workspace` OK; feature build 14 / 108
+passed. **Still blocked (honestly)**: HLC case-A full migration (over-churn);
+open-cuda Hopper/Ada FP8 vendor GEMM (needs H100/RTX40, this box is a GT
+730); AWQ real-model E2E (no public GPT-2-architecture AWQ models).
+
+### 次回再開ポイント
+1. 復活用メッセージ項目5 後半 / 項目6(Tauri)・項目7(P4〜P6)。
+2. HLC 案A 全面移行(P-HLC-3)。
+3. Hopper/Ada 実機が入手できた場合の open-cuda FP8 ベンダー GEMM。
+
+---
+
 ## 2026-09-02(続き24) チェックポイント(aruaru-db: `Query.htapReplicasAll` 全テーブル一覧)
 
 続き23 の残りの1つ——`htapReplicas` の複数テーブル一括版——を実装。
