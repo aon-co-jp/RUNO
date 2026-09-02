@@ -11,6 +11,67 @@
 
 ---
 
+## 2026-09-02(続き23) チェックポイント(aruaru-db: `Query.htapReplicas` を GraphQL 正式公開 + 続き22 (a)〜(d) 実 HTTP E2E)
+
+続き22 の残り2件を実施。ユーザー指示「世界中の言語で Google/GitHub 調査を
+実装に活かし、実用的になるまで数回繰り返す」に沿い、TiFlash /
+CockroachDB のレプリカ観測手法を WebSearch 調査してから設計した。
+
+### 調査
+- TiFlash: `INFORMATION_SCHEMA.TIFLASH_REPLICA` の `PROGRESS`(0.0〜1.0)+
+  `AVAILABLE`(0/1)。PROGRESS<1 は pushdown クエリのタイムアウト要因。
+- CockroachDB: per-range closed timestamp がフォロワーリードの根拠。
+  Raft パイプラインの end-to-end 観測は現状限定的(issue #72393)。
+  → applied-index / progress / availability を一括で出す価値あり。
+
+### 実装(aruaru-db)
+- `QueryEngine::set_columnar_observer`(`olap_notify` と独立チャネル)。
+- `ColumnarApplier::observing(shared_engine)` = 本番 `QueryEngine` を共有した
+  同居(co-located)オブザーバモード + `observe_table` + `replication_progress`
+  (TiFlash PROGRESS 相当)+ `replica_available`(AVAILABLE 相当)。
+- `main.rs`: `aruaru.yaml: htap.columnar_replicas: true` で同居
+  `ColumnarApplier` を立て `set_columnar_observer` 通知で追従、
+  `AdminCtx.columnar` へ共有。
+- `Query.htapReplicas(table, pruneColumn, pruneOp, pruneValue)` を新設。
+  TiFlash `TIFLASH_REPLICA` 相当の同期状態 + 枝刈り込みプレビュー。
+
+### 検証
+- `cargo test -p aruaru-graphql` 20 / `-p aruaru-dist` 101 /
+  `-p aruaru-query` 60 / `-p aruaru-server` 13、`cargo build --workspace` 成功。
+- **実 HTTP E2E(release、`htap.columnar_replicas: true` +
+  `max_offset_ms: 60000`)**: `/graphql` の `execSql` で CREATE+5 INSERT →
+  同居オブザーバが自動追従(`replicationCount=6`)、`htapReplicas` が
+  `available=true`/`progress=1.0`/`blockCount=6`/`liveRowCount=5`、
+  prune `amount>250` で `skippedBlocks=2`/`keptLiveRows=3`、DELETE で
+  `deletionVectorPositions=1`、未知テーブルは `available=false`。
+  `/admin/closed-timestamp/receive` に far-future 値 → WARN で HLC 汚染前に
+  拒否(`max_offset` 有効)。
+
+### English summary
+`Query.htapReplicas` is now a first-class GraphQL query on the production
+`aruaru-server`. With `aruaru.yaml: htap.columnar_replicas: true` the
+server runs a co-located `ColumnarApplier` sharing the production
+`QueryEngine`, following writes via a new
+`QueryEngine::set_columnar_observer` channel. The query returns TiFlash
+`INFORMATION_SCHEMA.TIFLASH_REPLICA`-style `PROGRESS`/`AVAILABLE` plus a
+pruning preview; design informed by a WebSearch pass over TiFlash's
+columns and CockroachDB issue #72393. Verified end-to-end over real HTTP
+`/graphql` (release build): auto-follow of `execSql` writes, prune / DELETE
+deletion-vector / unknown-table / far-future `max_offset` rejection all
+confirmed. Remaining: the true separate-process `--columnar-learner`
+`?required_index=` 409 path; multi-table `htapReplicas`; HLC case-A full
+migration (P-HLC-3).
+
+### 次回再開ポイント
+1. `--columnar-learner` 真の別プロセス learner での `?required_index=` 409 実 HTTP。
+2. `htapReplicas` の複数テーブル一括版(TiFlash `TIFLASH_REPLICA` は全行返す)。
+3. aruaru-db 復活用メッセージ項目5(`disaster_backup.email` reconcile)以降 /
+   HLC 案A 全面移行(P-HLC-3)。
+4. open-cuda: Hopper/Ada 実機での `sgemm_fp8_weight_vendor` 実装、AWQ 実配布
+   モデルでの E2E。
+
+---
+
 ## 2026-09-02(続き22) チェックポイント(aruaru-db 次フェーズ一括 + open-cuda AWQ/FP8ベンダー分岐、ビルドまで)
 
 ユーザー指示「次フェーズ … 進めて」→「ビルドまでで記録」。実プロセス
