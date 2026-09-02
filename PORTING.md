@@ -11,6 +11,42 @@
 
 ---
 
+## 2026-09-02(続き24) チェックポイント(aruaru-db: `Query.htapReplicasAll` 全テーブル一覧)
+
+続き23 の残りの1つ——`htapReplicas` の複数テーブル一括版——を実装。
+TiFlash の `INFORMATION_SCHEMA.TIFLASH_REPLICA` が全 (db, table) 行を返す
+のと同じく、テーブル名を知らなくても全列レプリカの同期状態を一覧できる
+(監視サーフェスとしての実用性向上)。
+
+- `ColumnarApplier::replicated_tables() -> Vec<String>`(`replica_state`
+  のキー、ソート済み)。
+- `htapReplicas` / `htapReplicasAll` 共通の `htap_status_for` ヘルパーへ
+  切り出し。`Query.htapReplicasAll -> [HtapReplicaStatusGql]`
+  (prune プレビューなし、列レプリカ無効なら空配列)。
+- テスト: 2 テーブル目を足すと `htapReplicasAll` がソート順で両方返す。
+  `cargo test -p aruaru-graphql` 20 / `-p aruaru-dist` 101、
+  `cargo build --workspace` 成功。
+
+### English summary
+Added `Query.htapReplicasAll`, the multi-table version of `htapReplicas`
+(like TiFlash's `INFORMATION_SCHEMA.TIFLASH_REPLICA` returning one row per
+(db, table)): list the sync state of every columnar replica without
+knowing table names. `ColumnarApplier::replicated_tables()` returns sorted
+`replica_state` keys; a shared `htap_status_for` helper removes
+duplication; `htapReplicasAll` returns `[HtapReplicaStatusGql]` (no prune
+preview, empty when disabled). Test extended (second table → both returned
+sorted). `cargo test -p aruaru-graphql` 20 / `-p aruaru-dist` 101,
+`cargo build --workspace` OK.
+
+### 次回再開ポイント
+1. `--columnar-learner` 真の別プロセス learner での `?required_index=` 409 実 HTTP。
+2. aruaru-db 復活用メッセージ項目5(`disaster_backup.email` reconcile)以降 /
+   HLC 案A 全面移行(P-HLC-3)。
+3. open-cuda: Hopper/Ada 実機での `sgemm_fp8_weight_vendor` 実装、AWQ 実配布
+   モデルでの E2E。
+
+---
+
 ## 2026-09-02(続き23) チェックポイント(aruaru-db: `Query.htapReplicas` を GraphQL 正式公開 + 続き22 (a)〜(d) 実 HTTP E2E)
 
 続き22 の残り2件を実施。ユーザー指示「世界中の言語で Google/GitHub 調査を
