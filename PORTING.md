@@ -30,9 +30,17 @@
   `GptModel::enable_fp8_weights`(opt-in)+ aruaru-llm 側
   `ARUARU_LLM_ENABLE_FP8_WEIGHTS=e4m3|e5m2` 配線。**正直な開示**:
   GT730 に FP8 Tensor Core が無く softwareパスで、利益は重みメモリ 1/4
-  であり速度ではない。opencuda-blas 42 / open-cuda-llm 43 / aruaru-llm
-  101 passed、clippy 0件、実 HTTP E2E(distilgpt2 で配線ログ発火 →
+  であり速度ではない。実 HTTP E2E(distilgpt2 で配線ログ発火 →
   `/v1/generate` がコヒーレントな英文、f32 版と僅かに異なる継続)確認済み。
+- **第三段(ユーザー追加要望「対応外dtype(INT8/INT4)は正直なエラー。
+  対応して」、open-cuda `4f27a41`)**: **GPTQ(AutoGPTQ 形式)の
+  INT4/INT8 量子化モデルの逆量子化ロード**。GPTQ は単一 dtype ではなく
+  「I32 ビットパックの `qweight` + `scales` + `qzeros` + `config.json` の
+  `quantization_config`」で表現されるため、`GptModel::load` がそれを
+  自動検出して `w = (q - (zero+1)) * scale` で復元。AWQ(interleave
+  パック)は正直なエラーで拒否。合成 4bit テンソルの厳密一致テスト。
+  aruaru-llm 側はコード変更不要(`GptModel::load` を呼ぶだけ)。
+  open-cuda-llm 45 / aruaru-llm 101 passed、clippy 0件。
 
 **項目2 — Model Folding 残課題(前回=続き2 で Attentionスキップ軽量パス
 完了済み)**: 高性能統合GPUでの再実測はこの機に該当GPUが無く未達、
