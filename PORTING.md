@@ -11,6 +11,57 @@
 
 ---
 
+## 2026-09-02 チェックポイント(open-cuda / aruaru-llm / aruaru-db 横断: F16/BF16/FP8ローダー + DialoGPT-small カタログ + aruaru-db A.6-4 段階2 Merge-on-Read)
+
+ユーザー指示「123の順番で」の3項目を順に実施した。
+
+**項目1 — open-cuda-llm ローダーの F16/BF16/FP8 対応(完了・push待ち→push済み)**:
+`GptModel::load` の `tensor_f32` を F32 のみから **F16・BF16(`half`
+クレート)・FP8 E4M3・FP8 E5M2(OCP仕様準拠の自前デコーダ)→f32 変換**へ
+拡張(open-cuda `9c4ff39`)。これにより対話FT済み GPT-2 互換モデル
+(DialoGPT-small、F16 配布)を実際にロードできる。aruaru-llm 側は
+`model_catalog` に `dialogpt-small` + `tokenizer_hf_repo`(gpt2 の
+tokenizer 流用)を追加(aruaru-llm `ef4004f`)。推論経路は F32 のまま
+(配布フォーマット拡張であり FP8 演算カーネルではない)。合成dtypeテスト
++ 実 DialoGPT-small F16 の実機 E2E + `/v1/models/select` ホットスワップ
+実HTTP検証済み。詳細は `open-cuda/CLAUDE.md`・`aruaru-llm/CLAUDE.md` の
+2026-09-02 エントリ。
+
+**項目2 — Model Folding 残課題(前回=続き2 で Attentionスキップ軽量パス
+完了済み)**: 高性能統合GPUでの再実測はこの機に該当GPUが無く未達、
+日本語較正データの品質定量評価は未着手(いずれも前回チェックポイントの
+記録から変更なし)。
+
+**項目3 — aruaru-db A.6-4 段階2「base+delta の Merge-on-Read」(完了・push済み)**:
+`ColumnarApplier` を都度フル再構築から base+delta 方式へ格上げし、
+続き18 が「まだ残る配線」と明記していた**実 DELETE/UPDATE 発生時に
+deletion vector を立てる書き込み側の経路**を実装(aruaru-db `0d51944`、
+`crates/aruaru-dist/src/columnar_applier.rs`)。DELETE/PK変更UPDATE は
+該当 block の `deletion_vector` へ位置を insert(block 実体は書き直さない
+= 即時 rewrite 無しの MoR)、INSERT/内容変更UPDATE は小さな delta block を
+追加、閾値8で base へ compaction。`columnar_pod` の `GET /columnar/:table`
+に `columnarBlockCount`/`columnarLiveRowCount`/`columnarDeletionVector
+Positions` を追加。8ユニットテスト green、aruaru-dist 91 / aruaru-backup 45
+失敗0、`cargo build --workspace` 成功、**2プロセス実HTTP E2E**
+(leader + `--columnar-learner`)で in-place UPDATE → deletionVectorPositions 1、
+DELETE → 2、blockCount は書き直されず維持、liveRowCount が行ストアミラーに
+追従することを実証。詳細は `aruaru-db/CLAUDE.md` の続き20 エントリ。
+**残り(要求③実装トラック)**: HLC(続き14 で `hlc.rs` 実装済み・未配線
+——`as_nanos()` が Unix ナノ秒 `pt` を `<<16` すると u64 オーバーフロー
+する設計課題があり、`closed_ts`/`wal_service`/`multi_raft` への配線は
+エンコード方式の設計判断を伴う別スライスとして次回)、`aruaru.yaml: htap`
+セクション(§5・A.7)、`Query.htapReplicas` 相当の枝刈り込み観測 API、
+A.6-3(Raft index + MVCC SI 検証)。
+
+**VPS**: open-english(項目2、続き2)は既にデプロイ済み。aruaru-llm /
+open-cuda はアーキテクチャ上 VPS へデプロイしない(aruaru-llm は利用者PC
+上で動作、open-cuda はライブラリ)。aruaru-db は `/root/aruaru-db` へ
+`git pull` + `systemctl restart aruaru-server` で反映
+(続き19 の `ln -sf /root/open-raid-z /root/repository/open-raid-z`
+パス不整合対応が必要になる場合あり)。
+
+---
+
 ## 2026-09-01(続き2) チェックポイント(open-cuda + aruaru-llm + open-english: Attentionスキップ軽量パス実装 + 「open-cudaは必須の相方」明文化)
 
 **背景**: 直前チェックポイント(d631cf1)の「未着手・次回検討候補」に
