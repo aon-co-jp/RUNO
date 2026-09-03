@@ -138,6 +138,29 @@ aruaru-llm `99ea2f4`):
 - **Intel** Arc/Xe は Vulkan・SYCL 両対応、`intel/compute-runtime`
   (Level Zero)成熟 → Vulkan/SPIR-V の同一経路で扱う。
 
+### 2026-09-03(続き28)クライアント接続・GPU 3ベンダー・インストーラ名
+
+- **aruaru-llm `e74560a`**: `hardware.rs` に高VRAM帯 GPU 3ベンダーの実在
+  確認(RTX 5090 32GB / RTX PRO 6000 Blackwell 96GB / **AMD R9700 32GB
+  FP8 383 TFLOPS** / **Intel Arc Pro B60 24GB**、「RTX 5900」は非実在)。
+  3ベンダーとも open-cuda の同一 Vulkan/SPIR-V 経路。ヒューリスティックは
+  不変(gpt2-xl 上限)、テスト 6 件 green。
+- **aruaru-llm `34cd004`**(続き27): `GET /v1/runtime` に llama.cpp 風
+  `backend_matrix`(8 行、report only)、4 テスト、実 HTTP E2E、README 日英。
+- **aruaru-db `90223a7`**: **`docs/CLIENTS.md`(日英)+ `clients/` コネクタ
+  キット**新設。結論 = aruaru-db は **pgwire(:5433)+ GraphQL/HTTP
+  (:4001)** の 2 標準契約だけを公開し、どの言語も**標準 PostgreSQL
+  ドライバ**でそのまま繋がる → **独自ドライバ・`device-driver-installer.exe`
+  は作らない**(「闇雲な代替を避ける」原則、独自変換層は速度をむしろ
+  落とす)。同期/非同期はワイヤ同一、ハイブリッドは両対応ドライバ選択、
+  OS 差は TCP+TLS に閉じる。Java/Rust(Axum・Poem・RPoem)/Python
+  (FastAPI)/PHP(Laravel)/Go/Node/.NET/Ruby のレシピ + OS 別ドライバ
+  入手表(Win/Mac/Linux/UNIX/z/OS メインフレーム/Android/iOS/iPadOS)。
+  `clients/` に python-fastapi・rust-axum・php-laravel・java-jdbc の
+  実行可能サンプル。配布物名が要る場合は `aruaru-db-<言語>-connector`。
+  管理GUIインストーラ名を `aruaru-db-admin-win-installer.exe` へ統一
+  (主 `aruaru-db-installer.exe` は既に規則どおり)。
+
 ### 次回再開ポイント
 1. aruaru-db: P-HLC-3c/3d は続き27(`b96b7d5`)で完了・VPS 反映済み。
    残りは復活用メッセージ項目5(Tauri 設定タブの `aruaru.yaml` 編集 UI 化)・
