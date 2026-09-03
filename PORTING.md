@@ -172,6 +172,22 @@ aruaru-llm `99ea2f4`):
   `PgPool` / RPoem 同梱 `open-runo-db::AruaruDbBackend`〈KV のみ、
   Git-on-SQL 非対応〉)をそのまま使う。pgwire は拡張プロトコル込みで
   PG 互換なので新規開発不要。
+- **aruaru-db `b082b4c`(続き30)**: 公式薄いコネクタを **Python / Node /
+  PHP / COBOL** へ拡張(いずれも標準ドライバ + `commit()`/`query_as_of()`、
+  commit_id 検証で SQLi 防止):
+  - `clients/python-aruaru-db/`(PyPI `aruaru-db`): `AruaruDb`(asyncpg、
+    FastAPI)+ `AruaruDbSync`(psycopg v3、Django/Flask)。`unittest` 4
+    passed(Python 3.14)。
+  - `clients/node-aruaru-db/`(npm `@aruaru/db`): `pg` の薄いラッパー +
+    `.d.ts`。`node test.js` 4 passed。
+  - `clients/php-aruaru-db/`(Composer `aruaru/db`): `PDO` の薄いラッパー。
+    `AruaruDb::fromPdo(DB::connection()->getPdo())` で Laravel の PDO 再利用。
+    未検証(PHP なし)。
+  - `clients/cobol/ARUARU.cob`: 埋め込み SQL 参照実装。pgwire なので
+    ODBC(psqlODBC、**z/OS USS** 含む)/ libpq `CALL` / OCESQL で接続。
+    未検証(COBOL 環境なし)。
+  `docs/CLIENTS.md` §0.2 コネクタ表 + COBOL 行(言語マトリクス・OS 表)。
+  次: Go / Java / .NET / Ruby の同種薄ラッパー、稼働 server でのライブ往復。
 
 ### 次回再開ポイント
 1. aruaru-db: P-HLC-3c/3d は続き27(`b96b7d5`)で完了・VPS 反映済み。
