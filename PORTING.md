@@ -11,6 +11,56 @@
 
 ---
 
+## 2026-09-03(続き28) チェックポイント(aruaru-db: .NET 実バグ修正 + Python asyncpg ハング調査 + Mojo コネクタ新設)
+
+続き27に続き、同日中に実施。aruaru-dbコミット`4083022`・`7568a42`
+(いずれもpush済み)。
+
+- **.NET コネクタ実サーバ往復で実バグ発見・修正**: `NpgsqlDataSource`
+  既定のブートストラップ(接続確立時に`pg_type`等へ型情報を問い合わせる)
+  が、aruaru-dbが`pg_catalog`を完全実装していないため`"SELECT: missing
+  FROM"`で失敗していた。`ServerCompatibilityMode.NoTypeLoading`で
+  ブートストラップ自体を無効化して解消、`dotnet test`
+  `ARUARU_DB_TEST_CONNSTRING`付きで10/10 green(実サーバ往復)。
+- **Python `asyncpg` の接続がハングする問題を発見(未解決)**:
+  `asyncpg.connect()`/`create_pool()`いずれも、ローカルaruaru-server
+  相手にタイムアウトするまで応答が返らない(単一接続`pool=False`でも
+  同様)。.NETと同種の型システム自動探索の非互換が疑われるが未確証。
+  `clients/python-aruaru-db/live-check.py`を新設し、README に正直に
+  記録(次回調査対象)。
+- **Mojo対応を新設**: Mojoには成熟したネイティブPostgreSQLドライバが
+  無いため、Python interop(`from python import Python`)経由で既存の
+  `python-aruaru-db`コネクタを薄くラップする設計(`clients/
+  mojo-aruaru-db/`)。commit_id検証(`is_safe_commit_id`)のみ純Mojoで
+  実装(ネットワーク前の防御)。この開発機に`mojo`/`magic`/`modular`
+  いずれのツールチェーンも無く、`.mojo`ファイルは未コンパイル・
+  未実行(README に正直に明記、Go/Java/Rubyと同じ扱い)。
+- これで公式薄いコネクタは Rust/Python/Node/PHP/COBOL/Go/Java/.NET/
+  Ruby/Mojo の10言語。`docs/CLIENTS.md`・`clients/README.md`・
+  aruaru-db `CLAUDE.md`(続き33)も同コミットで更新済み。
+
+**English**: Same-day continuation of 続き27 (aruaru-db commits
+`4083022`/`7568a42`, both pushed). **(1)** Found and fixed a real bug in
+the .NET connector's live round-trip: `NpgsqlDataSource`'s default
+bootstrap (querying `pg_type` etc. at connection time) fails against
+aruaru-db with `"SELECT: missing FROM"` since aruaru-db doesn't fully
+implement `pg_catalog`; fixed via `ServerCompatibilityMode.
+NoTypeLoading`, `dotnet test` now 10/10 green against a real server.
+**(2)** Discovered (unresolved) that Python `asyncpg.connect()`/
+`create_pool()` hang indefinitely against a local aruaru-server (even
+with a single connection, `pool=False`) — a similar type-introspection
+incompatibility to the .NET case is suspected but unconfirmed; recorded
+honestly in `clients/python-aruaru-db/README.md` with a new
+`live-check.py` for future investigation. **(3)** Added a Mojo connector
+(`clients/mojo-aruaru-db/`) — since no mature native Mojo PostgreSQL
+driver exists, it thinly wraps the existing Python connector via
+`from python import Python` interop; `is_safe_commit_id` is implemented
+natively in Mojo (pre-network defense). No `mojo`/`magic`/`modular`
+toolchain is installed on this machine, so the `.mojo` files are
+uncompiled/unrun — stated plainly in the README, same honesty standard as
+the Go/Java/Ruby connectors. The official thin-connector count is now 10
+languages (Rust/Python/Node/PHP/COBOL/Go/Java/.NET/Ruby/Mojo).
+
 ## 2026-09-03(続き27) チェックポイント(aruaru-db 公式薄いコネクタ: 拡張プロトコルのライブ往復検証 + Go/Java/.NET/Ruby 新設)
 
 ユーザー指示「拡張プロトコルのライブ往復検証(Rust/Node)を実施 + 未着手

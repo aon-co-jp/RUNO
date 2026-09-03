@@ -52,3 +52,23 @@ https://github.com/aon-co-jp
   `F:\runo`)は完了し`F:\open-runo`自体が削除されたため、移行途上を
   前提とした記述・重複clone(`F:\open-runo\aon`)に関する記述を全文
   削除し、現在の構成(`F:\runo`のみ)を前提とした簡潔な記述へ整理した。
+- **2026-09-03 aruaru-dbセッション記録の同期**: `aruaru-db`の公式薄い
+  コネクタ拡張(続き27〜33、Go/Java/.NET/Ruby/Mojo新設・.NET実バグ修正・
+  Python asyncpgハング調査)の詳細は、このリポジトリ本来の役割(索引)を
+  汚さないよう、詳細記録は[`PORTING.md`](PORTING.md)の
+  「複数リポジトリ横断セッションチェックポイント」節(続き27・続き28)へ
+  日英併記で集約した。`README.md`の`aruaru-db`行の役割要約は今回の
+  コネクタ追加では実質的な変更が無いため無編集(索引は実装詳細ではなく
+  役割サマリのみを持つ既存方針どおり)。
+
+  **🔁 再開用メッセージ(次回このセッションを続ける人へ)**: aruaru-db
+  リポジトリ側の正本は`aruaru-db/CLAUDE.md`の「🛑 再開用メッセージ」節
+  (続き32時点)。未解決の残作業は (1) Go/Java/Rubyコネクタの実ビルド・
+  実テスト(この開発機にツールチェーン無し)、(2) 4コネクタとも実サーバ
+  往復(ライブE2E)が未実施(.NETのみ2026-09-03に完了、`NoTypeLoading`
+  修正込み)、(3) Python `asyncpg`の接続ハング問題の原因調査
+  (`clients/python-aruaru-db/README.md`に記録、`live-check.py`で再現可)、
+  (4) Mojoコネクタの実コンパイル・実テスト(`mojo`ツールチェーン無し)。
+  VPS(`ssh conoha`、`/root/repository/aruaru-db`)は`git pull`で追従済み
+  (サーバ本体は無変更のためサービス再起動は都度不要、クライアント
+  コネクタのみの変更)。
