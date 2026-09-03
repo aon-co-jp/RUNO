@@ -39,6 +39,30 @@
   500ms`、`closedTsAdvance`(nowNanos 省略)は従来どおり有効。
   **案A 全面移行はこれで完了扱い。**
 
+### aruaru-db: HLC P-HLC-3c/3d(続き27、`b96b7d5`)
+- **P-HLC-3c**: `closed_ts` の follower read staleness を CockroachDB の
+  uncertainty interval へ。`can_serve_uncertainty_safe_read_at(read_ts,
+  max_offset)` = `[read_ts, read_ts + max_offset]` の全域が閉じ済み。
+  `plan_uncertainty_safe_read`(`max_offset==0` は `plan_exact_staleness_read`
+  へ委譲)。GraphQL `planFollowerRead(mode: "uncertainty-safe")`。
+- **P-HLC-3d(ユーザー指摘「シフト・パックが無い?」への対応)**: 外向き
+  u64 射影から**シフト・パック・切り捨てを完全撤去**。
+  `as_ordinal() = wall_nanos + logical`(`<<16` も `& !0xFFFF` も、
+  `advance_locked` のバケット分岐も削除、CockroachDB `hlc.go` `Now()` と
+  ビット一致)。`from_ordinal = {wall_nanos: o, logical: 0, synthetic: true}`。
+  `ORDINAL_*` 定数・`ordinal_bucket()` 削除。→ `closed_ts` 等が受け取る
+  u64 は**フル精度 Unix ナノ秒スケール**、案B の 65µs 粒度の代償が消滅。
+  `now_ordinal`/`observe_ordinal`/`closed_ts`/`wal_service`/`closedTsAdvance`
+  は無変更。
+- 検証: hlc 21 / closed_ts 9、フルスイープ dist 108 / graphql 22 /
+  server 13、`cargo build --workspace` OK、clippy 新規指摘なし。
+  実 HTTP E2E(release, `follower_read.max_offset_ms: 500`):
+  `hlcNow` で `wallNanos == ordinal` 完全一致(17桁 `1788412243861359300`)、
+  `uncertaintyUpperNanos == wallNanos + 500ms`。`closedTsAdvance(now=20s)`
+  → closed=17s、`planFollowerRead(uncertainty-safe, staleness=1s)`
+  → `route_to_leaseholder`、`staleness=4s` → `follower_read`
+  `readTimestamp=16000000000`。**案A 全面移行は P-HLC-3a/b/c/d 完了。**
+
 ### open-cuda: AWQ 量子化器 + クロスベンダー×クロスOS 設計
 - `pub fn quantize_conv1d_awq`(`load_conv1d_awq` の厳密な逆)+
   実重み相当ラウンドトリップテスト(逆量子化誤差 ≤ scale の 0.6 倍)。
@@ -88,9 +112,9 @@ still only verified on one NVIDIA GT 730.
 (aruaru-llm `f2c9f62` / dream-os `27f8258` / open-directx `10e82bc`)。
 
 ### 次回再開ポイント
-1. aruaru-db: `closed_ts` の follower read staleness を `uncertainty_upper`
-   ベースへ(P-HLC-3c)。復活用メッセージ項目5 残り(Tauri 設定タブ)・
-   項目6・項目7。
+1. aruaru-db: P-HLC-3c/3d は続き27(`b96b7d5`)で完了・VPS 反映済み。
+   残りは復活用メッセージ項目5(Tauri 設定タブの `aruaru.yaml` 編集 UI 化)・
+   項目6・項目7(P4〜P6)。
 2. open-cuda: macOS 実機での MoltenVK 経由 Vulkan 検証(Android と同じ手順)。
    FP8 対応 GPU が入手できた場合の SPIR-V + Vulkan FP8/coop-matrix 経路実装。
    `dxil-spirv` 相当の DXIL→SPIR-V 経路調査 → `opencuda-directx` を Vulkan
