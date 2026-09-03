@@ -71,12 +71,32 @@ backbone; macOS via MoltenVK, not a new backend; portable FP8 via
 `VK_EXT_shader_float8` + `VK_KHR_cooperative_matrix`). Doc-only change;
 still only verified on one NVIDIA GT 730.
 
+### エコシステム横断の GPU 移植性設計見直し(5 リポジトリ)
+ユーザー指示「dream-os / open-directx / open-cuda / aruaru-llm / aruaru-db の
+新規設計・新規実装の見直しに活かす」。**正本は
+`open-cuda/OmniGPU-Design.md` §11(クロスベンダー×クロスOS)・§12(横断
+見直し)**。追加調査: vkd3d-proton/DXVK 3.0(`dxil-spirv`)・llama.cpp
+バックエンド行列・「Llamas on the Web」(WebGPU)・MLC-LLM。方針:
+- **SPIR-V を唯一の実行時 GPU IR**に(CUDA/HIP/Metal は任意の高速化経路)。
+- **open-directx**: 並行バックエンド → DXBC/DXIL→SPIR-V フロントエンドへ
+  役割再定義(vkd3d-proton が実証)。
+- **dream-os**: GPU 実行系は open-cuda へ委譲、OS レベル割り当てのみ。
+- **aruaru-llm**: バックエンド行列明示 + 起動時の能力交渉による自動選択、
+  int8 活性化量子化(`dot_i8`/VNNI)配線、WebGPU/wasm は将来オプション。
+- **aruaru-db**: 「外向き互換を保ちつつ内部を刷新」(HLC P-HLC-3 が実証例)。
+各リポジトリの CLAUDE.md にこの正本へのポインタ HANDOFF を追記済み
+(aruaru-llm `f2c9f62` / dream-os `27f8258` / open-directx `10e82bc`)。
+
 ### 次回再開ポイント
 1. aruaru-db: `closed_ts` の follower read staleness を `uncertainty_upper`
    ベースへ(P-HLC-3c)。復活用メッセージ項目5 残り(Tauri 設定タブ)・
    項目6・項目7。
 2. open-cuda: macOS 実機での MoltenVK 経由 Vulkan 検証(Android と同じ手順)。
    FP8 対応 GPU が入手できた場合の SPIR-V + Vulkan FP8/coop-matrix 経路実装。
+   `dxil-spirv` 相当の DXIL→SPIR-V 経路調査 → `opencuda-directx` を Vulkan
+   フォールバック専用へ縮退させる設計 PR。
+3. aruaru-llm: バックエンド自動選択 + README のバックエンド行列。
+4. open-directx: 役割再定義を README へ、SPIR-V フロントエンド化ロードマップ。
 
 ---
 
