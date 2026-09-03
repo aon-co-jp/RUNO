@@ -160,6 +160,18 @@ aruaru-llm `99ea2f4`):
   実行可能サンプル。配布物名が要る場合は `aruaru-db-<言語>-connector`。
   管理GUIインストーラ名を `aruaru-db-admin-win-installer.exe` へ統一
   (主 `aruaru-db-installer.exe` は既に規則どおり)。
+- **aruaru-db `64f4366`(続き29)**: 公式 Rust コネクタ
+  **`clients/rust-aruaru-db/`(`aruaru-db-connector` v0.1.0)** を新設。
+  独自ドライバではなく `tokio-postgres` の薄いラッパー: `commit(msg)` /
+  `query_as_of(base_select, commit_id, params)`(commit_id を
+  `is_safe_commit_id` で検証、SQLi 防止)。`cargo test` 2 passed / 1
+  ignored + doctest(ネットワーク不要ぶん green)。`docs/CLIENTS.md §3.8b`
+  に **RPoem/Poem での使い方**: 「Poem 用ドライバ」は無いし要らない
+  ——RPoem は Web FW で DB クライアントを指定しない。Rust 非同期 PG
+  クライアント(`aruaru-db-connector` / `tokio-postgres` 生 / `sqlx`
+  `PgPool` / RPoem 同梱 `open-runo-db::AruaruDbBackend`〈KV のみ、
+  Git-on-SQL 非対応〉)をそのまま使う。pgwire は拡張プロトコル込みで
+  PG 互換なので新規開発不要。
 
 ### 次回再開ポイント
 1. aruaru-db: P-HLC-3c/3d は続き27(`b96b7d5`)で完了・VPS 反映済み。
