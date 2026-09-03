@@ -11,6 +11,51 @@
 
 ---
 
+## 2026-09-03(続き29) チェックポイント(open-cuda / open-directx / aruaru-llm: 32GB VRAM級3ベンダー前提 + F16/F32/F64/F128 精度対応)
+
+ユーザー指示「open-directx open-cuda aruaru-llmにて、RTXかAMDやINTELで
+32GB VRAMグラフィックボード想定でF16/F32/F64などを想定して開発を進めて」
+「F128まで対応しておいて」への対応。3リポジトリへ並行してバックグラウンド
+エージェントを投入(この開発機の実機はGT 730〈Kepler、2GB〉のみのため、
+32GB級マルチベンダー実機検証はいずれのリポジトリでも不可能)。
+
+- **open-cuda**(コミット`f4652ce`・`8ed166c`): `opencuda-core::KernelArg`/
+  `ResolvedArg`へF16(`half::f16`)・F64・F128(自前実装のdouble-double型
+  `DoubleDouble`)を追加、対応する`hgemm`/`dgemm`/`qgemm`(CPUリファレンス
+  実装)を新設。**F128はGPU上のネイティブハードウェア対応が存在しない
+  ためソフトウェアエミュレーション**であることを明記。`OmniGPU-Design.md`
+  §13に32GB級VRAMベンダー方針を文書化。clippy/テストすべてgreen。
+- **open-directx**(コミット`1849fea`・`610a8ea`): 実装調査の結果、
+  DXIL(LLVMビットコード型システム)デコーダが`half`/`min16float`
+  (HLSL SM6.2+のネイティブ16bit型)に対応する`TYPE_CODE_HALF`を未知の
+  型として取りこぼしていた実バグを発見・修正。**F128はHLSL/DXILに
+  対応する構文自体が存在しないため対象外**と正直に判断・記録
+  (誤って「対応しているふり」をするコードは追加しなかった)。
+- **aruaru-llm**(コミット`700f78d`・`735b072`・`c32d80d`):
+  `src/hardware.rs`のVRAM推奨ヒューリスティックへ`InferencePrecision`
+  (F16/F32/F64/F128、バイト/パラメータ)を導入し、同じVRAM容量でも
+  fp16推論なら約2倍のパラメータ数のモデルを推奨できるようにした
+  (既存関数はF32既定で委譲、後方互換)。9/9テストgreen。
+- クロスリポジトリのビルド確認(aruaru-llm→open-cudaのpath依存)も
+  成功を確認済み。3リポジトリともpush済み。
+
+**English**: In parallel across `open-cuda`, `open-directx`, and
+`aruaru-llm`, per user instruction to target 32GB-VRAM-class NVIDIA/AMD/
+Intel GPUs and support F16/F32/F64/F128 going forward (this dev machine
+only has a GT 730, so no real multi-vendor 32GB hardware verification
+was possible anywhere). **open-cuda**: added `F16`/`F64`/`F128` to
+`KernelArg`/`ResolvedArg` plus `hgemm`/`dgemm`/`qgemm` CPU-reference
+GEMMs; F128 is an honest from-scratch software double-double type (no
+GPU has native FP128 hardware). **open-directx**: found and fixed a real
+bug where the DXIL type decoder didn't recognize `TYPE_CODE_HALF`
+(HLSL's `half`/`min16float`); F128 was correctly declared out of scope
+since HLSL/DXIL have no such construct at all — no fake support was
+added. **aruaru-llm**: made the VRAM-recommendation heuristic
+precision-aware (`InferencePrecision`, bytes/param), so the same VRAM
+budget now recommends a bigger model at fp16 than at fp32; 9/9 tests
+pass. Cross-repo build (aruaru-llm's path dependency on open-cuda) was
+also verified working. All three repos pushed.
+
 ## 2026-09-03(続き28) チェックポイント(aruaru-db: .NET 実バグ修正 + Python asyncpg ハング調査 + Mojo コネクタ新設)
 
 続き27に続き、同日中に実施。aruaru-dbコミット`4083022`・`7568a42`
