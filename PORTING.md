@@ -11,6 +11,56 @@
 
 ---
 
+## 2026-09-03(続き27) チェックポイント(aruaru-db 公式薄いコネクタ: 拡張プロトコルのライブ往復検証 + Go/Java/.NET/Ruby 新設)
+
+ユーザー指示「拡張プロトコルのライブ往復検証(Rust/Node)を実施 + 未着手
+コネクタ(Go/Java/.NET/Ruby)の追加、この２つをお願い」への対応。
+
+### 拡張プロトコルのライブ往復検証(aruaru-db コミット `e4aef79`)
+projection-fix 入り release バイナリ完成後、ローカル`aruaru-server`
+(`:5433`、`ARUARU_USERS=app:secret`)相手に実施。
+- **Rust `aruaru-db-connector`**: `cargo test -- --ignored` = passed
+  (`connect` SCRAM/NoTls → `commit()` → `query_as_of()` 過去値`1`/最新`5`)。
+- **Node `@aruaru/db`**: `npm i pg && node live-check.js` = OK(同上)。
+  実装中に**実バグ1件発見・修正**: `commit()`が`SELECT aruaru_commit($1)
+  AS commit_id`の別名に依存していたが、aruaru-dbは`AS alias`を無視し
+  結果列名は関数名`aruaru_commit`のまま → 列名非依存(先頭列位置読み)へ
+  修正。`node test.js` 4件green。
+- Python(asyncpg未導入で実サーバ往復は未実施、単体4件はgreen)、PHP/COBOL
+  はツールチェーン無しのため引き続き未実施。
+
+### Go/Java/.NET/Ruby コネクタ新設(aruaru-db コミット `f418fa3`)
+Rust/Nodeと同一方式(薄いラッパー、`commit()`は結果列を位置で読む、
+`query_as_of()`はcommit_idを整数/安全な文字集合として検証してから
+`AS OF COMMIT`へ埋め込み)。
+- `clients/go-aruaru-db/`(`pgx/v5`ラッパー)、
+  `clients/java-aruaru-db/`(Maven、`org.postgresql:postgresql`、
+  既存`clients/java-jdbc/`を統合・削除)、
+  `clients/dotnet-aruaru-db/`(`.csproj`、`Npgsql`)、
+  `clients/ruby-aruaru-db/`(`pg` gem)を新設。
+- **検証状況(正直な開示)**: このWindows環境に`.NET SDK`のみ導入済み
+  だったため**.NETのみ実ビルド・実テスト**(`dotnet build`成功、
+  `dotnet test` 10/10 green、ライブサーバ往復は未実施)。
+  **Go/Java/Rubyはツールチェーン未導入のため未コンパイル・未テスト**
+  (各READMEの「検証状況」節に正直に明記、PHP/COBOLと同じ扱い)。
+- `docs/CLIENTS.md`・`clients/README.md`(日英両方)・`CLAUDE.md`
+  (続き32、再開用メッセージ更新)も同コミットに含む。
+
+### 作業上の注意点(次回の教訓)
+サブエージェントへ委譲した際、最初の2回は「バックグラウンドエージェント
+を起動した」という**計画の報告のみ**で実作業(ファイル作成・コミット)
+をしていなかった(応答時間が20〜30秒と極端に短く、`git log`で検証して
+発覚)。「あなた自身が直接ツールを使って実行しろ、他のエージェントを
+起動するな」と明示的に再指示して初めて実作業(68ツール呼び出し・約
+475秒)が行われた。委譲後は必ず`git log`/`git status`で実際の変更が
+生じたか検証すること。また、この再指示と並行して別経路からも同種の
+再開が走り、一時的に同一ファイルへの重複エージェント実行が発生した
+(最終的には片方が正常にコミットし、もう片方は`TaskStop`で停止して
+実害なし)。
+
+**残作業**: Python asyncpgのライブサーバ往復検証(このセッションでは
+未実施)。
+
 ## 2026-09-03(続き26) チェックポイント(aruaru-db HLC P-HLC-3 案A 全面移行 + open-cuda AWQ 量子化器 + クロスベンダー/OS 設計)
 
 ユーザー指示「世界中の言語で Google/GitHub を調査して最新理論・設計思想を
