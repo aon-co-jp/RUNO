@@ -111,16 +111,47 @@ still only verified on one NVIDIA GT 730.
 各リポジトリの CLAUDE.md にこの正本へのポインタ HANDOFF を追記済み
 (aruaru-llm `f2c9f62` / dream-os `27f8258` / open-directx `10e82bc`)。
 
+### 2026-09-03(続き27)世界中の言語で Google/GitHub 再調査 → 設計書更新
+
+ユーザー指示「OmniGPU-Design.md 等は世界中の言語で Google/GitHub 再調査
+してから再編集して」。EN/JA/ZH + GitHub 中心で再検索。**§11.4 / §12.2-12.3
+の設計方針は 1 行も撤回せず**、一次資料の更新のみ反映(`open-cuda`
+`04f3bbb` = `OmniGPU-Design.md` §11.6 追加、consuming repos の CLAUDE.md
+に「2026-09-03(続き)」節: open-directx `31e948d` / dream-os `f128639` /
+aruaru-llm `99ea2f4`):
+- **`EmbarkStudios/rust-gpu` は 2025-10-31 アーカイブ** → 「単一 Rust
+  ソース → 全 GPU」のメンテ実装は **CubeCL(`tracel-ai/cubecl`)** と
+  **wgpu+`naga`**(WGSL/SPIR-V → SPIR-V/MSL/GLSL/HLSL/DXIL、golden
+  parity SPIR-V 87/87・MSL 91/91・HLSL 72/72)。
+- **`VK_EXT_shader_float8`(E4M3/E5M2)は出荷ドライバ入り**: NVIDIA
+  2025-06 / **AMD Adrenalin 25.10.2(2025-10)**。Intel 未確認。→ FP8
+  移植性実装先(SPIR-V + Vulkan 拡張)は理論値 → 実前提へ格上げ。
+- **Vulkan 1.4.342 `VK_QCOM_cooperative_matrix_conversion`**、llama.cpp
+  Vulkan の拡張スタック(`VK_KHR_cooperative_matrix` +
+  `VK_NV_cooperative_matrix2` + `VK_KHR_shader_integer_dot_product` +
+  `VK_KHR_shader_bfloat16`、FOSDEM 2026)。
+- **llama.cpp 2026-04 バックエンド非依存テンソル並列**(ベンダー混在可)。
+- **`dxil-spirv` 2026-02 production SM 6.9**(DXBC は `dxbc-spirv`)→
+  open-directx「DXBC/DXIL→SPIR-V フロントエンド」役割再定義の実現性確定。
+- **WebGPU W3C Candidate Recommendation Draft(2026-05-21)**、WebLLM は
+  ネイティブ比 ~80%、埋め込みは WebGPU が WASM 比 40〜75×。
+- **Intel** Arc/Xe は Vulkan・SYCL 両対応、`intel/compute-runtime`
+  (Level Zero)成熟 → Vulkan/SPIR-V の同一経路で扱う。
+
 ### 次回再開ポイント
 1. aruaru-db: P-HLC-3c/3d は続き27(`b96b7d5`)で完了・VPS 反映済み。
    残りは復活用メッセージ項目5(Tauri 設定タブの `aruaru.yaml` 編集 UI 化)・
    項目6・項目7(P4〜P6)。
-2. open-cuda: macOS 実機での MoltenVK 経由 Vulkan 検証(Android と同じ手順)。
-   FP8 対応 GPU が入手できた場合の SPIR-V + Vulkan FP8/coop-matrix 経路実装。
-   `dxil-spirv` 相当の DXIL→SPIR-V 経路調査 → `opencuda-directx` を Vulkan
-   フォールバック専用へ縮退させる設計 PR。
-3. aruaru-llm: バックエンド自動選択 + README のバックエンド行列。
-4. open-directx: 役割再定義を README へ、SPIR-V フロントエンド化ロードマップ。
+2. **aruaru-llm(次の実装スライス、最も着手しやすい)**: (A) `GET /v1/runtime`
+   をバックエンド行列 + 能力交渉結果を返す形へ、(B) README 日英に llama.cpp
+   風バックエンド表(CPU-SIMD=済/Vulkan=済/DXIL=済/Metal via MoltenVK=将来/
+   HIP・SYCL=optional/WebGPU=将来)、(C) `ARUARU_LLM_ENABLE_*` を「未指定なら
+   能力交渉で自動、指定なら override」へ(env 意味を変えない後方互換)。
+3. open-cuda: macOS 実機での MoltenVK 経由 Vulkan 検証。FP8 対応 GPU が
+   入手できた場合の SPIR-V + `VK_EXT_shader_float8` + `VK_KHR_cooperative_
+   matrix` 経路実装。
+4. open-directx: `dxil-spirv` vs `naga` の DXBC/DXIL→SPIR-V 変換比較 PR →
+   `directx-shader-translate` をフロントエンドの薄いラッパーへ縮退。
 
 ---
 
