@@ -11,6 +11,75 @@
 
 ---
 
+## 2026-09-03(続き26) チェックポイント(aruaru-db HLC P-HLC-3 案A 全面移行 + open-cuda AWQ 量子化器 + クロスベンダー/OS 設計)
+
+ユーザー指示「世界中の言語で Google/GitHub を調査して最新理論・設計思想を
+新規設計書に活かしてから実装、実用的になるまで数回反復」。
+
+### aruaru-db: HLC P-HLC-3(案A 全面移行、`docs/HLC_TIMESTAMP_REDESIGN.md` §6)
+- 追加の一次資料調査(CockroachDB `util/hlc` は WallTime int64・Logical
+  int32・Synthetic bool をパックせず別フィールド + `sync.Mutex`、uhlc-rs も
+  `Mutex` + incoming が壁時計+delta 超で `Err`)。
+- 内部を **`HlcTimestamp { wall_nanos: u64(切り捨て無し), logical: u32,
+  synthetic: bool }`** へ刷新。順序 = `(wall_nanos, logical)` 辞書式。
+  シフト・パックが無いので u64 オーバーフロー構造的に不可能。
+  `Hlc` は `parking_lot::Mutex` 保護。
+- **外向き u64 互換維持**: `as_ordinal()` は案B の 65µs 射影、`Hlc` が
+  `last_ordinal` でクランプして `now_ordinal()` を厳密単調に。
+  `now_ordinal`/`observe_ordinal`/`try_observe_ordinal`/`from_ordinal` は
+  互換シグネチャ維持 → `closed_ts`/`wal_service`/GraphQL `closedTsAdvance`
+  は無変更。
+- 新 API: `now_hlc`/`observe_hlc`(フル精度)、
+  `HlcTimestamp::uncertainty_upper(max_offset)`(CockroachDB の uncertainty
+  interval 上端)。GraphQL `Query.hlcNow` 追加(観測専用)。
+- 検証: `cargo test` aruaru-dist hlc 21 / graphql 21 / server 13、
+  `cargo build --workspace` 成功、clippy 警告0。実 HTTP E2E(release):
+  `hlcNow` が 17 桁のフル精度 Unix ナノ秒を返し(truncated ordinal では
+  ない)、2 連続で ordinal 厳密増加、`uncertaintyUpperNanos = wallNanos +
+  500ms`、`closedTsAdvance`(nowNanos 省略)は従来どおり有効。
+  **案A 全面移行はこれで完了扱い。**
+
+### open-cuda: AWQ 量子化器 + クロスベンダー×クロスOS 設計
+- `pub fn quantize_conv1d_awq`(`load_conv1d_awq` の厳密な逆)+
+  実重み相当ラウンドトリップテスト(逆量子化誤差 ≤ scale の 0.6 倍)。
+  「合成テンソル厳密一致が検証上限」→「実重み相当の誤差評価」へ引き上げ。
+  実 AutoAWQ ワイヤ形式互換は GPT-2 アーキの AWQ 公開モデルが無く未検証。
+- `OmniGPU-Design.md` §11 新設: rust-gpu「running on every GPU」/ CubeCL /
+  MoltenVK / `VK_EXT_shader_float8` + `VK_KHR_cooperative_matrix` の一次
+  資料調査に基づくクロスベンダー×クロスOS 設計。Vulkan+SPIR-V を移植性の
+  背骨と正式化、macOS は MoltenVK 経由 Vulkan を検証(新バックエンド不要)、
+  FP8 移植性実装先を SPIR-V + Vulkan FP8/coop-matrix 拡張へ訂正
+  (対応 HW = NVIDIA Hopper/Ada/Blackwell〈RTX 5080/5090〉∪ AMD RDNA4
+  〈Radeon AI PRO R9700 等〉∪ Intel Arc B/Xe2)。実装変更は文言のみ。
+- `cargo test -p open-cuda-llm --release` 47 passed / 7 ignored、clippy 警告0。
+
+### English summary
+aruaru-db: HLC "case-A" full migration — internal representation is now
+`HlcTimestamp { wall_nanos: u64 (full precision), logical: u32, synthetic:
+bool }` ordered by `(wall_nanos, logical)` (no shift/pack → the original
+u64 overflow is structurally impossible), `Hlc` `Mutex`-guarded like
+CockroachDB/uhlc-rs. The external u64 ordinal wire format is unchanged
+(`as_ordinal()` = case-B 65µs projection, `last_ordinal` clamp keeps
+`now_ordinal()` strictly monotonic), so `closed_ts`/`wal_service`/GraphQL
+`closedTsAdvance` need no changes. New API: `now_hlc`/`observe_hlc` (full
+precision), `uncertainty_upper`. GraphQL `Query.hlcNow` added. Verified
+end-to-end over real HTTP. open-cuda: added `quantize_conv1d_awq` +
+real-weight-like round-trip test (raises the verification ceiling beyond
+synthetic exact-match), and `OmniGPU-Design.md` §11 — a researched
+cross-vendor × cross-OS portability design (Vulkan+SPIR-V as the
+backbone; macOS via MoltenVK, not a new backend; portable FP8 via
+`VK_EXT_shader_float8` + `VK_KHR_cooperative_matrix`). Doc-only change;
+still only verified on one NVIDIA GT 730.
+
+### 次回再開ポイント
+1. aruaru-db: `closed_ts` の follower read staleness を `uncertainty_upper`
+   ベースへ(P-HLC-3c)。復活用メッセージ項目5 残り(Tauri 設定タブ)・
+   項目6・項目7。
+2. open-cuda: macOS 実機での MoltenVK 経由 Vulkan 検証(Android と同じ手順)。
+   FP8 対応 GPU が入手できた場合の SPIR-V + Vulkan FP8/coop-matrix 経路実装。
+
+---
+
 ## 2026-09-02(続き25) チェックポイント(aruaru-db: 真の別プロセス learner E2E + `disaster_backup.email` reconcile 配線)
 
 残タスク3件のうち、この環境で完結できる2件を消化。
