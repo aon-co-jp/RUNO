@@ -188,6 +188,22 @@ aruaru-llm `99ea2f4`):
     未検証(COBOL 環境なし)。
   `docs/CLIENTS.md` §0.2 コネクタ表 + COBOL 行(言語マトリクス・OS 表)。
   次: Go / Java / .NET / Ruby の同種薄ラッパー、稼働 server でのライブ往復。
+- **aruaru-db `1566c0b` + `177afb3`(続き31)**: 公式コネクタの**実サーバ
+  往復検証中に実バグを発見・修正**。(1) `SELECT col ... AS OF COMMIT` が
+  列射影を無視して常にフル行を返す既知制限(2026-07-13)が、型なし
+  クライアントで「頼んだ列と違う値が返る」実害だった → `parser.rs` /
+  `engine.rs::select_as_of`(`SELECT *`=フル行、列指定=その順・その列、
+  不明列=Err)/ `aruaru-wire::describe_columns` を修正(RowDescription と
+  DataRow の列数不一致による拡張プロトコル `error parsing response` も解消)。
+  (2) 結果列は現状すべて `VARCHAR`(text)で返る → 型付きゲッターは使えず
+  文字列で受けて parse(`docs/CLIENTS.md §5.1` に明記)。
+  検証: `cargo test` aruaru-query 60 / aruaru-wire 10 / aruaru-graphql 22
+  green。simple プロトコル実往復で `AS OF qty=1` 確認。**VPS 反映済み**
+  (`1566c0b` active / healthz 200)。拡張プロトコルのコネクタ・ライブ
+  往復(Rust `cargo test -- --ignored` / Node `node live-check.js`)は
+  projection-fix 入り release バイナリのビルド完了待ち(このセッション中に
+  ビルドが複数回タイムアウト/ロック競合で再実行)。CLAUDE.md 続き31 の
+  「🛑 再開用メッセージ」に手順記載。
 
 ### 次回再開ポイント
 1. aruaru-db: P-HLC-3c/3d は続き27(`b96b7d5`)で完了・VPS 反映済み。
