@@ -1172,6 +1172,66 @@ push・コミットして停止して」により、本セッションの到達�
 到達点と次回再開ポイントの一覧。各詳細は各リポジトリの`CLAUDE.md`の
 HANDOFFセクション参照。
 
+## 🧳 2026-09-09 アカウント引っ越し用メッセージ(Claude TEAMアカウント解約・乗り換え)
+
+> **背景**: ユーザーがClaudeのTEAMアカウント(料金が高い)を解約し、
+> 普通の安いアカウント1つに一本化する予定。旧TEAMアカウント2つ
+> (このアカウント+もう1つのTEAMSアカウント)は完全に削除される見込み。
+> 新しいアカウント(セッション)に引き継ぐため、直近の到達点をここに
+> まとめる。**アカウントの解約・削除自体はAnthropicの課金/アカウント
+> 管理画面(claude.ai / console.anthropic.com の設定)からユーザー自身が
+> 行う必要があり、Claude Codeセッションからは操作不可**(ツールの
+> アクセス範囲外)。
+
+**Background (English)**: The user is canceling their Claude Team
+account (too expensive) and consolidating to a single regular
+account. Both old Team accounts (this one + another Teams account)
+are expected to be fully deleted. This entry summarizes recent
+progress so a new account/session can pick up without confusion.
+**Account cancellation/deletion itself must be done by the user via
+Anthropic's own billing/account settings (claude.ai /
+console.anthropic.com) — a Claude Code session has no access to
+perform that.**
+
+### 直近の到達点(2026-09-08〜09時点)
+
+1. **VPS(conoha)復旧完了**: メモリ不足(OOM)によりSSH/HTTPSとも応答
+   不能になっていたVPSを、ユーザーによるコントロールパネルからの
+   再起動+`cargo build --release -j 1`での再ビルドで復旧。
+   `aruaru-server.service`・`aruaru-db-web.service`とも`active`、
+   ディスクは100%→79%(空き20G)まで回復。**恒久ルール**として
+   `open-raid-z/CLAUDE.md`「運用ルール」節に「VPS上のcargo buildは
+   必ず`-j 1`で行うこと」を追記済み(全リポジトリ共通の正本)。
+2. **aruaru-llmのWindows配布バグ修正完了**: `open-cpu`のsibling
+   checkout漏れ→CIビルド全滅、GPUビルド(DirectXシェーダー未整備)が
+   installer全体を巻き込んで失敗、の2点を修正。`v0.2.4`で
+   `aruaru-llm-windows-x86_64.zip`・`aruaru-llm-windows-x86_64-installer.exe`
+   (改名済み)・`aruaru-llm-linux-x86_64.tar.gz`が正しく公開されることを
+   確認済み。open-english側の`fetch-aruaru-llm.ps1`のダウンロードリンクも
+   追従修正済み。GPUビルド自体(DirectXシェーダー .dxil未整備)は別課題
+   (task_e9df0ef8として切り出し済み、未着手)。
+3. **open-englishのプラットフォーム別バッジ統一**: Windows/macOS/Linuxを
+   個別ブランドにせず「PC版起動中！」に統一、新たに「モバイル版起動中！」
+   (スマホ・ガラケー・折りたたみ複数画面スマホ)・「タブレット版起動中！」
+   をUser-Agent判定で追加。実ブラウザ検証済み、push済み。
+4. **aruaru.tokyo/aon.tokyo(=aon.co.jp)/runo.tokyo/ion.tokyo(LOLIPOP)の
+   コンテンツ更新**: KIKOU動画・金融シリーズ①動画(NIHON-KOKUSAI.mp4)の
+   レイアウト統一、新規事業提案文(不動産電子契約・AUDIOルーム・酪農家
+   人工授精士・植林・商工会議所SET創業支援等)の日英併記掲載を
+   aruaru.tokyo/aon.tokyo/runo.tokyoへ追加・pushずみ。ion.tokyo
+   (LOLIPOP、WebDAV: `hiho-aon.webdav-lolipop.jp`)も同内容へ更新済み。
+5. **未着手・次回への持ち越し**: (a) aruaru-llm以外の各リポジトリの
+   `target/`ビルドキャッシュ削除(ディスク再利用、aruaru-db分のみ完了)、
+   (b) `open-english-pc`(OTP/TOTP認証付き新規URL)・`open-english-f`
+   (Facebookモバイルアプリ)のeasy-web.tokyoへの実装、(c) LOLIPOPの
+   ion.tokyo SSL証明書は2026-09-08にユーザー自身が対応済み(現在
+   `https://ion.tokyo/`は正常稼働、証明書有効期限2026-12-07)。
+6. **ドキュメント言語ポリシー(2026-09-08指示、memory
+   `feedback_doc_language_policy`参照)**: README/CLAUDE/PORTINGは
+   PCローカルドライブ・VPS上=日本語のみ、GitHub公開分のみ最大10ヶ国語
+   程度(英・露・独・伊・仏・波斯・アラビア語等)に絞る方針。既存の
+   11ヶ国語超のREADME群(open-english等)の削減作業は未着手。
+
 ## 2026-08-28 VPS(ConoHa、`ssh conoha`)ディレクトリ構成整理
 
 **背景**: ユーザー指示「`/root`の下にrepositoryフォルダを作りリポジトリ
