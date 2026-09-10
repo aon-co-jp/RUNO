@@ -16,6 +16,7 @@ AI駆動開発ツールに関する所感・確認不要の自動継続/リミ�
 各プロジェクト(RCosmo/RFrontEnd/RPoem/aruaru-db/aruaru-llm/aruaru-tokyo/
 audiocafe-tokyo-rust/audiocafe.tokyo/e-gov.info/karu.tokyo/open-cuda/
 open-directx/open-easy-web/open-english(ジャンル: 学習/Study)/
+open-english-pc(open-englishのクライアント分離先、ジャンル: 学習/Study)/
 open-raid-z/open-web-server/rs-to-readme等)への
 入口(README・PORTING.md・CLAUDE.md・役割の要約)を、`README.md`に一箇所へ
 まとめて掲載することだけを目的とする。
