@@ -16,8 +16,7 @@ AI駆動開発ツールに関する所感・確認不要の自動継続/リミ�
 各プロジェクト(RCosmo/RFrontEnd/RPoem/aruaru-db/aruaru-llm/aruaru-tokyo/
 audiocafe-tokyo-rust/audiocafe.tokyo/e-gov.info/karu.tokyo/open-cuda/
 open-directx/open-easy-web/open-english(ジャンル: 学習/Study)/
-open-english-pc(open-englishのクライアント分離先、ジャンル: 学習/Study)/
-open-raid-z/open-web-server/rs-to-readme等)への
+open-raid-z/open-tv-chat/open-web-server/rs-to-readme等)への
 入口(README・PORTING.md・CLAUDE.md・役割の要約)を、`README.md`に一箇所へ
 まとめて掲載することだけを目的とする。
 
@@ -74,3 +73,21 @@ https://github.com/aon-co-jp
   VPS(`ssh conoha`、`/root/repository/aruaru-db`)は`git pull`で追従済み
   (サーバ本体は無変更のためサービス再起動は都度不要、クライアント
   コネクタのみの変更)。
+- **2026-09-15 open-english-pc再統合によるリポジトリ削除**: 2026-09-10に
+  `open-english`から submodule 切り出ししていた`aon-co-jp/open-english-pc`
+  (クライアント実装 `web/` `pc/` `tablet/` `mobile/`)を、ユーザー指摘
+  (「わざわざopen-englishから独立させた意味が無い」——インストーラー
+  組み立て・リリースCI・配信サーバーが分離後も本体側に残ったままで、
+  分離の目的が実現されていなかったため)により履歴を保持して本体へ
+  再統合し、`open-english-pc`リポジトリ自体を削除した。本`README.md`から
+  `open-english-pc`の行を削除。
+- **2026-09-26 open-tv-chat新設**: Skype風「世界約130ヶ国語リアルタイム
+  音声翻訳」対応のTV会議/ビデオチャットアプリ構想を`aon-co-jp/open-tv-chat`
+  として新規作成。`easy-web.tokyo`でWindows/macOS/Linux/Android/iPhone向け
+  クライアントを配布し、利用者PCに`open-web-server`を立てRust+`RPoem`
+  (Cosmo互換)で動かす構成。音声翻訳は2ヶ国語〜最大10ヶ国語同時対応、対応言語は
+  「英語名(現地呼称) = ネイティブ表記」併記(例: Iran (Persia) = فارسی (Farsi))。
+  現時点は設計ドキュメント(README/CLAUDE.md/PORTING.md)のみで実装は未着手、
+  音声翻訳エンジン(ASR/MT/TTS)の選定が次回最優先課題。詳細は
+  `open-tv-chat/PORTING.md`の「次回再開ポイント」を参照。本`README.md`には
+  `open-tv-chat`行を追加(役割要約のみ、実装詳細は転記しない既存方針どおり)。
