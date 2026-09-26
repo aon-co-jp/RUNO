@@ -102,3 +102,15 @@ https://github.com/aon-co-jp
   gRPC+Protocol Buffersシグナリング等)のみ、実装は未着手。詳細は
   `open-LiveKit/PORTING.md`の「次回再開ポイント」(WebRTCスタックのwebrtc-rs
   vs str0m比較から着手)を参照。本`README.md`には`open-LiveKit`行を追加。
+- **2026-09-26 open-LiveKit技術選定1〜5決定+aruaru-db-archive新設**:
+  GitHub調査(スター数・実運用実績・ライセンス)に基づき(1)WebRTCスタック=
+  webrtc-rs、(3)シグナリング=RPoem GraphQL Subscriptions、(4)Simulcastは
+  フェーズ2見送り、(5)翻訳エンジンはAgentフック方式、を決定。(2)水平
+  スケーリングはユーザー指示により「`aruaru-db`+PostgreSQLのDUAL DB
+  (VPS高速キャッシュ)+非公開の`aon-co-jp/aruaru-db-archive`(Git-on-SQL
+  経由の自動バックアップ)」の2層構成に確定(世界中からの大量アクセス時に
+  VPSストレージが溢れるのを防ぐため、データが古くなると自動でGitHub側
+  リポジトリへ同期・VPS側は破棄する設計、利用者端末側にも任意でログ保存
+  できる選択肢を用意)。`aruaru-db-archive`を新規作成(非公開)、雛形README
+  のみでVPS側の自動同期実装は未着手。詳細は`open-LiveKit/README.md`
+  「技術選定の決定事項」を参照。本`README.md`には`aruaru-db-archive`行を追加。
