@@ -16,7 +16,7 @@ AI駆動開発ツールに関する所感・確認不要の自動継続/リミ�
 各プロジェクト(RCosmo/RFrontEnd/RPoem/aruaru-db/aruaru-llm/aruaru-tokyo/
 audiocafe-tokyo-rust/audiocafe.tokyo/e-gov.info/karu.tokyo/open-cuda/
 open-directx/open-easy-web/open-english(ジャンル: 学習/Study)/
-open-raid-z/open-tv-chat/open-web-server/rs-to-readme等)への
+open-raid-z/open-tv-chat/open-LiveKit/open-web-server/rs-to-readme等)への
 入口(README・PORTING.md・CLAUDE.md・役割の要約)を、`README.md`に一箇所へ
 まとめて掲載することだけを目的とする。
 
@@ -91,3 +91,14 @@ https://github.com/aon-co-jp
   音声翻訳エンジン(ASR/MT/TTS)の選定が次回最優先課題。詳細は
   `open-tv-chat/PORTING.md`の「次回再開ポイント」を参照。本`README.md`には
   `open-tv-chat`行を追加(役割要約のみ、実装詳細は転記しない既存方針どおり)。
+- **2026-09-26 open-LiveKit新設**: `open-tv-chat`の通話リレーサーバー
+  (既定モードで相手にIP非開示、翻訳もサーバー側処理)に使うSFU技術として、
+  LiveKit(Go+Pion製、Apache-2.0)/mediasoup/Janus/Jitsi Videobridge/自前実装
+  のトレードオフを比較した結果、ユーザーの意向により「LiveKitのアーキテクチャ
+  を参考に、コードは流用せず一からRust+RPoemで再実装する」方針となり、
+  `aon-co-jp/open-LiveKit`を新規作成。じっくり時間をかけてGoogle検索・GitHub
+  調査を行った上で設計・実装を進める方針(ユーザー指示)。現時点はLiveKitの
+  アーキテクチャ調査(SFUモデル・ルーム管理・Redisによる水平スケーリング・
+  gRPC+Protocol Buffersシグナリング等)のみ、実装は未着手。詳細は
+  `open-LiveKit/PORTING.md`の「次回再開ポイント」(WebRTCスタックのwebrtc-rs
+  vs str0m比較から着手)を参照。本`README.md`には`open-LiveKit`行を追加。
