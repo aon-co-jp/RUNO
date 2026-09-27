@@ -49,6 +49,17 @@ https://github.com/aon-co-jp
 
 ## HANDOFF
 
+- **2026-09-27 音声系5リポジトリ新設・統合、限界前の緊急チェックポイント**:
+  open-bar(バグ修正・open-audioコンテナ再生・高音補正・PD音源テストフィクスチャ)、
+  open-av(音声専用プロファイルをopen-mqa-dsdへ統合、映像専用の薄いクレートへ)、
+  open-mqa-dsd(上記コンテナ実装を吸収、旧称「open-audio」は廃止し
+  `"format": "open-mqa-dsd"`へ改称)、**新規`open-audio-sr`**(AudioSR実在の拡散モデルで
+  音声帯域拡張、実機で定量検証済み)、**新規`open-music-llm`**(MusicGen実在のオーディオLLMで
+  音楽生成、環境構築のみで生成自体は未検証のまま中断)。各リポジトリのCLAUDE.md/PORTING.mdに
+  詳細な引き継ぎ・環境固有の既知の問題(このPCでのPython import異常な遅さ等)を記録済み。
+  本`README.md`にopen-bar/open-av/open-mqa-dsd/open-audio-sr/open-music-llmの行を追加。
+  ユーザーから「もうリミットなので」との指示によりドキュメント更新・pushのみで緊急停止。
+
 - **2026-08-28 ドキュメント整理**: 作業ドライブ移行(`F:\open-runo`→
   `F:\runo`)は完了し`F:\open-runo`自体が削除されたため、移行途上を
   前提とした記述・重複clone(`F:\open-runo\aon`)に関する記述を全文

@@ -1938,3 +1938,47 @@ commit・pushした:
 
 - プロジェクト自動認識: [runo-scan.txt](runo-scan.txt) / [runo-scanner](runo-scanner)
 - 開発方針の正本: [open-raid-z/CLAUDE.md](open-raid-z/CLAUDE.md)
+
+## 2026-09-27 チェックポイント(限界前の緊急停止)
+
+ユーザーから「もうリミットなので」との指示で、ドキュメント更新・pushのみ行い緊急停止。
+
+### 今回作った・触ったリポジトリ
+
+- **open-bar**: 共有モード出力のtry_lock無音混入バグ修正・open-audioコンテナ(.mka)再生対応・
+  高音補正(MP3向け、biquad EQ)・テスト用PD音源10曲整備・追加バグ3件修正。全てpush済み。
+- **open-av**: 音声専用プロファイル(旧称open-audio)を`open-mqa-dsd`へ完全移設し、
+  映像プロファイル専用の薄いクレートへ縮小。push済み。
+- **open-mqa-dsd**: 上記コンテナ実装(`container`モジュール)を吸収、
+  `"format": "open-mqa-dsd"`へ改称。push済み。
+- **open-audio-sr(新設)**: AudioSR(実在の拡散モデル)による音声帯域拡張。
+  実機で「単純補間-59.3dB vs AI超解像-24.8dB」を定量確認、HTTP API(RPoem経由)も
+  エンドツーエンドで実機検証済み。push済み。
+- **open-audio-sr内、Python環境構築時のハマりどころ**: 32bit Pythonは不可(torch非対応)、
+  audiosrパッケージ自身のrequirements(numpy 1.23.5等)がPython 3.13と非互換のため
+  `--no-deps`+個別解決、`torchaudio.load`はtorchcodec(FFmpeg共有ライブラリ要)を
+  soundfile版へmonkeypatchして回避。詳細は`open-audio-sr/CLAUDE.md`。
+- **open-music-llm(新設、未完了)**: MusicGen(実在のオーディオLLM)でテキストから音楽生成。
+  Python venv構築・依存インストールまで完了したが、**実際の生成(推論)は未検証のまま中断**
+  (`transformers`のimportがこの開発機で90秒待っても終わらない現象に遭遇、詳細は
+  `open-music-llm/CLAUDE.md`の「環境の既知の問題」参照)。次回はここから再開すること。
+
+### 訂正した誤った説明(記録のため)
+
+セッション中に「LLM(言語モデル)は音声を生成できない」と説明したが不正確だった。
+正しくは「テキストの次単語予測を行う通常のLLMは音声を直接生成できないが、EnCodec等の
+ニューラル音声コーデックで音声を離散トークン化し、そのトークン列に通常のLLMと同じ
+Transformerデコーダ+次トークン予測を適用する『オーディオLLM』という設計は実在し、
+MusicGen/AudioGenが採用している既に主流の一つ」。ただし帯域拡張(超解像)用途に限っては
+2026年の研究でオーディオLLMは拡散モデルに性能面で劣ると報告されており、
+open-audio-sr(拡散モデル)の選択自体は妥当だった。
+
+### 次回再開の起点
+
+1. **open-music-llm**: `python/generate.py`の実行を、より長いタイムアウト
+   (数分〜十数分)で再試行する。環境変数`USE_TF=0`・`USE_FLAX=0`等でtransformersの
+   バックエンド自動検出を抑制する案も未検証。
+2. **open-mqa-dsd/open-avの統合は完了済み**(前回HANDOFFで「次回」としていたが今回完了)。
+3. `aruaru-search`+archive.org(PD/CC0/CC-BY限定)による曲名/人名横断検索システムは未着手。
+4. make-disk-installer.exeのGUI実クリック検証は依然未着手(自動操作ツールが無い)。
+5. open-bar高音補正のGPU/NPU本格化(SBR倍音生成)も未着手。
