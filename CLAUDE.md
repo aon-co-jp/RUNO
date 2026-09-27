@@ -14,7 +14,7 @@ AI駆動開発ツールに関する所感・確認不要の自動継続/リミ�
 **このリポジトリは`aon-co-jp`エコシステム全体のメタ索引であり、
 個別のコード実装は持たない。** `aon-co-jp` organization配下に分散する
 各プロジェクト(RCosmo/RFrontEnd/RPoem/aruaru-db/aruaru-llm/aruaru-tokyo/
-audiocafe-tokyo-rust/audiocafe.tokyo/e-gov.info/karu.tokyo/open-cuda/
+aruaru-vpn/audiocafe-tokyo-rust/audiocafe.tokyo/e-gov.info/karu.tokyo/open-cuda/
 open-directx/open-easy-web/open-english(ジャンル: 学習/Study)/
 open-raid-z/open-tv-chat/open-LiveKit/open-web-server/rs-to-readme等)への
 入口(README・PORTING.md・CLAUDE.md・役割の要約)を、`README.md`に一箇所へ
@@ -49,6 +49,17 @@ https://github.com/aon-co-jp
 
 ## HANDOFF
 
+- **2026-09-27 aruaru-vpn新設**: `open-tv-chat`/`open-LiveKit`開発中に
+  「TV CHAT利用者向け汎用VPNアプリも同時開発してはどうか」との提案があり、
+  (1)独立VPN事業として運営する案は各国VPN法規制・運営者責任を理由に見送り、
+  (2)本来の目的を隠して別サイトとして配布する案は不誠実・検知回避リスクを
+  理由に見送り、(3)最終的に[Outline VPN](https://getoutline.org/)/
+  [Algo VPN](https://github.com/trailofbits/algo)と同じ「利用者自身が
+  自分のVPS上に自分専用の中継を立てる、用途を隠さないOSSテンプレート」
+  方式を採用し`aon-co-jp/aruaru-vpn`を新規作成。**aon-co-jpは中継サーバー
+  を運営しない**のが最重要方針。透明性告知文(`TRANSPARENCY_NOTICE.md`、
+  日英正本+`open-tv-chat`と同じ主要30ヶ国語、AI翻訳につきネイティブ検証前)
+  も作成済み。実装は未着手。本`README.md`に`aruaru-vpn`行を追加。
 - **2026-09-27 音声系5リポジトリ新設・統合、限界前の緊急チェックポイント**:
   open-bar(バグ修正・open-audioコンテナ再生・高音補正・PD音源テストフィクスチャ)、
   open-av(音声専用プロファイルをopen-mqa-dsdへ統合、映像専用の薄いクレートへ)、
