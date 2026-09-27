@@ -1992,5 +1992,14 @@ open-audio-sr(拡散モデル)の選択自体は妥当だった。
    を確認し、Enrico Carusoのパブリックドメイン録音がストリーミングURL付きで返ることを確認済み。
    未実施: VPSへの本番デプロイ、open-bar等の再生側からこのAPIを呼ぶ導線。詳細は
    `aruaru-search/CLAUDE.md`の「archive.org横断検索」節参照。
-4. make-disk-installer.exeのGUI実クリック検証は依然未着手(自動操作ツールが無い)。
-5. open-bar高音補正のGPU/NPU本格化(SBR倍音生成)も未着手。
+4. make-disk-installer.exeのGUI実クリック検証は依然未着手(GUI自動操作ツールが本セッションに無いため)。
+5. **open-bar高音補正のAI本格化: 実装・テスト・push完了(2026-09-27)**。`src/ai_treble.rs`が
+   open-audio-sr(実在の拡散モデルAudioSR)を呼び、MP3の高域を実際に復元する。推論が重いため
+   再生をブロックせず、初回はリアルタイムEQ(既存)にフォールバックしつつバックグラウンドで
+   AI強化版を生成、次回同じ曲を再生するときはキャッシュ済みのAI強化版を再生してEQは重ねない。
+   **副産物のバグ修正**: open-audio-srをgit依存として他プロジェクト(open-bar)から使おうとして
+   初めて判明した不具合(HTTPサーバー専用のRPoem/open-cpu依存が常時必須でビルドできない)を
+   open-audio-sr側で修正(`server`featureへ隔離)。両リポジトリともpush済み、`cargo test`は
+   open-bar 33件・open-audio-sr(lib/server両方)ビルド成功で確認。
+   **未実施**: 実機での音質検証(AI強化版の生成完了を待った聴き比べ)、GUI側の生成中/完了表示、
+   GPU(open-cuda/open-directx)推論(open-audio-sr側が未実装のため)。
