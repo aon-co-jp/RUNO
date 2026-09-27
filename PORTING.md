@@ -1975,10 +1975,15 @@ open-audio-sr(拡散モデル)の選択自体は妥当だった。
 
 ### 次回再開の起点
 
-1. **open-music-llm**: `python/generate.py`の実行を、より長いタイムアウト
-   (数分〜十数分)で再試行する。環境変数`USE_TF=0`・`USE_FLAX=0`等でtransformersの
-   バックエンド自動検出を抑制する案も未検証。
+1. **open-music-llm: 完了(2026-09-27)**。`USE_TF=0 USE_FLAX=0 TRANSFORMERS_NO_ADVISORY_WARNINGS=1`
+   を付けて実行することで実際に音楽生成(facebook/musicgen-small、5.06秒・32kHz、
+   `ffmpeg volumedetect`でmean -23.1dB/max -6.1dBの実音声を確認)に成功した。
+   前回「transformersのimportが90秒で終わらない」ように見えた真因は、バックグラウンド
+   実行コマンド文字列側に重ねて`&`を付けたことでラッパーシェルが即終了し完了と
+   誤通知されていたことだった(importの遅さ自体は残るが、ツール側の`run_in_background`
+   機能だけに任せれば正しく完了まで待てる)。詳細は`open-music-llm/CLAUDE.md`。
 2. **open-mqa-dsd/open-avの統合は完了済み**(前回HANDOFFで「次回」としていたが今回完了)。
-3. `aruaru-search`+archive.org(PD/CC0/CC-BY限定)による曲名/人名横断検索システムは未着手。
+3. `aruaru-search`+archive.org(PD/CC0/CC-BY限定)による曲名/人名横断検索システムは未着手
+   (規模が大きいため設計から着手が必要、次回優先)。
 4. make-disk-installer.exeのGUI実クリック検証は依然未着手(自動操作ツールが無い)。
 5. open-bar高音補正のGPU/NPU本格化(SBR倍音生成)も未着手。
