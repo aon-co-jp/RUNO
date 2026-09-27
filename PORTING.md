@@ -1983,7 +1983,14 @@ open-audio-sr(拡散モデル)の選択自体は妥当だった。
    誤通知されていたことだった(importの遅さ自体は残るが、ツール側の`run_in_background`
    機能だけに任せれば正しく完了まで待てる)。詳細は`open-music-llm/CLAUDE.md`。
 2. **open-mqa-dsd/open-avの統合は完了済み**(前回HANDOFFで「次回」としていたが今回完了)。
-3. `aruaru-search`+archive.org(PD/CC0/CC-BY限定)による曲名/人名横断検索システムは未着手
-   (規模が大きいため設計から着手が必要、次回優先)。
+3. **`aruaru-search`+archive.org連携: 実装・実機確認済み(2026-09-27)**。新エンドポイント
+   `GET /v1/media-search?q=&n=`で、曲名/演奏者/作曲者/レーベル名によりarchive.orgを横断検索し、
+   パブリックドメイン・CC0・CC-BY・CC-BY-SAの音源だけ(CC-BY-NC/ND系・ライセンス不明は除外)を
+   即時ストリーミング可能なURL付きで返す。既存のHTML解析前提のengine.rsとは別に、archive.org
+   自身の構造化JSON APIを使う専用モジュール`src/archive_org.rs`として実装(aruaru-searchの
+   「機能ごとにモジュールを分ける」既存方針に沿う)。実機で`curl .../v1/media-search?q=Caruso&n=5`
+   を確認し、Enrico Carusoのパブリックドメイン録音がストリーミングURL付きで返ることを確認済み。
+   未実施: VPSへの本番デプロイ、open-bar等の再生側からこのAPIを呼ぶ導線。詳細は
+   `aruaru-search/CLAUDE.md`の「archive.org横断検索」節参照。
 4. make-disk-installer.exeのGUI実クリック検証は依然未着手(自動操作ツールが無い)。
 5. open-bar高音補正のGPU/NPU本格化(SBR倍音生成)も未着手。
