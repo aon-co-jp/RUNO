@@ -1992,7 +1992,18 @@ open-audio-sr(拡散モデル)の選択自体は妥当だった。
    を確認し、Enrico Carusoのパブリックドメイン録音がストリーミングURL付きで返ることを確認済み。
    未実施: VPSへの本番デプロイ、open-bar等の再生側からこのAPIを呼ぶ導線。詳細は
    `aruaru-search/CLAUDE.md`の「archive.org横断検索」節参照。
-4. make-disk-installer.exeのGUI実クリック検証は依然未着手(GUI自動操作ツールが本セッションに無いため)。
+4. **make-disk-installer.exeのGUI実クリック検証: 完了(2026-09-27)**。専用のGUI自動操作
+   ツールは無いため、Windows UI Automation(`System.Windows.Automation`)+
+   `SetCursorPos`/`mouse_event`によるPowerShellスクリプトを自作し、実際のマウス座標で
+   「参照...」「インストール」ボタン・チェックボックス・完了モーダルのOKを実クリックした。
+   実クリックで実際に`perform_install`が走り、既定のインストール先へファイルが展開され、
+   レジストリ(`HKCU\...\Uninstall\make-disk-installer`)が正しく登録され、登録された
+   `UninstallString`をそのまま実行してアンインストール(フォルダ・レジストリ削除)まで
+   実機で確認できた。詰まった点(DPI-awareness不整合でクリックが無反応になる、完了
+   モーダルがUIAのルート列挙に出てこないためEnumWindowsが必要、UTF-8 BOM無しの
+   PowerShellスクリプトが文字化けで構文エラーになる)は`make-disk/installer-exe/README.md`
+   に記録。open-bar同時インストールのチェック時の実インストール経路は、実機へopen-barを
+   本当にインストールする副作用を避けるため未検証のまま(次回、使い捨て環境で)。
 5. **open-bar高音補正のAI本格化: 実装・テスト・push完了(2026-09-27)**。`src/ai_treble.rs`が
    open-audio-sr(実在の拡散モデルAudioSR)を呼び、MP3の高域を実際に復元する。推論が重いため
    再生をブロックせず、初回はリアルタイムEQ(既存)にフォールバックしつつバックグラウンドで
