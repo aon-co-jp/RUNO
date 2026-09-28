@@ -2036,3 +2036,21 @@ open-audio-sr(拡散モデル)の選択自体は妥当だった。
      無変換でISO/ディスクへ含める機能(`copy_source_as_is`)も実装・push済み。
    - `cargo test`: 147 passed, 0 failed(新規テスト全て含む)。
    - **未実施**: 実機GUIクリックでの動作確認(上記の理由により断念、次回は手動確認が必要)。
+7. **make-disk: AIアップミックス(HT-Demucs実音源分離)を新設(2026-09-28)**。
+   ユーザーから「単純なpanフィルタではなく実際のAIで」との要望を受け、実在する
+   Meta製音源分離モデルHT-Demucs(MIT、demucs-onnxのONNX変換版)を、make-diskの
+   他のAI機能(RNNoise/LavaSR)と同じ純Rust(tract)推論で実装。
+   - **技術的な壁の突破**: 配布されているhtdemucs.onnxはtractのONNX `Pad`
+     (省略可能な第3入力を必須とみなす)・`Range`(697ノードでsymbolic dimension型
+     推論に失敗)の実装の狭さでそのままは読み込めなかった(onnxruntimeでは正常動作、
+     モデル側の欠陥ではない)。onnxライブラリでグラフを直接パッチ(Pad: 明示的定数
+     入力を追加、Range: onnxruntimeで実際に推論して値を捕捉しConstant化)する手法を
+     確立し、tractでの読み込み・最適化・推論実行(出力shape `[1,4,2,343980]`)まで
+     実機確認済み。再現手順は`make-disk/tools/demucs-onnx-patch/README.md`。
+   - 設計: ボーカル/ドラム/ベース/その他の4分離→センター=ボーカル、フロント=ドラム+
+     ベース、リア=その他(残響/伴奏)、LFE=無音、へ配置(`src-tauri/src/engine/ai_upmix.rs`)。
+   - **未実施**: モデル配布(パッチ後約2.2GBがGitHub Releases標準上限2GB超のため、
+     LavaSR等と同じ自動ダウンロード方式は未実装。現状は環境変数
+     `MAKE_DISK_DEMUCS_MODEL_DIR`での手動配置のみ、未設定時はpanフィルタへ自動
+     フォールバック)、オーバーラップ加算によるチャンク境界のクロスフェード。
+   - `cargo test`: 153 passed, 0 failed。
