@@ -49,6 +49,13 @@ https://github.com/aon-co-jp
 
 ## HANDOFF
 
+- **2026-09-30 音声・音質の研究を横断反映**: maid-cafe-seでの研究(音程と声の太さの独立制御、AI帯域拡張+声向けのロールオフ検出、
+  日本語ニューラルTTSのライセンス調査、Rust化と音質の実測)を、ユーザー指示でaruaru-llm/open-english/maidcafe-programming-school/
+  make-disk/maid-cafe-seへ反映した。コード変更が入ったのはmake-disk(声向けの帯域拡張モード`AudioBwe.speech`)とmaid-cafe-se(Rust
+  `maid-cafe-core`/`maid-cafe-enhance`)。aruaru-llm・maidcafe-programming-schoolは音声実装が無くドキュメントのみ、open-englishは
+  WEB版/ローカル版/ミックス版ごとの効き方を記録(コード変更なし、音声合成エンドポイントと共有ライブラリの置き場所は要決定)。
+  各リポジトリの`CLAUDE.md`「音声・音質の研究の成果」節、正本は`maid-cafe-se/PORTING.md`「音質向上の研究」。
+
 - **2026-09-27 aruaru-vpn新設**: `open-tv-chat`/`open-LiveKit`開発中に
   「TV CHAT利用者向け汎用VPNアプリも同時開発してはどうか」との提案があり、
   (1)独立VPN事業として運営する案は各国VPN法規制・運営者責任を理由に見送り、
