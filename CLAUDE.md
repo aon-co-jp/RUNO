@@ -55,6 +55,8 @@ https://github.com/aon-co-jp
   `maid-cafe-core`/`maid-cafe-enhance`)。aruaru-llm・maidcafe-programming-schoolは音声実装が無くドキュメントのみ、open-englishは
   WEB版/ローカル版/ミックス版ごとの効き方を記録(コード変更なし、音声合成エンドポイントと共有ライブラリの置き場所は要決定)。
   各リポジトリの`CLAUDE.md`「音声・音質の研究の成果」節、正本は`maid-cafe-se/PORTING.md`「音質向上の研究」。
+  **同日、音声処理をRPoemの共有クレート`open-runo-voice`(`RPoem/crates/open-runo-voice`、`docs/voice.md`)へ切り出した**(ユーザー指示、
+  「汎用化できるロジックはRPoemへ」の方針どおり)。maid-cafe-coreはそれを再公開している。
 
 - **2026-09-27 aruaru-vpn新設**: `open-tv-chat`/`open-LiveKit`開発中に
   「TV CHAT利用者向け汎用VPNアプリも同時開発してはどうか」との提案があり、
