@@ -1134,3 +1134,42 @@ English: Techniques for running AI stably and fast on machines with no or little
 - Left out on purpose: nested `Option` (`null` cannot tell the levels apart).
 
 **Rules**: we go on with unfinished work without asking; we test and verify on real systems before saying "done"; we never write secrets; we add no new REST APIs; Node.js is used only for tests the owner allowed (the Apollo interop).
+## 2026-11-20 version-control通知(10リポジトリ)対応の現状と完成予定 / Version-control notice (10 repos): status and plan
+
+### 日本語
+**現状(できたこと)**
+- **依存の更新と脆弱性の修正**: lettre 0.11.24(RUSTSEC-2026-0560〜0565)を RS-Sync・open-web-server・open-easy-web へ、sqlx 0.9.1+libsqlite3-sys 0.40(RUSTSEC-2026-0459)を RPoem・open-cosmo・open-web-server へ入れ、qrcode 0.15・sonic-rs 0.5 などにも更新。どれもビルドと試験が成功し、push 済み。
+- **本番への反映**: lettre を直した open-web-server(入口のサーバー)と open-easy-web を作り直して入れ替えました。14ドメインの応答が入れ替え前と同じ、エラーログ0。旧版は `*.before-lettre-20261120` に残しています。
+- **RPoem の脆弱性チェック(security-audit.yml)**: 設定ファイルの書き方の誤りで動いていなかったのを直し、成功を確認。
+- **VPS 用ビルドの glibc ずれ対策**: VPS 用の Linux プログラムは WSL の `Ubuntu-24.04`(glibc 2.39)で [`vps-build.sh`](vps-build.sh) を使って作り、[`check-glibc.sh`](check-glibc.sh) で自動検査します。
+- **VPS のクローンの最新化**: RPoem・RUNO・open-cosmo・open-cuda・open-web-server・rs-sync・whisper.cpp に加え、遅れていた aruaru-llm・open-bar・open-easy-web-app も最新にしました。
+  - aruaru-llm は、手元で変わっているファイル(動いているサービスが更新するニュースのデータ)と届いた変更が重ならないため、そのまま進めました。
+  - open-bar と open-easy-web-app は、古い内容への書き戻しやビルドの残りでした。差分を `/root/<名前>-vps-local-20261120.patch` に保存し、`git stash` で退避してから進めたので、いつでも元に戻せます。
+  - 動いているプログラムは入れ替えていません。
+- **RS-Sync のときどき落ちる試験**: 同期の記録の保存・読み込みに失敗しても黙って無視していたのを直しました(一時ファイル+名前の置き換え、やり直し、失敗の報告)。試験は全109件成功で、問題の試験も25回中25回成功(`d73c2c1`)。ただし、この PC では修正前でも失敗が再現しなかったので、原因が確定したとは言えません。
+
+**完成予定(これから)**
+- RS-Sync の今回の修正を、次のリリースで本番に反映する。
+- 実スマホのカメラでの QR ログイン、実際の SMTP での `otp_qr` の通し試験(人の操作が必要)。
+- VPS の stash とパッチ(open-bar・open-easy-web-app)は、中身が不要と確かめられたら消す(今は残す)。
+
+### English
+**Current state (done)**
+- **Dependency and security updates**:
+  - lettre 0.11.24 (RUSTSEC-2026-0560..0565) in RS-Sync, open-web-server and open-easy-web.
+  - sqlx 0.9.1 with libsqlite3-sys 0.40 (RUSTSEC-2026-0459) in RPoem, open-cosmo and open-web-server.
+  - Also qrcode 0.15, sonic-rs 0.5 and others.
+  - Everything builds, tests pass, and it is pushed.
+- **Production**: rebuilt and swapped open-web-server (the front server) and open-easy-web with the lettre fix. All 14 domains answer exactly as before; error log 0. The old binaries are kept as `*.before-lettre-20261120`.
+- **RPoem security audit (security-audit.yml)**: it was not running because of a YAML mistake. Fixed, and confirmed passing.
+- **glibc mismatch for VPS builds**: VPS Linux binaries are now built in WSL `Ubuntu-24.04` (glibc 2.39) with [`vps-build.sh`](vps-build.sh), and checked automatically by [`check-glibc.sh`](check-glibc.sh).
+- **VPS clones updated**: RPoem, RUNO, open-cosmo, open-cuda, open-web-server, rs-sync and whisper.cpp, plus aruaru-llm, open-bar and open-easy-web-app, which had fallen behind.
+  - aruaru-llm: the locally changed file is news data written by the running service, and the incoming commits do not touch it, so it fast-forwarded as is.
+  - open-bar and open-easy-web-app: the local changes were old-content reverts and build leftovers. They were saved to `/root/<name>-vps-local-20261120.patch` and stashed before the fast-forward, so both can be restored.
+  - No running binaries were swapped.
+- **RS-Sync flaky test**: failed saves and reads of the sync record were silently ignored. Now the state is written to a temp file and renamed into place, with retries, and failures are reported (`d73c2c1`). All 109 tests pass, and the flaky test passed 25 of 25 runs. Honest note: the failure did not reproduce on this PC even with the old code, so the cause is not proven.
+
+**Planned (next)**
+- Ship the RS-Sync fix to production with the next release.
+- End-to-end tests that need a person: QR login with a real phone camera, and an `otp_qr` run with real SMTP.
+- Remove the VPS stash and patches (open-bar, open-easy-web-app) once they are confirmed unneeded (kept for now).
