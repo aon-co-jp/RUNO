@@ -1093,3 +1093,44 @@ English: Techniques for running AI stably and fast on machines with no or little
 ## 2026-11-20 追記: RNode.js(Rust 版 Node.js 互換)を姉妹に追加 / RNode.js added as a sister
 **日本語**: `RS-Node.js`(RNode.js)は、Node.js 互換を目指す Rust 製の実行環境です。JavaScript は Rust 製エンジン Boa、TypeScript は `RS-TypeScript` を通して動き、将来は `RS-JavaScript`(一から作る Rust 製エンジン)に差し替えられます。本物の Node.js(v26.5.0)と同じスクリプトの出力を比べて互換を確かめながら開発しており、現在の対応は `console`・`process`・`require`(`path`・`fs` の同期版)までです。Node.js を選んだ利用者への案内に、代わりの候補として追加しました。姉妹リポジトリ(Reaxt・RPoRea・RPoem・RMojo・open-cosmo・RS-TypeScript・RS-JavaScript・RS-Node.js・pl2pl)は同時に開発します。
 **English**: `RS-Node.js` (RNode.js) is a Rust runtime aiming at Node.js compatibility. JavaScript runs on the Rust engine Boa and TypeScript through `RS-TypeScript`; `RS-JavaScript` (our from-scratch Rust engine) can replace Boa later. It is developed by comparing script output against real Node.js (v26.5.0); current coverage is `console`, `process` and `require` (synchronous `path` and `fs`). It is now listed as an alternative in the notice shown to users who pick Node.js. The sister repositories (Reaxt, RPoRea, RPoem, RMojo, open-cosmo, RS-TypeScript, RS-JavaScript, RS-Node.js, pl2pl) are developed together.
+
+
+## 2026-11-20 現状と完成予定 / Status and planned work (日本語・English)
+
+### 日本語(やさしい説明)
+**現状(実機で確認済み)**
+- 4姉妹(open-cosmo・RPoem・Reaxt・RPoRea)は、いつも一緒に作っています。
+- ゲートウェイ(open-cosmo)は、複数のサーバーに質問を分けて、答えを1つにまとめます。`@key`・`@requires`・`@provides`・`@skip`・`@include`・名前付きフラグメント・書き込みのあとの取り直しに対応しています。試験はゲートウェイ59件、Reaxt 22件、本物のサーバーを並べた通し試験21項目が成功しています。
+- **Reaxt 以外の実装とも結合できます**: Apollo(Node.js)と Rust の async-graphql のサブグラフを、Reaxt と並べて、分割と `@key` 結合が動くことを確かめました。
+- Reaxt のアクションは、`Option`・`Vec`・`HashMap`・`f32`・`f64`・各種整数・`Box<T>`・2〜3個のタプルを使えます(v0.1.2 まで公開済み、それ以降は `main`)。
+- RPoRea は、Python・Mojo・Android(実機)から呼べます。Mac と iPhone は CI での確認までです。
+- 全公開リポジトリと非公開9件に、最新の `.md` とインストーラー一覧を出す仕組み(`docs-latest`)が入っています(日本時間 10時・12時・22時ごろ)。
+
+**完成予定(未了)**
+1. Mac・iPhone の実機確認(実機がありません)。
+2. 4つ以上のタプルへの対応(必要になってから)。
+3. クラウドでの定期実行(GitHub を Claude につなぐと作れます)。
+4. `docs-latest` の定期実行(cron)が実際に動いたかの確認(日本時間 22:07 以降)。
+5. 次の `Reaxt` リリース(`f32`・`Box<T>`・タプルを入れる)。
+- 対象外にしたもの: `Option` の入れ子(`null` で段が区別できません)。
+
+**決まり**: 終わっていない仕事は確認せず自動で進めます。試験して本物で確かめてから「できた」と書きます。秘密は書きません。新しい REST は作りません。Node.js は、ユーザーが許可した試験(Apollo の相互運用)だけで使います。
+
+### English (plain words)
+**Where we are (checked on real systems)**
+- We always build the four sisters (open-cosmo, RPoem, Reaxt, RPoRea) together.
+- The gateway (open-cosmo) splits a question across several servers and merges the answers. It supports `@key`, `@requires`, `@provides`, `@skip`, `@include`, named fragments and re-reading after a write. 59 gateway tests, 22 Reaxt tests and a 21-check end-to-end run with real servers all pass.
+- **It also joins with non-Reaxt implementations**: we ran an Apollo (Node.js) subgraph and a Rust async-graphql subgraph next to Reaxt, and both splitting and `@key` joins worked.
+- Reaxt actions can use `Option`, `Vec`, `HashMap`, `f32`, `f64`, the integer types, `Box<T>` and 2- to 3-element tuples (released up to v0.1.2; later work is on `main`).
+- RPoRea can be called from Python, Mojo and Android (real phone). Mac and iPhone are checked in CI only.
+- Every public repository and 9 private ones have the `docs-latest` workflow, which shows the latest `.md` files and an installer list (about 10:00, 12:00 and 22:00 Japan time).
+
+**Planned (still open)**
+1. Real-device checks on Mac and iPhone (we have no devices).
+2. Tuples of four or more (when needed).
+3. Scheduled cloud runs (possible once GitHub is connected to Claude).
+4. Confirming that the `docs-latest` schedule (cron) really fires (after 22:07 Japan time).
+5. The next `Reaxt` release (to ship `f32`, `Box<T>` and tuples).
+- Left out on purpose: nested `Option` (`null` cannot tell the levels apart).
+
+**Rules**: we go on with unfinished work without asking; we test and verify on real systems before saying "done"; we never write secrets; we add no new REST APIs; Node.js is used only for tests the owner allowed (the Apollo interop).
