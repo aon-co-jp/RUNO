@@ -4231,14 +4231,14 @@ We always build the four **together**. Done: a Reaxt server can join the front d
 ## 2026-11-20 全リポジトリの最新 .md と最新インストーラーの常時表示 / Always-latest docs and installers in every repo
 
 ### 日本語(やさしい説明)
-- **何をしたか**: 公開リポジトリ全部に GitHub Actions(`.github/workflows/docs-latest.yml`)を入れました。`main` への push のたび、リリース公開のとき、毎週月曜に自動で走ります。書き込みが無い週も走ります。
+- **何をしたか**: 公開リポジトリ全部に GitHub Actions(`.github/workflows/docs-latest.yml`)を入れました。`main` への push のたび、リリース公開のとき、毎日3回(日本時間の朝10時・昼12時・夜22時ごろ)自動で走ります。書き込みが無い日も走ります。
 - **`docs` ブランチ**: 一番上の階層の `*.md`(README・CLAUDE・PORTING・POLICY など)を、ソースの版やタグとは別に、いつも最新の形で写します。
 - **`INSTALLERS.md`**: 最新リリースの添付を、Windows・macOS・Linux・Android・iOS ごとに表にします(大きさと SHA-256 つき)。ジョブの要約にも出ます。
 - **配布**: 元のファイルは `tools/docs-latest.yml`、配布は `tools/rollout-docs-latest.sh`、失敗分の再試行は `tools/retry-docs-latest.sh` です。公開リポジトリ全部に反映し、再実行でも全て同一内容を確認しました。空のリポジトリ(11件)と非公開(9件)は対象外です。
 - **注意**: 先行版・下書きのリリースは載りません。署名のない配布物は OS が警告を出すことがあります。
 
 ### English
-- **What changed**: every public repository now has a GitHub Actions workflow (`.github/workflows/docs-latest.yml`). It runs on each push to `main`, when a release is published, and every Monday, even in weeks with no edits.
+- **What changed**: every public repository now has a GitHub Actions workflow (`.github/workflows/docs-latest.yml`). It runs on each push to `main`, when a release is published, and three times a day (about 10:00, 12:00 and 22:00 Japan time), even on days with no edits.
 - **`docs` branch**: all top-level `*.md` files (README, CLAUDE, PORTING, POLICY and so on) are mirrored to the root of this branch, always current and separate from source versions and tags.
 - **`INSTALLERS.md`**: the assets of the latest release are listed per OS (Windows, macOS, Linux, Android, iOS) with size and SHA-256, and also shown in the job summary.
 - **Rollout**: the source is `tools/docs-latest.yml`; `tools/rollout-docs-latest.sh` deploys it and `tools/retry-docs-latest.sh` retries failures. All public repositories carry the identical file (verified on a re-run). Empty repositories (11) and private ones (9) are skipped.
