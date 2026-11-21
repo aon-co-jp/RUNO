@@ -1373,3 +1373,78 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 **آنچه مانده است:** فقط بررسی روی Mac و iPhone واقعی (این دستگاه‌ها را اینجا نداریم). `Option` تودرتو عمداً کنار گذاشته شده است، چون با `null` نمی‌توان سطح‌ها را از هم تشخیص داد.
 **قواعد:** بدون پرسیدن ادامه می‌دهیم؛ فقط پس از بررسی روی سامانه‌های واقعی می‌نویسیم «انجام شد»؛ هرگز اطلاعات محرمانه نمی‌نویسیم؛ REST API تازه اضافه نمی‌کنیم.
 *دربارهٔ ترجمه: متن ژاپنی متن اصلی است. زبان‌های دیگر را هوش مصنوعی ترجمه کرده و سپس بررسی کرده است که به همان اندازهٔ نوشتهٔ یک گویشور بومی روان و طبیعی باشند. هنوز هیچ گویشور بومیِ انسانی آن‌ها را بازبینی نکرده است.*
+
+
+## 2026-11-21 依存更新と本番反映の現状 / Dependency updates and production status (12 languages: ja, en, zh-Hans, zh-Hant, ko, de, fr, es, pt, ru, ar, fa; AI翻訳・ネイティブ確認前 / AI-translated, not yet native-checked)
+
+### 日本語
+- **済み(本番反映)**: 脆弱性の修正(lettre: RS-Blog・RS-EC・open-redmine・open-gitea、quinn-udp: RS-Guard・aruaru-search・aruaru.tokyo・e-gov)を、VPS の 9 サービスへバックアップ付きで入れ替えました。全サービス稼働中、エラーログ 0、公開 URL は 200 です。
+- **済み(GitHub へ反映、試験成功)**: base64 0.23(open-gitea)、reqwest 0.13(runo.tokyo)、ureq 3(open-media、`cargo check` のみ)、thiserror 2 と windows 0.62(open-raid-z)。
+- **据え置き**: bincode 3.0.0 は中身が `compile_error!` だけの空の版なので、1.3 のままにしています。
+- **未了**: これら 4 件のメジャー更新の本番入れ替え、open-media の通しビルドと実機確認、maid-cafe-programming-school の npm メジャー更新、VPS に残した stash とパッチの整理、`rs-whisper`(C++ の Rust 化)の段階 3 以降。
+
+### English
+- **Done (in production)**: the security fixes (lettre in RS-Blog, RS-EC, open-redmine and open-gitea; quinn-udp in RS-Guard, aruaru-search, aruaru.tokyo and e-gov) were swapped into 9 VPS services with backups. Every service is running, the error logs are empty, and the public URLs return 200.
+- **Done (on GitHub, tests pass)**: base64 0.23 (open-gitea), reqwest 0.13 (runo.tokyo), ureq 3 (open-media, `cargo check` only), thiserror 2 and windows 0.62 (open-raid-z).
+- **Held back**: bincode 3.0.0 is an empty release containing only `compile_error!`, so we stay on 1.3.
+- **Open**: deploying these four major updates to production, a full build and real-device check of open-media, the npm major updates in maid-cafe-programming-school, cleaning up the stashes and patches left on the VPS, and stage 3 onward of `rs-whisper` (the C++ to Rust port).
+
+### 简体中文
+- **已完成(已上线)**:安全漏洞修复(lettre:RS-Blog、RS-EC、open-redmine、open-gitea;quinn-udp:RS-Guard、aruaru-search、aruaru.tokyo、e-gov)已带备份替换到 VPS 上的 9 个服务。所有服务运行正常,错误日志为 0,公开网址均返回 200。
+- **已完成(已推送到 GitHub,测试通过)**:base64 0.23(open-gitea)、reqwest 0.13(runo.tokyo)、ureq 3(open-media,仅做了 `cargo check`)、thiserror 2 与 windows 0.62(open-raid-z)。
+- **暂不升级**:bincode 3.0.0 是只含 `compile_error!` 的空版本,因此继续使用 1.3。
+- **未完成**:将这四项大版本升级部署到线上、open-media 的完整构建与真机验证、maid-cafe-programming-school 的 npm 大版本升级、清理 VPS 上留下的 stash 和补丁,以及 `rs-whisper`(C++ 改写为 Rust)第 3 阶段之后的工作。
+
+### 繁體中文
+- **已完成(已上線)**:安全漏洞修補(lettre:RS-Blog、RS-EC、open-redmine、open-gitea;quinn-udp:RS-Guard、aruaru-search、aruaru.tokyo、e-gov)已附備份替換到 VPS 上的 9 個服務。所有服務運作正常,錯誤日誌為 0,公開網址皆回應 200。
+- **已完成(已推送到 GitHub,測試通過)**:base64 0.23(open-gitea)、reqwest 0.13(runo.tokyo)、ureq 3(open-media,僅執行 `cargo check`)、thiserror 2 與 windows 0.62(open-raid-z)。
+- **暫不升級**:bincode 3.0.0 是只含 `compile_error!` 的空版本,因此維持 1.3。
+- **未完成**:把這四項大版本升級部署到線上、open-media 的完整建置與實機驗證、maid-cafe-programming-school 的 npm 大版本升級、清理 VPS 上留下的 stash 與修補檔,以及 `rs-whisper`(將 C++ 改寫為 Rust)第 3 階段之後的工作。
+
+### 한국어
+- **완료(운영 반영)**: 보안 취약점 수정(lettre: RS-Blog·RS-EC·open-redmine·open-gitea, quinn-udp: RS-Guard·aruaru-search·aruaru.tokyo·e-gov)을 백업과 함께 VPS의 9개 서비스에 교체했습니다. 모든 서비스가 정상 동작하고 오류 로그는 0건이며, 공개 URL은 모두 200을 반환합니다.
+- **완료(GitHub 반영, 테스트 통과)**: base64 0.23(open-gitea), reqwest 0.13(runo.tokyo), ureq 3(open-media, `cargo check`만 실행), thiserror 2와 windows 0.62(open-raid-z).
+- **보류**: bincode 3.0.0은 `compile_error!`만 들어 있는 빈 버전이라 1.3을 그대로 씁니다.
+- **미완료**: 이 네 가지 메이저 업데이트의 운영 반영, open-media의 전체 빌드와 실기기 확인, maid-cafe-programming-school의 npm 메이저 업데이트, VPS에 남은 stash와 패치 정리, `rs-whisper`(C++를 Rust로 옮기는 작업)의 3단계 이후.
+
+### Deutsch
+- **Erledigt (in Produktion)**: Die Sicherheitskorrekturen (lettre in RS-Blog, RS-EC, open-redmine und open-gitea; quinn-udp in RS-Guard, aruaru-search, aruaru.tokyo und e-gov) wurden mit Sicherungen in 9 VPS-Dienste eingespielt. Alle Dienste laufen, die Fehlerprotokolle sind leer, und die öffentlichen URLs antworten mit 200.
+- **Erledigt (auf GitHub, Tests bestanden)**: base64 0.23 (open-gitea), reqwest 0.13 (runo.tokyo), ureq 3 (open-media, nur `cargo check`), thiserror 2 und windows 0.62 (open-raid-z).
+- **Zurückgestellt**: bincode 3.0.0 ist eine leere Version, die nur `compile_error!` enthält; wir bleiben deshalb bei 1.3.
+- **Offen**: diese vier Hauptversions-Updates in Produktion bringen, ein vollständiger Build und eine Prüfung von open-media auf echter Hardware, die npm-Hauptversions-Updates in maid-cafe-programming-school, das Aufräumen der auf dem VPS verbliebenen Stashes und Patches sowie ab Stufe 3 `rs-whisper` (die Portierung von C++ nach Rust).
+
+### Français
+- **Terminé (en production)** : les correctifs de sécurité (lettre dans RS-Blog, RS-EC, open-redmine et open-gitea ; quinn-udp dans RS-Guard, aruaru-search, aruaru.tokyo et e-gov) ont été déployés avec sauvegarde sur 9 services du VPS. Tous les services fonctionnent, les journaux d'erreurs sont vides et les URL publiques répondent 200.
+- **Terminé (sur GitHub, tests réussis)** : base64 0.23 (open-gitea), reqwest 0.13 (runo.tokyo), ureq 3 (open-media, `cargo check` seulement), thiserror 2 et windows 0.62 (open-raid-z).
+- **Mis de côté** : bincode 3.0.0 est une version vide qui ne contient que `compile_error!` ; nous restons donc sur la 1.3.
+- **À faire** : déployer ces quatre mises à jour majeures en production, compiler entièrement open-media et le vérifier sur un vrai appareil, les mises à jour majeures npm de maid-cafe-programming-school, nettoyer les stashes et correctifs laissés sur le VPS, ainsi que `rs-whisper` (le portage de C++ vers Rust) à partir de l'étape 3.
+
+### Español
+- **Hecho (en producción)**: las correcciones de seguridad (lettre en RS-Blog, RS-EC, open-redmine y open-gitea; quinn-udp en RS-Guard, aruaru-search, aruaru.tokyo y e-gov) se desplegaron con copia de seguridad en 9 servicios del VPS. Todos los servicios funcionan, los registros de errores están vacíos y las URL públicas responden 200.
+- **Hecho (en GitHub, pruebas superadas)**: base64 0.23 (open-gitea), reqwest 0.13 (runo.tokyo), ureq 3 (open-media, solo `cargo check`), thiserror 2 y windows 0.62 (open-raid-z).
+- **Aplazado**: bincode 3.0.0 es una versión vacía que solo contiene `compile_error!`, así que seguimos con la 1.3.
+- **Pendiente**: llevar estas cuatro actualizaciones mayores a producción, una compilación completa y una comprobación de open-media en un dispositivo real, las actualizaciones mayores de npm en maid-cafe-programming-school, limpiar los stashes y parches que quedaron en el VPS y, desde la etapa 3, `rs-whisper` (el port de C++ a Rust).
+
+### Português
+- **Feito (em produção)**: as correções de segurança (lettre em RS-Blog, RS-EC, open-redmine e open-gitea; quinn-udp em RS-Guard, aruaru-search, aruaru.tokyo e e-gov) foram aplicadas com backup em 9 serviços do VPS. Todos os serviços estão em execução, os logs de erro estão vazios e as URLs públicas respondem 200.
+- **Feito (no GitHub, testes aprovados)**: base64 0.23 (open-gitea), reqwest 0.13 (runo.tokyo), ureq 3 (open-media, apenas `cargo check`), thiserror 2 e windows 0.62 (open-raid-z).
+- **Adiado**: o bincode 3.0.0 é uma versão vazia que contém apenas `compile_error!`; por isso continuamos na 1.3.
+- **Pendente**: levar essas quatro atualizações maiores para produção, uma compilação completa e a verificação do open-media em um dispositivo real, as atualizações maiores de npm em maid-cafe-programming-school, limpar os stashes e patches que ficaram no VPS e, a partir da etapa 3, o `rs-whisper` (o port de C++ para Rust).
+
+### Русский
+- **Готово (в продакшене)**: исправления уязвимостей (lettre в RS-Blog, RS-EC, open-redmine и open-gitea; quinn-udp в RS-Guard, aruaru-search, aruaru.tokyo и e-gov) выкачены на 9 сервисов VPS с резервными копиями. Все сервисы работают, журналы ошибок пусты, публичные URL отвечают кодом 200.
+- **Готово (на GitHub, тесты пройдены)**: base64 0.23 (open-gitea), reqwest 0.13 (runo.tokyo), ureq 3 (open-media, только `cargo check`), thiserror 2 и windows 0.62 (open-raid-z).
+- **Отложено**: bincode 3.0.0 — пустая версия, в которой есть только `compile_error!`, поэтому остаёмся на 1.3.
+- **Не завершено**: выкатка этих четырёх крупных обновлений в продакшен, полная сборка и проверка open-media на реальном устройстве, крупные обновления npm в maid-cafe-programming-school, уборка оставшихся на VPS stash и патчей, а также `rs-whisper` (перенос C++ на Rust) начиная с этапа 3.
+
+### العربية
+- **تم (في الإنتاج)**: جرى تطبيق إصلاحات الثغرات الأمنية (lettre في RS-Blog وRS-EC وopen-redmine وopen-gitea؛ وquinn-udp في RS-Guard وaruaru-search وaruaru.tokyo وe-gov) على 9 خدمات في VPS مع نسخ احتياطية. جميع الخدمات تعمل، وسجلات الأخطاء فارغة، وتُرجع العناوين العامة الرمز 200.
+- **تم (على GitHub مع نجاح الاختبارات)**: base64 0.23 (open-gitea)، وreqwest 0.13 (runo.tokyo)، وureq 3 (open-media، مع تشغيل `cargo check` فقط)، وthiserror 2 وwindows 0.62 (open-raid-z).
+- **مؤجَّل**: الإصدار bincode 3.0.0 إصدار فارغ لا يحتوي إلا على `compile_error!`، لذلك نبقى على الإصدار 1.3.
+- **لم يكتمل بعد**: نشر هذه التحديثات الرئيسية الأربعة في الإنتاج، وبناء open-media بالكامل مع التحقق منه على جهاز حقيقي، وتحديثات npm الرئيسية في maid-cafe-programming-school، وتنظيف ما تبقّى على VPS من stash وملفات التصحيح، ثم `rs-whisper` (نقل C++ إلى Rust) من المرحلة 3 فصاعدًا.
+
+### فارسی
+- **انجام‌شده (در محیط عملیاتی)**: اصلاحات امنیتی (lettre در RS-Blog، RS-EC، open-redmine و open-gitea؛ و quinn-udp در RS-Guard، aruaru-search، aruaru.tokyo و e-gov) همراه با پشتیبان‌گیری روی ۹ سرویس VPS جایگزین شد. همهٔ سرویس‌ها در حال اجرا هستند، گزارش‌های خطا خالی است و نشانی‌های عمومی پاسخ ۲۰۰ می‌دهند.
+- **انجام‌شده (روی GitHub و با موفقیت آزمون‌ها)**: base64 0.23 (open-gitea)، reqwest 0.13 (runo.tokyo)، ureq 3 (open-media، فقط با `cargo check`)، و thiserror 2 و windows 0.62 (open-raid-z).
+- **فعلاً کنار گذاشته شد**: bincode 3.0.0 نسخه‌ای تهی است که فقط `compile_error!` دارد؛ بنابراین نسخهٔ 1.3 را نگه می‌داریم.
+- **باقی‌مانده**: استقرار این چهار به‌روزرسانی اصلی در محیط عملیاتی، ساخت کامل و بررسی open-media روی دستگاه واقعی، به‌روزرسانی‌های اصلی npm در maid-cafe-programming-school، پاک‌سازی stash و وصله‌های باقی‌مانده روی VPS، و از مرحلهٔ ۳ به بعد `rs-whisper` (انتقال C++ به Rust).
