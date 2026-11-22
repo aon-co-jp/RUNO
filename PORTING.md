@@ -4798,3 +4798,37 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - The VPS aruaru-llm clone is 11 commits behind with local changes (do not pull). The VPS open-gitea clone has diverged (44 behind / 26 ahead); ask the owner before touching it.
 - Real-device checks on Mac and iPhone (no devices). Local work folders (`F:\_wt-aruaru-llm`, `F:\_wt-ime`, `F:\_work_rlf`, `F:\_*.bin`) need manual cleanup because deletion was blocked.
 - Rules: continue without asking; verify on real systems before saying "done"; never write secrets; no new REST; build VPS binaries in `Ubuntu-24.04`.
+
+## 2026-11-22 現状・完成予定・課題: PowerDVD の高音ノイズと WMP の CD 書き込みでの声の変化(日本語・English)
+
+### 日本語
+**現状(調査のみ、設定は未変更・原因は未確定)**
+- 症状1: PowerDVD(ブルーレイ)で人の声の高音にノイズが入る。症状2: Windows Media Player で mp4 を音楽 CD へ直接書き込むと、女性の声が男性の声のように低く聞こえる(以前は無かった)。
+- 確認できた事実: 既定の出力 `スピーカー (LOXJIE AUDIO)` の既定形式が **384,000 Hz / 32bit**(共有モード)。ドライバーは XMOS 5.50.0(2022-09-08 版)で **2026-10-10 に導入**(同日に Driver Booster 14 も導入)。open-bar は起動しておらず原因ではない。PowerDVD の `audiodg`・本体に第三者の音声処理モジュールは見当たらない。WMP の設定は `CDBurnNormalizeAudio=1`(書き込み時に音量均一化)・`CDBurnSpeed=3` で、声の高さを変える設定ではない。11月に UniConverter 18(11/11)・Leawo Prof. Media 13(11/15)・KB5132061/KB5132688(11/11)が入った。
+- 最有力の推定: 384kHz 既定形式への再サンプリング(症状1)。症状2(声が低くなる=サンプルレートの取り違え)は、384kHz 設定の影響か、コーデックや更新の差し替えかを切り分けていない。
+
+**完成予定(次の手順、所有者の操作が要る)**
+1. `LOXJIE AUDIO` の既定形式を 24bit / 48000 Hz に下げ、PowerDVD の同じ場面でノイズが消えるか確認する。
+2. WMP で短い mp4 を CD-RW かディスクイメージへ書き、声の高さが戻るか確認する。
+3. 1 で直れば、ドライバーを以前の版へ戻すか、384kHz を使うのは排他モードの再生(open-bar / open-media)だけにする。2 だけ直らなければ UniConverter / Leawo のコーデックを外して再確認する。
+
+**課題**
+- 再現はまだ(所有者の実機での確認待ち)。設定変更は「システム設定の変更」にあたるため、こちらでは行わない。
+- 管理者権限が要る確認(WMP の Windows 機能の状態など)は未実施。
+- ドライバーを導入したのが Driver Booster かどうかは未確認。
+
+### English
+**Status (investigation only; no settings changed; cause not confirmed)**
+- Symptom 1: PowerDVD (Blu-ray) adds noise to high-pitched human voices. Symptom 2: burning an mp4 straight to an audio CD with Windows Media Player makes women's voices sound like men's (this did not happen before).
+- Facts: the default output `Speakers (LOXJIE AUDIO)` has a default format of **384,000 Hz / 32-bit** (shared mode). Its driver is XMOS 5.50.0 (dated 2022-09-08), **installed on 2026-10-10** (Driver Booster 14 was installed the same day). open-bar is not running, so it is not the cause. No third-party audio-processing module was found in `audiodg` or PowerDVD. WMP has `CDBurnNormalizeAudio=1` (volume normalization on burn) and `CDBurnSpeed=3`, neither of which changes pitch. In November, UniConverter 18 (11/11), Leawo Prof. Media 13 (11/15) and KB5132061/KB5132688 (11/11) were installed.
+- Leading hypothesis: resampling to the 384 kHz default format (symptom 1). Symptom 2 (lower voices mean a sample-rate mix-up) is not yet separated into "caused by the 384 kHz setting" versus "a codec or update was swapped".
+
+**Planned (next steps; the owner must act)**
+1. Lower the `LOXJIE AUDIO` default format to 24-bit / 48,000 Hz and check whether the PowerDVD noise disappears on the same scene.
+2. Burn a short mp4 with WMP to a CD-RW or a disc image and check whether the voice pitch returns.
+3. If step 1 fixes it, roll the driver back or use 384 kHz only for exclusive-mode playback (open-bar / open-media). If only step 2 stays broken, remove the UniConverter / Leawo codecs and retest.
+
+**Issues**
+- Not reproduced yet (waiting for the owner's real-device check). Changing the default format is a system-settings change, so we do not do it ourselves.
+- Checks that need administrator rights (e.g. the WMP Windows feature state) were not done.
+- It is not confirmed whether Driver Booster installed the driver.
