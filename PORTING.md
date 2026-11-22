@@ -4918,3 +4918,7 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 ## 2026-11-23 追記: 未了の再確認(日本語・English)
 **日本語**: 本番 `AdmissionStats` を再確認(読み取りのみ)。いまも `claude-check` の1件だけで、実呼び出し側の `x-tenant` は未観測です(実トラフィック待ち)。残りはすべて所有者の実機・実機材が要ります(LOXJIEドライバー旧版戻し・UniConverter削除・既定形式変更、Mac/iPhone実機、aruaru-IME v0.2.30のexeインストール試験)。こちらだけで進められる未了はありません。
 **English**: Re-checked production `AdmissionStats` (read-only): still only `claude-check`; real callers' `x-tenant` remains unobserved (waiting for real traffic). Everything left needs the owner's machine or devices (LOXJIE driver rollback, UniConverter removal, default-format change, Mac/iPhone, aruaru-IME v0.2.30 exe install test). Nothing remains that can be done from here alone.
+
+## 2026-11-23 再開用メッセージ(翻訳・SFTP・x-tenant) / Resume message
+**日本語**: 前の続きです。`F:uno\PORTING.md` 末尾を読み、未了を確認なしで進めてください。(1)whisper常駐化+窓短縮+繰り返し検出(`open-tv-chat/PORTING.md`末尾)、(2)dist_syncの実SFTP確認とSFTP削除の通し、(3)実トラフィックでの`x-tenant`観測。所有者待ち: 音声切り分け・Mac/iPhone・IME exe・検証用鍵の削除。決まり: 本物で確認してから完了、秘密は書かない、新しいRESTは作らない、返答は日本語のみ。
+**English**: Read the end of `F:uno\PORTING.md` and continue without asking: whisper resident + shorter window + repetition guard, a real SFTP check of dist_sync and delete, and `x-tenant` with real traffic. Owner-only: audio isolation, Mac/iPhone, the IME exe, deleting the test key.
