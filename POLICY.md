@@ -1163,3 +1163,9 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - The embedded SFTP server of open-web-server, rebuilt on `russh-sftp` 4 (built in WSL Ubuntu-24.04 with `--features sftp` through `vps-build.sh`, glibc check OK), was started and exercised with the **real OpenSSH `sftp` client** (key authentication, throw-away user and host keys, `127.0.0.1` only).
 - Operations that worked: listing (`ls`), download (`get`, content matches), upload (`put`), `mkdir`, `rename`, listing inside the folder, and deletion (`rm`, `rmdir`). The final listing returned to the original state (only `a.txt`). This goes one step beyond the earlier mock-server tests: **the server side is now verified with a real client**.
 - **Still open**: the client side (the paths where rs-sync and open-easy-web's `dist_sync` connect to a real server), a check through the production VPS SFTP path, observing `x-tenant` actually reaching aruaru-llm in production (tcpdump did not capture it), and the PowerDVD high-pitch noise / WMP CD-burn voice change (waiting for the owner's settings check on the real machine).
+
+## 2026-11-22 追記: 確認の決まり(日本語)
+- **「できた」と書く条件**: 本物の相手で確かめてから書く。モックだけの確認は、そう書く(SFTPは、サーバー側を本物の OpenSSH `sftp`、クライアント側を実サーバーで確認してから「両側とも確認」と書いた)。
+- **本番に触る確認**: 読み取りと、ごく小さな1回の呼び出し(例: `max_new_tokens=1` の Generate)まで。負荷をかける試験・デバッグは手元PC(WSL)で行う。
+- **有効にしていない機能**(本番のSFTPサーバーなど)は、勝手に有効にしない。有効にするかは所有者が決める。
+- 新しいRESTは作らない。秘密は書かない。WSLで動かすサーバーは、同じ呼び出しの中で起動して試験する(呼び出しが終わると止まる)。
