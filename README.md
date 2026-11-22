@@ -1312,3 +1312,33 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - 別セッションの報告(aruaru-IME v0.2.30、RS-Node.js のESM対応、README索引3行の修正)は、記録として確認しただけで、このリポジトリでの変更はありません。
 - `open-tv-chat` の実装は、翻訳モデルのダウンロード許可待ちの状態で、最初の一歩を選ぶところまで進みました(詳細は `open-tv-chat/PORTING.md` 末尾)。
 - 残り: Mac・iPhone の実機確認(実機なし)。aruaru-IME v0.2.30 の exe は未インストール試験です。
+
+## 2026-11-22 引っ越し(別アカウントでの再開)用の引き継ぎ / Hand-off for moving to another account
+
+### 日本語
+**優先して一緒に開発しているリポジトリ(すべて `aon-co-jp` 配下、`F:\<名前>`)**
+- 変換: `pl2pl`(最優先。COBOL・C・C++・Fortran→Web)、`COBOL_to`、`Java_to`(元の2つの削除だけは最後に本人確認)
+- 4姉妹: `RPoem`、`open-cosmo`、`Reaxt`、`RPoRea`。姉妹: `RMojo`、`RS-TypeScript`、`RS-JavaScript`、`RS-Node.js`
+- AI・計算: `aruaru-llm`、`open-cuda`、`open-cpu`、`open-directx`、`rs-whisper`
+- 会話・入力: `open-tv-chat`、`open-LiveKit`、`aruaru-IME`
+- 基盤・運用: `open-web-server`、`open-easy-web`、`RS-JSON`、`version-control`、`runo`(この索引)、`2FastAPI`、`MFastAPI`
+
+**この日の到達点**: 4姉妹のCIは成功。`open-tv-chat` の翻訳モデルMADLAD-400 3B(q4k、1.65GB、`F:\_work\models\madlad400-3b-mt-q4k`)をダウンロードし、WSL(`~/mt/candle`のquantized-t5例を改造、環境変数`MT_TOKENIZER`)でCPU実行に成功。ja→enは自然(「It's a very nice day today. Can we go for a walk together?」)、en→jaは前半を落とした。速度は約1.4語/秒、1回約37秒(読み込み込み、メモリ約4.8GB)で、**リアルタイムには遅い**。
+**未了(この順)**: (1)`rs-whisper-transcribe`(引数にモデルと音声を渡す。例は `F:\_work\whisper.cpp\samples\jfk.wav`、`ggml-tiny.bin`)で文字起こし→MADLADで翻訳する通し計測、(2)結果を `open-tv-chat` の文書(日本語)へ記録し、古い「ダウンロード許可待ち」の行を直す、(3)Mac・iPhone実機確認(実機なし)、(4)aruaru-IME v0.2.30のexeインストール試験。
+**決まり**: 確認せず自動で進める/本物で確認してから「完了」/秘密は書かない/新しいRESTは作らない/VPS用ビルドは`Ubuntu-24.04`/開発・試験は手元PC。
+
+### English
+**Priority repositories developed together (all under `aon-co-jp`, at `F:\<name>`)**
+- Conversion: `pl2pl` (top priority; COBOL/C/C++/Fortran to web), `COBOL_to`, `Java_to` (only deleting these two originals needs the owner's confirmation, last)
+- Four sisters: `RPoem`, `open-cosmo`, `Reaxt`, `RPoRea`; related: `RMojo`, `RS-TypeScript`, `RS-JavaScript`, `RS-Node.js`
+- AI/compute: `aruaru-llm`, `open-cuda`, `open-cpu`, `open-directx`, `rs-whisper`
+- Chat/input: `open-tv-chat`, `open-LiveKit`, `aruaru-IME`
+- Infrastructure: `open-web-server`, `open-easy-web`, `RS-JSON`, `version-control`, `runo` (this index), `2FastAPI`, `MFastAPI`
+
+**Reached today**: CI of the four sisters is green. For `open-tv-chat`, MADLAD-400 3B (q4k, 1.65 GB, `F:\_work\models\madlad400-3b-mt-q4k`) was downloaded and runs on CPU in WSL (candle's quantized-t5 example, patched with env `MT_TOKENIZER`, in `~/mt/candle`). ja-to-en reads naturally; en-to-ja dropped the first sentence. Speed is about 1.4 tokens/s and about 37 s per call including loading (about 4.8 GB RAM): **too slow for real time**.
+**Open (in order)**: (1) an end-to-end measurement: `rs-whisper-transcribe` (pass model and audio; sample `F:\_work\whisper.cpp\samples\jfk.wav`, `ggml-tiny.bin`) then MADLAD; (2) record the result in `open-tv-chat` docs (Japanese) and fix the stale "waiting for download permission" line; (3) real Mac/iPhone checks (no devices); (4) install test of the aruaru-IME v0.2.30 exe.
+**Rules**: continue without asking; verify on real systems before saying "done"; never write secrets; no new REST; build VPS binaries in `Ubuntu-24.04`; develop and test on the local PC.
+
+### 再開用メッセージ / Resume message (paste as is)
+**日本語**: 前の続きです。`F:\runo\PORTING.md` 末尾「2026-11-22 引っ越し(別アカウントでの再開)用の引き継ぎ」を読んでから、そこに載っている優先リポジトリ(pl2pl・COBOL_to・Java_to・RPoem・RPoRea・Reaxt・RMojo・aruaru-llm・open-cosmo・open-tv-chat ほか)の未了を、確認なしで自動で進めてください。まず open-tv-chat の「rs-whisper→MADLAD-400」通し計測から。決まり: 本物で確認してから完了と書く、秘密は書かない、新しいRESTは作らない、元のCOBOL_to/Java_toの削除だけは確認、返答は日本語のみ。
+**English**: Continuing from before. Read "2026-11-22 引っ越し(別アカウントでの再開)用の引き継ぎ" at the end of `F:\runo\PORTING.md`, then keep working through the open items of the listed priority repositories (pl2pl, COBOL_to, Java_to, RPoem, RPoRea, Reaxt, RMojo, aruaru-llm, open-cosmo, open-tv-chat and others) without asking. Start with the open-tv-chat rs-whisper-to-MADLAD-400 end-to-end measurement. Rules: verify on real systems before saying done, never write secrets, no new REST, only deleting the original COBOL_to/Java_to needs confirmation.
