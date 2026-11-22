@@ -1639,3 +1639,16 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - Not reproduced yet (waiting for the owner's real-device check). Changing the default format is a system-settings change, so we do not do it ourselves.
 - Checks that need administrator rights (e.g. the WMP Windows feature state) were not done.
 - It is not confirmed whether Driver Booster installed the driver.
+
+
+## 2026-11-22 追記: SFTP の実クライアントでの通し確認(日本語・English)
+
+### 日本語
+- `russh-sftp` 4 で作り直した open-web-server の組み込み SFTP サーバーを、WSL(Ubuntu-24.04、`vps-build.sh` で `--features sftp` を付けて作成、glibc 検査OK)で起動し、**本物の OpenSSH の `sftp` クライアント**から接続して通し確認しました(鍵認証、使い捨ての鍵とホスト鍵、`127.0.0.1` のみ)。
+- 成功した操作: 一覧(`ls`)・ダウンロード(`get`、内容一致)・アップロード(`put`)・フォルダー作成(`mkdir`)・名前変更(`rename`)・フォルダー内の一覧・削除(`rm`・`rmdir`)。最後の一覧は元の状態(`a.txt` のみ)に戻りました。これまでのモックのサーバーでの試験より一歩進み、**サーバー側は実クライアントで確認済み**です。
+- **まだ**: クライアント側(rs-sync・open-easy-web の `dist_sync` が実サーバーへつなぐ経路)の実サーバー確認、本番 VPS の SFTP 経路での確認、`x-tenant` が本番で aruaru-llm に届くことの観測(tcpdump では捕まらなかった)、PowerDVD の高音ノイズ・WMP の CD 書き込みの声の変化(所有者の実機での設定確認待ち)。
+
+### English
+- The embedded SFTP server of open-web-server, rebuilt on `russh-sftp` 4 (built in WSL Ubuntu-24.04 with `--features sftp` through `vps-build.sh`, glibc check OK), was started and exercised with the **real OpenSSH `sftp` client** (key authentication, throw-away user and host keys, `127.0.0.1` only).
+- Operations that worked: listing (`ls`), download (`get`, content matches), upload (`put`), `mkdir`, `rename`, listing inside the folder, and deletion (`rm`, `rmdir`). The final listing returned to the original state (only `a.txt`). This goes one step beyond the earlier mock-server tests: **the server side is now verified with a real client**.
+- **Still open**: the client side (the paths where rs-sync and open-easy-web's `dist_sync` connect to a real server), a check through the production VPS SFTP path, observing `x-tenant` actually reaching aruaru-llm in production (tcpdump did not capture it), and the PowerDVD high-pitch noise / WMP CD-burn voice change (waiting for the owner's settings check on the real machine).
