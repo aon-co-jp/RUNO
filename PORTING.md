@@ -4728,3 +4728,23 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 ### 再開用メッセージ(2026-11-22、翻訳高速化・関連リポジトリ共有) / Resume message
 **日本語**: 前の続きです。`F:\runo\PORTING.md` 末尾の「翻訳の高速化の知見を関連リポジトリで共有」を読んでから、`open-tv-chat`・`maid-cafe-english`・`maid-cafe-tokyo`(`open-maid-cafe` という名前のリポジトリは存在しません)・`aruaru-llm`・`open-cuda`・`open-cpu`・`open-directx` の未了を、確認なしで自動で進めてください。順番: (1)常駐+文ごと翻訳を maid-cafe-english のコードへ反映、(2)`open-cuda-llm` に T5 を追加して candle と比較、(3)`open-cuda-whisper` と `rs-whisper` の比較、(4)GPU 実測。作業は手元PC(WSL)、VPS は配備と確認のみ。決まり: 本物で確認してから完了、秘密は書かない、新しいRESTは作らない、返答は日本語のみ。
 **English**: Continuing from before. Read "Sharing the translation-speed findings" at the end of `F:\runo\PORTING.md`, then keep working through the open items of `open-tv-chat`, `maid-cafe-english`, `maid-cafe-tokyo` (there is no repository named `open-maid-cafe`), `aruaru-llm`, `open-cuda`, `open-cpu` and `open-directx` without asking. Order: (1) apply resident + sentence-by-sentence translation to maid-cafe-english's code; (2) add T5 to `open-cuda-llm` and compare with candle; (3) compare `open-cuda-whisper` with `rs-whisper`; (4) GPU measurements. Work on the local PC (WSL); use the VPS only to deploy and verify. Rules: verify on real systems before saying done, never write secrets, no new REST.
+
+## 2026-11-22 version-control通知(7リポジトリ)の対応と、Rust以外を使う理由の確認 / Notice for 7 repos and the non-Rust check
+
+### 日本語
+- **脆弱性**: rs-link-fusion の quinn-udp を 0.5.16 へ(RUSTSEC-2026-0538、`Cargo.lock` のみ、試験19件成功、`2de3edb`、既定ブランチは `master`)。
+- **russh-sftp 3→4**: rs-sync(`faf5fc3`、試験109件)・open-web-server(`5e0dcbe`、sftp試験6件)・open-raid-z(`f7bcba7`、統合試験4件)・open-easy-web(`3bbab82`、dist_sync試験9件)。v4 は SFTP サーバー側の `handle` が `String` から `SftpHandle` に変わったため、サーバー実装と試験用モックを追従させた。`open-easy-web-app` は GitHub に無く、VPS 上の `open-easy-web` のクローンなので、更新は `open-easy-web` で行った。
+- **lindera 6.2→7**: rs-kokoro-ja(`b43c6ad`、試験成功)。
+- **VPS のクローン**: RUNO・open-raid-z を `--ff-only` で最新化(未コミットなし)。動いているプログラムは入れ替えていない。
+- **見送り(理由つき)**: open-raid-z の `fuser` 0.18→0.19 は `macfuse-4-compat` が無くなり、macOS・Android 用の別フォーク(`fuser-android`)も絡むので、実機が必要。`bincode` 3.0.0 は中身が空の版なので 1.3 のまま。rs-link-fusion の大型更新(aggligator・chacha20 系・eframe/egui・ndt7-client 0.3・rand 0.10 など)は API の書き換えが大きく、複数の物理回線での実機確認が要るため、別の作業として残す(試して戻した)。
+- **本番**: russh-sftp 4 の入れ替えは次のリリースで行う(SFTP 機能の通し確認とセットで)。
+- **Rust 以外が原因の更新**: 今回の7件の更新はすべて Rust のクレートで、C++ や Python が原因のものはなかった。
+
+### English
+- **Vulnerability**: quinn-udp in rs-link-fusion to 0.5.16 (RUSTSEC-2026-0538; `Cargo.lock` only; 19 tests pass; `2de3edb`; the default branch is `master`).
+- **russh-sftp 3 to 4**: rs-sync (`faf5fc3`, 109 tests), open-web-server (`5e0dcbe`, 6 sftp tests), open-raid-z (`f7bcba7`, 4 integration tests) and open-easy-web (`3bbab82`, 9 dist_sync tests). In v4 the server-side `handle` changed from `String` to `SftpHandle`, so the server code and the test mocks were updated. `open-easy-web-app` is not on GitHub; it is the VPS clone of `open-easy-web`, so the update was made in `open-easy-web`.
+- **lindera 6.2 to 7**: rs-kokoro-ja (`b43c6ad`, tests pass).
+- **VPS clones**: RUNO and open-raid-z fast-forwarded (no uncommitted changes); no running binaries were swapped.
+- **Held back (with reasons)**: `fuser` 0.18 to 0.19 in open-raid-z drops `macfuse-4-compat` and also involves the `fuser-android` fork, so it needs real devices. `bincode` 3.0.0 is an empty release, so we stay on 1.3. The big rs-link-fusion bumps (aggligator, the chacha20 family, eframe/egui, ndt7-client 0.3, rand 0.10 and others) need large API rewrites and real multi-NIC checks, so they stay as separate work (we tried and reverted).
+- **Production**: the russh-sftp 4 swap goes out with the next release, together with a real SFTP check.
+- **Updates caused by non-Rust code**: all seven items in this notice were Rust crates; none came from C++ or Python.
