@@ -4755,3 +4755,46 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 ## 2026-11-22 追記: BSDのWindows上エミュレーター試験・2Poem v0.1.4・PyPI / BSD emulator test, 2Poem v0.1.4, PyPI
 **日本語**: (1) **BSD**: Windows 11 に QEMU 20260811(公式 qemu.weilnetz.de、管理者権限なしで `F:\_work\bsd\qemu` へ)を入れ、WHPX 加速で FreeBSD 14.5-RELEASE(download.freebsd.org の BASIC-CLOUDINIT-ufs イメージ)を起動。FreeBSD の nuageinit は NoCloud の URL 方式に未対応だったため、シリアルコンソール(TCP)から単一ユーザーで ssh 鍵を入れた。VM 内で `pkg install rust git`(cargo 1.98.1)→ RMojo(0.4.4)を取得し **`cargo test --release` 11件成功**、`rmojo update` は「最新です(0.4.4)」(BSD 用の添付が無くても正しく動作)。VM とイメージは `F:\_work\bsd`(約10GB、不要なら削除可。起動は `qemu-system-x86_64 -accel whpx,kernel-irqchip=off -machine q35 -cpu qemu64 -smp 2 -m 6144 -drive file=bsd.qcow2,if=virtio -netdev user,id=n0,hostfwd=tcp:127.0.0.1:2222-:22 -device virtio-net-pci,netdev=n0 -display none -serial tcp:127.0.0.1:4555,server,nowait`、ユーザー `tester`、鍵 `seed/key`)。**注意**: 初回起動時の freebsd-update が終わるまで強制終了しない(途中で止めると sshd が壊れる)。実機 BSD は未確認。(2) **2Poem v0.1.4**: 計算式・代入・if/elif/else の自動移植(生成サーバーを起動して Python と同値を確認)、ORM(Django/SQLAlchemy/SQLModel)のモデルを `models.rs`+`schema.sql` へ。試験26件、CI全成功。(3) **PyPI**: 名前 `topoem` は未使用。ビルドと `twine check` 成功、トークン不要の公開ジョブを追加済み。**所有者の作業**: pypi.org で pending publisher(project `topoem` / owner `aon-co-jp` / repo `2Poem` / workflow `ci.yml` / environment `pypi`)を登録し、リポジトリ変数 `PYPI_PUBLISH=true` を設定して次のタグを push。**未了**: PyPI 初回公開(上の登録待ち)、ORM の問い合わせ・テンプレートの移植、Mac/iPhone/BSD 実機。**再開用メッセージ**: 「`F:\runo\PORTING.md` 末尾の2026-11-22追記を読み、`F:\2Poem` の未了(ORMの問い合わせ移植・ループや関数呼び出しを含む本体)を確認なしで進めて。PyPI公開は所有者の登録待ち。」
 **English**: (1) **BSD**: installed QEMU 20260811 (official qemu.weilnetz.de, no admin rights, into `F:\_work\bsd\qemu`) on Windows 11 and booted FreeBSD 14.5-RELEASE (BASIC-CLOUDINIT-ufs image from download.freebsd.org) with WHPX acceleration. FreeBSD's nuageinit does not support NoCloud over URL, so the ssh key was added through the serial console (TCP) in single-user mode. Inside the VM: `pkg install rust git` (cargo 1.98.1), cloned RMojo (0.4.4): **`cargo test --release` passes 11 tests**, and `rmojo update` prints "up to date (0.4.4)" (correct with no BSD asset). The VM and image are in `F:\_work\bsd` (about 10 GB, deletable; user `tester`, key `seed/key`). **Caution**: do not kill the VM during the first boot's freebsd-update (it breaks sshd). Real BSD hardware is unverified. (2) **2Poem v0.1.4**: expressions/assignments/if-elif-else are auto-ported (a generated server was run and matched Python), ORM models (Django/SQLAlchemy/SQLModel) become `models.rs` + `schema.sql`; 26 tests, CI all green. (3) **PyPI**: name `topoem` is free; build and `twine check` pass; a token-less publish job was added. **Owner steps**: register a pending publisher on pypi.org (project `topoem` / owner `aon-co-jp` / repo `2Poem` / workflow `ci.yml` / environment `pypi`), set repository variable `PYPI_PUBLISH=true`, and push the next tag. **Open**: first PyPI release (awaiting that registration), ORM queries and templates, Mac/iPhone/BSD hardware. **Resume**: read this addendum, continue 2Poem's open items without asking; PyPI waits for the owner's registration.
+
+
+## 2026-11-22 現状・完成予定・課題(日本語・English)
+
+### 日本語
+**現状(本番で確認済み)**
+- version-control の通知7件に対応しました。`russh-sftp` 4 への更新は rs-sync・open-web-server・open-easy-web・open-raid-z で終わり、前の3つは VPS に入れ替えました(`/` などの応答は入れ替え前と同じ、エラーログ0、旧版は `*.before-sftp4-20261122` などで保管)。
+- quinn-udp の脆弱性(rs-link-fusion)と lindera 7(rs-kokoro-ja)も更新して push しました。
+- REST 全廃の仕上げとして、`x-tenant` を送る変更と、aruaru-llm の同時実行の受付制御(上限・公平キュー)を VPS に反映しました。
+- 4姉妹(RPoem・open-cosmo・Reaxt・RPoRea)の CI は成功しています。
+
+**完成予定**
+1. SFTP の実サーバー相手の通し確認(VPS の sshd を相手に dist_sync か rs-sync で行う)。
+2. 本番の aruaru-llm が `x-tenant` を受け取る様子を、実際の通信で観測する。
+3. open-tv-chat の翻訳高速化(常駐+文ごと+native ビルドの反映、`open-cuda-llm` への T5 追加、`rs-whisper` との比較)。
+
+**課題(正直な未了・見送り)**
+- SFTP は、いまのところモックのサーバーでの単体・統合試験までしか確認できていません(WSL に sshd が無い)。
+- `x-tenant` は、本番の通信ではまだ観測できていません(tcpdump では aruaru-llm の通信が捕まらなかった)。
+- 見送り中の大型更新: rs-link-fusion(aggligator・chacha20系・eframe/egui・ndt7-client 0.3・rand 0.10。API の書き換えと複数NICの実機確認が要る)、open-raid-z の fuser 0.19(macOS・Android 実機が要る)、bincode 3(中身が空の版なので 1.3 のまま)。
+- VPS の aruaru-llm クローンは11遅れで手元変更あり(pull しない)。open-gitea の VPS クローンは分岐(44遅れ/26先行)で、触る前に本人確認が要る。
+- Mac・iPhone の実機確認(実機なし)。手元の作業用フォルダー(`F:\_wt-aruaru-llm`・`F:\_wt-ime`・`F:\_work_rlf`・`F:\_*.bin`)は、削除が止まったため手動で整理が要る。
+- 決まり: 確認せず自動で進める/本物で確認してから「完了」/秘密は書かない/新しい REST は作らない/VPS 用ビルドは `Ubuntu-24.04`。
+
+### English
+**Current state (verified in production)**
+- The 7 version-control notices were handled. The `russh-sftp` 4 update is done in rs-sync, open-web-server, open-easy-web and open-raid-z; the first three were swapped into the VPS (responses such as `/` match the pre-swap ones, error logs are empty, old binaries kept as `*.before-sftp4-20261122` and similar).
+- The quinn-udp vulnerability (rs-link-fusion) and lindera 7 (rs-kokoro-ja) were updated and pushed.
+- As part of finishing the REST abolition, the change that sends `x-tenant` and aruaru-llm's admission control (concurrency cap and fair queue) were deployed to the VPS.
+- CI of the four sisters (RPoem, open-cosmo, Reaxt, RPoRea) is green.
+
+**Planned**
+1. An end-to-end SFTP check against a real server (use the VPS sshd with dist_sync or rs-sync).
+2. Observe production aruaru-llm actually receiving `x-tenant` in real traffic.
+3. Translation speed-ups for open-tv-chat (resident + sentence-by-sentence + native build, T5 in `open-cuda-llm`, comparison with `rs-whisper`).
+
+**Issues (honest open items and deferrals)**
+- SFTP is verified only by unit and integration tests against a mock server so far (WSL has no sshd).
+- `x-tenant` has not yet been observed in production traffic (tcpdump did not capture aruaru-llm calls).
+- Deferred major updates: rs-link-fusion (aggligator, the chacha20 family, eframe/egui, ndt7-client 0.3, rand 0.10; these need API rewrites and multi-NIC real-device checks), open-raid-z's fuser 0.19 (needs macOS and Android devices), and bincode 3 (an empty release, so we stay on 1.3).
+- The VPS aruaru-llm clone is 11 commits behind with local changes (do not pull). The VPS open-gitea clone has diverged (44 behind / 26 ahead); ask the owner before touching it.
+- Real-device checks on Mac and iPhone (no devices). Local work folders (`F:\_wt-aruaru-llm`, `F:\_wt-ime`, `F:\_work_rlf`, `F:\_*.bin`) need manual cleanup because deletion was blocked.
+- Rules: continue without asking; verify on real systems before saying "done"; never write secrets; no new REST; build VPS binaries in `Ubuntu-24.04`.
