@@ -1368,3 +1368,46 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 ### 再開用メッセージ(2026-11-22、翻訳高速化・関連リポジトリ共有) / Resume message
 **日本語**: 前の続きです。`F:\runo\PORTING.md` 末尾の「翻訳の高速化の知見を関連リポジトリで共有」を読んでから、`open-tv-chat`・`maid-cafe-english`・`maid-cafe-tokyo`(`open-maid-cafe` という名前のリポジトリは存在しません)・`aruaru-llm`・`open-cuda`・`open-cpu`・`open-directx` の未了を、確認なしで自動で進めてください。順番: (1)常駐+文ごと翻訳を maid-cafe-english のコードへ反映、(2)`open-cuda-llm` に T5 を追加して candle と比較、(3)`open-cuda-whisper` と `rs-whisper` の比較、(4)GPU 実測。作業は手元PC(WSL)、VPS は配備と確認のみ。決まり: 本物で確認してから完了、秘密は書かない、新しいRESTは作らない、返答は日本語のみ。
 **English**: Continuing from before. Read "Sharing the translation-speed findings" at the end of `F:\runo\PORTING.md`, then keep working through the open items of `open-tv-chat`, `maid-cafe-english`, `maid-cafe-tokyo` (there is no repository named `open-maid-cafe`), `aruaru-llm`, `open-cuda`, `open-cpu` and `open-directx` without asking. Order: (1) apply resident + sentence-by-sentence translation to maid-cafe-english's code; (2) add T5 to `open-cuda-llm` and compare with candle; (3) compare `open-cuda-whisper` with `rs-whisper`; (4) GPU measurements. Work on the local PC (WSL); use the VPS only to deploy and verify. Rules: verify on real systems before saying done, never write secrets, no new REST.
+
+
+## 2026-11-22 現状・完成予定・課題(日本語・English)
+
+### 日本語
+**現状(本番で確認済み)**
+- version-control の通知7件に対応しました。`russh-sftp` 4 への更新は rs-sync・open-web-server・open-easy-web・open-raid-z で終わり、前の3つは VPS に入れ替えました(`/` などの応答は入れ替え前と同じ、エラーログ0、旧版は `*.before-sftp4-20261122` などで保管)。
+- quinn-udp の脆弱性(rs-link-fusion)と lindera 7(rs-kokoro-ja)も更新して push しました。
+- REST 全廃の仕上げとして、`x-tenant` を送る変更と、aruaru-llm の同時実行の受付制御(上限・公平キュー)を VPS に反映しました。
+- 4姉妹(RPoem・open-cosmo・Reaxt・RPoRea)の CI は成功しています。
+
+**完成予定**
+1. SFTP の実サーバー相手の通し確認(VPS の sshd を相手に dist_sync か rs-sync で行う)。
+2. 本番の aruaru-llm が `x-tenant` を受け取る様子を、実際の通信で観測する。
+3. open-tv-chat の翻訳高速化(常駐+文ごと+native ビルドの反映、`open-cuda-llm` への T5 追加、`rs-whisper` との比較)。
+
+**課題(正直な未了・見送り)**
+- SFTP は、いまのところモックのサーバーでの単体・統合試験までしか確認できていません(WSL に sshd が無い)。
+- `x-tenant` は、本番の通信ではまだ観測できていません(tcpdump では aruaru-llm の通信が捕まらなかった)。
+- 見送り中の大型更新: rs-link-fusion(aggligator・chacha20系・eframe/egui・ndt7-client 0.3・rand 0.10。API の書き換えと複数NICの実機確認が要る)、open-raid-z の fuser 0.19(macOS・Android 実機が要る)、bincode 3(中身が空の版なので 1.3 のまま)。
+- VPS の aruaru-llm クローンは11遅れで手元変更あり(pull しない)。open-gitea の VPS クローンは分岐(44遅れ/26先行)で、触る前に本人確認が要る。
+- Mac・iPhone の実機確認(実機なし)。手元の作業用フォルダー(`F:\_wt-aruaru-llm`・`F:\_wt-ime`・`F:\_work_rlf`・`F:\_*.bin`)は、削除が止まったため手動で整理が要る。
+- 決まり: 確認せず自動で進める/本物で確認してから「完了」/秘密は書かない/新しい REST は作らない/VPS 用ビルドは `Ubuntu-24.04`。
+
+### English
+**Current state (verified in production)**
+- The 7 version-control notices were handled. The `russh-sftp` 4 update is done in rs-sync, open-web-server, open-easy-web and open-raid-z; the first three were swapped into the VPS (responses such as `/` match the pre-swap ones, error logs are empty, old binaries kept as `*.before-sftp4-20261122` and similar).
+- The quinn-udp vulnerability (rs-link-fusion) and lindera 7 (rs-kokoro-ja) were updated and pushed.
+- As part of finishing the REST abolition, the change that sends `x-tenant` and aruaru-llm's admission control (concurrency cap and fair queue) were deployed to the VPS.
+- CI of the four sisters (RPoem, open-cosmo, Reaxt, RPoRea) is green.
+
+**Planned**
+1. An end-to-end SFTP check against a real server (use the VPS sshd with dist_sync or rs-sync).
+2. Observe production aruaru-llm actually receiving `x-tenant` in real traffic.
+3. Translation speed-ups for open-tv-chat (resident + sentence-by-sentence + native build, T5 in `open-cuda-llm`, comparison with `rs-whisper`).
+
+**Issues (honest open items and deferrals)**
+- SFTP is verified only by unit and integration tests against a mock server so far (WSL has no sshd).
+- `x-tenant` has not yet been observed in production traffic (tcpdump did not capture aruaru-llm calls).
+- Deferred major updates: rs-link-fusion (aggligator, the chacha20 family, eframe/egui, ndt7-client 0.3, rand 0.10; these need API rewrites and multi-NIC real-device checks), open-raid-z's fuser 0.19 (needs macOS and Android devices), and bincode 3 (an empty release, so we stay on 1.3).
+- The VPS aruaru-llm clone is 11 commits behind with local changes (do not pull). The VPS open-gitea clone has diverged (44 behind / 26 ahead); ask the owner before touching it.
+- Real-device checks on Mac and iPhone (no devices). Local work folders (`F:\_wt-aruaru-llm`, `F:\_wt-ime`, `F:\_work_rlf`, `F:\_*.bin`) need manual cleanup because deletion was blocked.
+- Rules: continue without asking; verify on real systems before saying "done"; never write secrets; no new REST; build VPS binaries in `Ubuntu-24.04`.
