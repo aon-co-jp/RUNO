@@ -5030,3 +5030,8 @@ Continuing from before. Read the 2026-11-23 sections at the end of `F:\runo\PORT
 ## 2026-11-23 追記: 音声ノイズ問題の解決(日本語・English)
 **日本語**: PowerDVD の高音ノイズは、**KB5132061 の削除と LOXJIE(D40 Pro)のレベル(ゲイン)調整**で解決しました(所有者の確認)。11/11前後に入ったドライバーは無く、UniConverter・Leawo も音声経路(APO・フィルター・システムファイル)に手を入れていませんでした。原因の主因は KB5132061 とレベル設定の組み合わせと見られます(どちらが決め手かは未区別)。WMP の CD 書き込みで声が低くなる件は、再確認の報告がまだありません(48kHz の mp4 を 44.1kHz/16bit の WAV にしてから書く方法が有力)。
 **English**: The PowerDVD high-pitch noise was solved by **removing KB5132061 and adjusting the LOXJIE (D40 Pro) level/gain** (confirmed by the owner). No driver was updated around 11/11, and UniConverter/Leawo did not touch the audio path (APOs, filters, system files). The combination of KB5132061 and the level setting is the likely cause; which one was decisive is not separated. The WMP CD-burn voice-pitch issue has not been re-reported (converting 48 kHz mp4 to a 44.1 kHz/16-bit WAV first is the leading fix).
+
+
+## 2026-11-23 追記: version-control通知(RUNO・aruaru-IME・open-bar)対応 / Notice handled
+**日本語**: aruaru-IME・open-bar の `url` を 2.5.9 へ更新して push(RUSTSEC-2026-0592)。VPS の RUNO(44遅れ)・aruaru-IME・open-bar のクローンは作業ツリーがきれいなことを確認して fast-forward 済み。open-bar は直列で全試験成功。VPS の検証用SFTP鍵は既に無く、`authorized_keys` は空。**未了**: 稼働バイナリの入れ替え(必要時)、Mac・iPhone実機確認。
+**English**: `url` was bumped to 2.5.9 in aruaru-IME and open-bar (RUSTSEC-2026-0592) and pushed. The VPS clones of RUNO (44 behind), aruaru-IME and open-bar were fast-forwarded after confirming clean trees. open-bar passes serially. The test SFTP key is already gone on the VPS (`authorized_keys` is empty). **Open**: swapping running binaries if needed, Mac/iPhone device checks.
