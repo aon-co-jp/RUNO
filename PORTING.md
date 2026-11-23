@@ -5008,3 +5008,21 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **Remaining candidates (untested)**: UniConverter 18 (11/11) and 17 (4/4), Leawo Prof. Media 13 (11/15), and LOXJIE AUDIO (XMOS/Thesycon 5.50.0.29217, installed 2026-10-10, 384 kHz). Searches found no report of high-frequency noise from the 5.50.0 driver and none of UniConverter 18 changing pitch in WMP. XMOS DAC reports include a case fixed by removing the ASIO driver and distortion from extreme upsampling. The usual cause of "lower voices" when burning is material that is not 44.1 kHz (for example 48 kHz AAC). **Waiting for the owner**: whether the PowerDVD noise and the WMP burn are fixed (KB5132061 and the three apps were removed together, so the effect cannot be attributed to one).
 - **x-tenant**: production `AdmissionStats` re-read (read-only) still shows only my own `claude-check` request; real traffic remains unobserved.
 - Sources: [XMOS/ASIO distortion case](https://community.audirvana.com/t/bursts-of-short-distorted-noise-shots-between-songs/39915), [Thesycon 5.50.0 post](https://www.denafrips.com/single-post/thesycon-v5-50-0-usb-driver-windows), [low-pitch WMP-like case](https://forum.dbpoweramp.com/forum/dbpoweramp/music-converter/4199-song-on-my-burned-cd-come-out-very-slow?p=65461).
+
+## 2026-11-23 引っ越し用の再開メッセージ(音声不具合・翻訳・ストリーミング) / Portable resume message
+
+### 日本語(そのまま貼り付け)
+前の続きです。`F:\runo\PORTING.md` 末尾の2026-11-23の各節を読んでから再開してください。
+- **音声不具合**(PowerDVD高音ノイズ・WMPのCD書き込みで声が低くなる): KB5132061は削除済み(ビルド26200.9711)、open-media・make-disk・open-barはアンインストール済み。どれが効いたかは未区別で、所有者の再試験待ち。残る候補はUniConverter 18/17、Leawo Prof. Media 13、LOXJIE AUDIO(XMOS 5.50.0・384kHz)。試す手順: mp4を44.1kHz/16bitのWAVにしてから書く、PowerDVDの拡張機能を切る、Windows Updateを一時停止。システム設定の変更は所有者が行う。make-disk 0.1.31の空の登録の削除は所有者の了承後。
+- **x-tenant**: 本番`AdmissionStats`は私の`claude-check`のみ。実トラフィック後に`anonymous`の割合を見る。
+- **翻訳・音声**: 製品はM2M100 418M(MIT)。NLLB-200はCC-BY-NCで研究のみ。`rs-whisper-la`は語の時刻(タイムスタンプ)が無く切り捨てで語が重複する。未了=タイムスタンプ実装、base以上の再測定(ダウンロード許可が要る)、M2M100 1.2B、`open-tv-chat`への組み込み。
+- **見送り**: fuser 0.19(fuser-androidと同時に実機つき)、aggligator更新(複数NIC実機)。VPSのaruaru-llm・open-giteaのクローンはpullしない(分岐、要確認)。検証用SFTP鍵`/var/lib/ows-sftp/testkey`は削除可。Mac・iPhone実機は無い。
+- **決まり**: 確認せず自動で進める、本物で確認してから完了、秘密は書かない、新しいRESTは作らない、VPS用ビルドは`Ubuntu-24.04`+`check-glibc.sh`、開発・試験は手元PC、元のCOBOL_to/Java_toの削除だけ確認、返答は日本語のみ。
+
+### English
+Continuing from before. Read the 2026-11-23 sections at the end of `F:\runo\PORTING.md` first.
+- **Audio bugs** (PowerDVD high-pitch noise; WMP burn lowers voices): KB5132061 is removed (build 26200.9711); open-media, make-disk and open-bar are uninstalled. Which change helped is not separated; waiting for the owner's retest. Remaining suspects: UniConverter 18/17, Leawo Prof. Media 13, LOXJIE AUDIO (XMOS 5.50.0, 384 kHz). Try: convert the mp4 to 44.1 kHz/16-bit WAV before burning, turn off PowerDVD enhancements, pause Windows Update. System-settings changes stay with the owner; remove the stale make-disk 0.1.31 registration only with approval.
+- **x-tenant**: production `AdmissionStats` shows only my `claude-check`; check the `anonymous` share once real traffic arrives.
+- **Translation/speech**: products use M2M100 418M (MIT); NLLB-200 is CC-BY-NC (research only). `rs-whisper-la` lacks word timestamps, so trimming duplicates a word. Open: timestamps, re-measure with base or larger (needs download permission), M2M100 1.2B, integration into `open-tv-chat`.
+- **Deferred**: fuser 0.19 (with fuser-android, on real devices), aggligator update (multi-NIC devices). Do not pull the VPS aruaru-llm / open-gitea clones (diverged; ask first). The test SFTP key `/var/lib/ows-sftp/testkey` can be deleted. No Mac/iPhone devices.
+- **Rules**: continue without asking; verify on real systems before "done"; never write secrets; no new REST; VPS builds in `Ubuntu-24.04` + `check-glibc.sh`; develop and test on the local PC; only deleting the original COBOL_to/Java_to needs confirmation; reply in Japanese only.
