@@ -1726,3 +1726,9 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 ## 2026-11-23 追記: 区間末尾の余分な語の除去(日本語・English)
 **日本語**: `rs-whisper-stream` で、区間の末尾に余分な語(例「Ask」)が付く問題に対し、**最後の文末記号(. ? !)の後ろに1語だけ残った場合はその語を落とす**処理(`drop_dangling`、試験1件追加、合計4件成功)を入れました。11秒の `jfk.wav`(tiny、CPU)のつないだ結果は「And so my fellow Americans ask not what your country can do for you. ask what you can do for your country.」になり、**余分な「Ask」が消えて全文が正しく**なりました(約5.7秒)。**限界**: 文末記号の後の1語を機械的に落とすので、本当にその1語で終わる発話(句読点なしの「Yes」など)でも、直前に文末記号があると落ちます。句読点なしの区間は残します。**未了**: base 以上のモデルでの再測定(追加のダウンロード許可が要る)、`open-tv-chat` への組み込み(マイク入力)。
 **English**: For the stray trailing word in `rs-whisper-stream` (for example "Ask"), I added `drop_dangling`: **a single word left after the last sentence end (. ? !) is dropped** (one test added; 4 pass). On the 11 s `jfk.wav` (tiny, CPU) the joined result is now "And so my fellow Americans ask not what your country can do for you. ask what you can do for your country." with **the stray "Ask" gone and the whole text correct** (about 5.7 s). **Limit**: it drops a lone word after a sentence end mechanically, so an utterance that really ends in one word (like an unpunctuated "Yes" right after a sentence end) is also dropped; segments with no sentence end are kept. **Open**: re-measuring with base or larger (needs download permission) and integration into `open-tv-chat` (microphone input).
+
+## 2026-11-23 追記: 同時開発の対象に MFastAPI と RMojo を明示(日本語)
+- 4姉妹(RPoem・open-cosmo・Reaxt・RPoRea)と、COBOL_to・Java_to・pl2pl に加えて、**MFastAPI と RMojo も同時に開発する対象**にしました(ユーザー指示)。1つを変えたら、ほかの確認と README・CLAUDE・PORTING の更新を同じ日に行います。
+- 現状確認: RMojo は手元の `cargo test` が11件成功、CI も成功。MFastAPI は CI(compat)が成功で、手元は Rust コア未ビルドのため `tests/test_rust_core.py` などが動かず、純 Python 分だけの確認にとどまります(コアのビルドは未実施)。
+- 手元の Reaxt のテストは全成功。RPoRea の `cargo test` は10分を超えて完了を確認できていません(バックグラウンドで実行中)。
+- 未了: 姉妹リポジトリそれぞれの未了(Mac・iPhone の実機確認など)。
