@@ -5045,3 +5045,7 @@ Continuing from before. Read the 2026-11-23 sections at the end of `F:\runo\PORT
 
 - **2026-11-23 追記(Ledger実書き込みの通し確認の結論)**: `Ledger::commit` を呼ぶのは open-web-server の `open-web-server-gateway` クレートの `Api/GrantItem`・`Transactions` だけで、本番で動いている前面の `open-web-server`(ドメイン振り分け・SFTP等)にはこの経路が無い(コード検索で確認、本番の `admin.env` に `OPEN_RUNO_ENDPOINT` も無い)。よって本番の前面経由では実書き込みを通せない。ゲートウェイ側の書き込みは、Ledgerと同じ形の `Admin/DbMutate` を VPS で実送信して確認済み(200・`db_commit_id`・冪等)。通し確認をするなら、`open-web-server-gateway` を手元で起動し、SSHトンネルで VPS のゲートウェイ(127.0.0.1:8140)へ向けて `GrantItem` を呼ぶ(本番DBに行が1件増えるので、実行前に所有者の了承が要る)。
 - *Ledger commits happen only in the `open-web-server-gateway` crate (`Api/GrantItem`, `Transactions`); the production front `open-web-server` has no such path and no `OPEN_RUNO_ENDPOINT`. A real end-to-end run would need that crate run locally and tunnelled to the VPS gateway (adds one DB row, so needs the owner's OK). The same-shaped `Admin/DbMutate` call was already verified.*
+
+## 2026-11-23 追記: WMPの書き込みの声の変化も解決(日本語・English)
+**日本語**: 所有者の確認で、PowerDVDの高音ノイズに加え、WMPのCD書き込みで声が低くなる件も解決しました。音声の不具合は両方とも完了です(原因の切り分けは、KB5132061の削除・3アプリのアンインストール・レベル調整を同時に行ったため、どれが決め手かは未区別)。
+**English**: The owner confirmed that the WMP CD-burn voice-pitch issue is also solved, in addition to the PowerDVD noise. Both audio issues are closed (KB5132061 removal, three uninstalls and level adjustment were done together, so which one was decisive is not separated).
