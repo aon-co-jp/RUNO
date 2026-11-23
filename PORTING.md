@@ -4956,3 +4956,8 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 ## 2026-11-23 追記: whisper常駐化とdist_syncの実SFTP / Update
 **日本語**: `rs-whisper-stream`(rs-whisper `4fdd99f`、open-tv-chat `1c187a4`)は、モデルを1回だけ読み込み、無音で区切り、区間長に合わせた窓と0.3秒の重なりで認識し、重複した語を除去します。11秒の音声で処理合計は約5.2秒(最小区間1.0秒は誤認識、2.5秒以上にする。末尾に余計な1語が付く)。dist_syncは実SFTPサーバーで通り、実サーバーだけで出る不具合(サブフォルダー未作成)を直しました。**未確認**: SFTP経由の削除(クライアント未実装)、実会話・雑音での区切り。**残り(所有者待ち)**: 音声切り分け・Mac/iPhone・IME exe。実トラフィック待ち: x-tenant。
 **English**: `rs-whisper-stream` loads the model once, splits on silence, recognizes with a window sized to each chunk plus 0.3 s overlap and removes duplicated words: about 5.2 s total for an 11 s clip (minimum chunk 1.0 s misrecognizes; use 2.5 s or more). dist_sync passed against a real SFTP server and a real-server-only bug (missing subfolders) was fixed. **Unverified**: SFTP delete (client not implemented), real conversation and noisy audio. Owner-only: audio isolation, Mac/iPhone, IME exe. Awaiting real traffic: x-tenant.
+
+## 2026-11-23 追記: SFTP削除のクライアント実装と実サーバー確認(日本語)
+- RS-Sync の `FolderBackend` に `remove_file`(既定は未対応エラー)を追加し、ローカルとSFTPで実装しました。ローカルの単体試験(削除と、無いファイルのエラー)は成功です。
+- 実サーバー試験(`sftp_remove_file_against_a_real_server`、`--ignored`)を、WSLの open-web-server 組み込みSFTP(`127.0.0.1:2311`のみ、使い捨て鍵)に対して実行し、書き込み→サイズ確認→削除→消えたことの確認が通り、サーバー側のルートも空に戻りました。
+- **未確認**: 同期の動作そのものへの組み込み(今は片方向コピーのみで、削除の同期はしません)、open-easy-web の `dist_sync` 側の削除、`rmdir`(フォルダー削除)。本番VPSには触っていません。
