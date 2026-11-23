@@ -4952,3 +4952,7 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - 現状確認: RMojo は手元の `cargo test` が11件成功、CI も成功。MFastAPI は CI(compat)が成功で、手元は Rust コア未ビルドのため `tests/test_rust_core.py` などが動かず、純 Python 分だけの確認にとどまります(コアのビルドは未実施)。
 - 手元の Reaxt のテストは全成功。RPoRea の `cargo test` は10分を超えて完了を確認できていません(バックグラウンドで実行中)。
 - 未了: 姉妹リポジトリそれぞれの未了(Mac・iPhone の実機確認など)。
+
+## 2026-11-23 追記: whisper常駐化とdist_syncの実SFTP / Update
+**日本語**: `rs-whisper-stream`(rs-whisper `4fdd99f`、open-tv-chat `1c187a4`)は、モデルを1回だけ読み込み、無音で区切り、区間長に合わせた窓と0.3秒の重なりで認識し、重複した語を除去します。11秒の音声で処理合計は約5.2秒(最小区間1.0秒は誤認識、2.5秒以上にする。末尾に余計な1語が付く)。dist_syncは実SFTPサーバーで通り、実サーバーだけで出る不具合(サブフォルダー未作成)を直しました。**未確認**: SFTP経由の削除(クライアント未実装)、実会話・雑音での区切り。**残り(所有者待ち)**: 音声切り分け・Mac/iPhone・IME exe。実トラフィック待ち: x-tenant。
+**English**: `rs-whisper-stream` loads the model once, splits on silence, recognizes with a window sized to each chunk plus 0.3 s overlap and removes duplicated words: about 5.2 s total for an 11 s clip (minimum chunk 1.0 s misrecognizes; use 2.5 s or more). dist_sync passed against a real SFTP server and a real-server-only bug (missing subfolders) was fixed. **Unverified**: SFTP delete (client not implemented), real conversation and noisy audio. Owner-only: audio isolation, Mac/iPhone, IME exe. Awaiting real traffic: x-tenant.
