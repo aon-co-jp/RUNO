@@ -4946,3 +4946,9 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **削除**: RS-Sync・dist_sync のどちらにも、SFTP経由の削除処理は実装されていません。削除(`rm`・`rmdir`)は、11/22 の本物のOpenSSH `sftp` での確認(サーバー側)のみです。クライアントからの削除は未実装=未確認。
 - **VPSの検証用鍵**: `/var/lib/ows-sftp/testkey`・`testkey.pub` を削除(`shred`)し、`authorized_keys`(検証鍵と同一だった)を空にしました(元は `/root/ows-sftp-authorized_keys.before-20261123`)。SFTPは `127.0.0.1:2222` のみ待ち受け、サービスは active・エラーなし。本番は再起動していないので、起動時に読んだ許可鍵がメモリに残っている可能性はありますが、秘密鍵は消えています(次の再起動で反映)。
 - **未了**: dist_sync の公開鍵認証対応、クライアント側の削除、実トラフィックでの `x-tenant` 観測(別担当)。
+
+## 2026-11-23 追記: 同時開発の対象に MFastAPI と RMojo を明示(日本語)
+- 4姉妹(RPoem・open-cosmo・Reaxt・RPoRea)と、COBOL_to・Java_to・pl2pl に加えて、**MFastAPI と RMojo も同時に開発する対象**にしました(ユーザー指示)。1つを変えたら、ほかの確認と README・CLAUDE・PORTING の更新を同じ日に行います。
+- 現状確認: RMojo は手元の `cargo test` が11件成功、CI も成功。MFastAPI は CI(compat)が成功で、手元は Rust コア未ビルドのため `tests/test_rust_core.py` などが動かず、純 Python 分だけの確認にとどまります(コアのビルドは未実施)。
+- 手元の Reaxt のテストは全成功。RPoRea の `cargo test` は10分を超えて完了を確認できていません(バックグラウンドで実行中)。
+- 未了: 姉妹リポジトリそれぞれの未了(Mac・iPhone の実機確認など)。
