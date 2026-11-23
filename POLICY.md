@@ -1173,3 +1173,7 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 ## 2026-11-24 追記: CI の姉妹リポジトリ取得の決まり(日本語・English)
 **日本語**: パス依存で姉妹リポジトリ(RMojo・open-cpu など)を参照するリポジトリは、任意機能(optional)でも cargo が解決するため、CI で同じ親フォルダーへ必ず clone する。新しい姉妹依存を足したら、同じ日に全ワークフロー(compat・wheels など)へ clone 行を足す。新しい REST は作らない。
 **English**: A repository with a path dependency on a sibling (RMojo, open-cpu, ...) must clone it into the same parent folder in CI, because cargo resolves path dependencies even for optional features. When adding a sibling dependency, add the clone line to every workflow (compat, wheels, ...) the same day. No new REST.
+
+## 2026-11-24 状況 / Status
+**日本語**: rs-whisper のテスト4件が成功し、runo・rs-whisper・open-tv-chat は origin/main と同期済み。未了: base 以上のモデルでの再測定(ダウンロード許可が必要)、M2M100 1.2B の測定、open-tv-chat へのマイク入力の組み込み(音を鳴らす・録る試験はしない)、x-tenant の実トラフィック観測、Mac・iPhone 実機。決まり: 新しい REST は作らない、秘密は書かない、実機で確かめてから「完了」と書く。
+**English**: The 4 rs-whisper tests pass, and runo, rs-whisper and open-tv-chat are in sync with origin/main. Open: re-measure with base or larger (needs download permission), measure M2M100 1.2B, integrate microphone input into open-tv-chat (no sound-playing or recording tests), observe x-tenant with real traffic, real Mac/iPhone devices. Rules: no new REST, never write secrets, say "done" only after checking on a real system.
