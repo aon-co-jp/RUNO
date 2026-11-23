@@ -5074,3 +5074,7 @@ Continuing from before. Read the 2026-11-23 sections at the end of `F:\runo\PORT
 - `cargo test --release` in `rs-whisper` passes 4 tests (word times, trimming, de-duplication). runo, rs-whisper and open-tv-chat are in sync with `origin/main`.
 - Still open: re-measure with base or larger (needs download permission), measure M2M100 1.2B, integrate microphone input into `open-tv-chat` (no sound-playing or recording tests), observe x-tenant with real traffic, real Mac/iPhone devices.
 - No new implementation this time (verification only).
+
+## 2026-11-24 追記: MFastAPI の CI 修正(日本語・English)
+**日本語**: MFastAPI の compat CI が失敗していた原因は、ust/mfastapi-server が姉妹リポジトリ RMojo をパス依存(../../../RMojo、任意機能でも解決は必須)で参照するのに、CI が RMojo を取得していなかったことでした。compat.yml と wheels.yml に RMojo の clone を足しました(MFastAPI main)。ほかの姉妹(RPoem・open-cosmo・Reaxt・RPoRea・RMojo・pl2pl・open-tv-chat)の CI は成功。新しい REST は追加していません。**未了**: MFastAPI の再実行結果の確認、Mac・iPhone 実機、所有者待ちの項目。
+**English**: MFastAPI's compat CI failed because ust/mfastapi-server has a path dependency on the sibling RMojo (../../../RMojo; cargo must resolve it even for an optional feature) and CI never checked it out. compat.yml and wheels.yml now clone RMojo (MFastAPI main). CI of the other sisters (RPoem, open-cosmo, Reaxt, RPoRea, RMojo, pl2pl, open-tv-chat) is green. No new REST added. **Open**: confirm the MFastAPI re-run, real Mac/iPhone devices, owner-side items.
