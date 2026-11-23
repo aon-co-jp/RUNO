@@ -5035,3 +5035,7 @@ Continuing from before. Read the 2026-11-23 sections at the end of `F:\runo\PORT
 ## 2026-11-23 追記: version-control通知(RUNO・aruaru-IME・open-bar)対応 / Notice handled
 **日本語**: aruaru-IME・open-bar の `url` を 2.5.9 へ更新して push(RUSTSEC-2026-0592)。VPS の RUNO(44遅れ)・aruaru-IME・open-bar のクローンは作業ツリーがきれいなことを確認して fast-forward 済み。open-bar は直列で全試験成功。VPS の検証用SFTP鍵は既に無く、`authorized_keys` は空。**未了**: 稼働バイナリの入れ替え(必要時)、Mac・iPhone実機確認。
 **English**: `url` was bumped to 2.5.9 in aruaru-IME and open-bar (RUSTSEC-2026-0592) and pushed. The VPS clones of RUNO (44 behind), aruaru-IME and open-bar were fast-forwarded after confirming clean trees. open-bar passes serially. The test SFTP key is already gone on the VPS (`authorized_keys` is empty). **Open**: swapping running binaries if needed, Mac/iPhone device checks.
+
+## 2026-11-23 追記: 語の時刻は実装済み / Word timestamps already done
+**日本語**: `rs-whisper` に交差注意DTWの語時刻と、`rs-whisper-la` の実時刻での切り捨てが入り、「ask」の重複は解消済み(rs-whisper `6792595`・`6c284cf`)。上の「タイムスタンプ未了」は古い記述。残りは base 以上での再測定(ダウンロード許可)と `open-tv-chat` への組み込み。
+**English**: Cross-attention DTW word timestamps and real-time trimming in `rs-whisper-la` are in (rs-whisper `6792595`, `6c284cf`), and the duplicated "ask" is fixed. The "timestamps open" lines above are stale. Remaining: re-measure with base or larger (needs download permission) and integrate into `open-tv-chat`.
