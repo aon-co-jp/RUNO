@@ -5065,3 +5065,12 @@ Continuing from before. Read the 2026-11-23 sections at the end of `F:\runo\PORT
 - 本番aruaru-llmの`AdmissionStats`(読み取りのみ)は、依然として確認用`claude-check`の1件だけ。実際の呼び出し側が`x-tenant`を付けているかは未観測(実トラフィック待ち)。
 - 4姉妹・RMojo・pl2pl・open-tv-chatのCIは成功、手元は`origin/main`と同期。MFastAPIのCIは実行中で、手元に別作業のステージ済み変更(`DESIGN-MOJO.md`・`PORTING.md`)があるため触っていない。rs-whisperはActionsの実行履歴なし。
 - 残り: x-tenantの実トラフィック観測、Mac・iPhone実機、MFastAPIのCI結果確認。
+## 2026-11-24 追記: 再確認(日本語)
+- `rs-whisper` の `cargo test --release` は4件成功(語時刻・切り捨て・重複除去)。runo・rs-whisper・open-tv-chat は `origin/main` と同期済み。
+- 未了(変わらず): base 以上のモデルでの再測定(ダウンロード許可が要る)、M2M100 1.2B の測定、`open-tv-chat` へのマイク入力の組み込み(音を鳴らす・録る試験はしない)、x-tenant の実トラフィック観測、Mac・iPhone 実機。
+- 今回は新しい実装は入れていない(確認のみ)。
+
+## 2026-11-24 Update: re-check (English)
+- `cargo test --release` in `rs-whisper` passes 4 tests (word times, trimming, de-duplication). runo, rs-whisper and open-tv-chat are in sync with `origin/main`.
+- Still open: re-measure with base or larger (needs download permission), measure M2M100 1.2B, integrate microphone input into `open-tv-chat` (no sound-playing or recording tests), observe x-tenant with real traffic, real Mac/iPhone devices.
+- No new implementation this time (verification only).
