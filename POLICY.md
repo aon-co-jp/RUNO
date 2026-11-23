@@ -1169,3 +1169,7 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **本番に触る確認**: 読み取りと、ごく小さな1回の呼び出し(例: `max_new_tokens=1` の Generate)まで。負荷をかける試験・デバッグは手元PC(WSL)で行う。
 - **有効にしていない機能**(本番のSFTPサーバーなど)は、勝手に有効にしない。有効にするかは所有者が決める。
 - 新しいRESTは作らない。秘密は書かない。WSLで動かすサーバーは、同じ呼び出しの中で起動して試験する(呼び出しが終わると止まる)。
+
+## 2026-11-24 追記: CI の姉妹リポジトリ取得の決まり(日本語・English)
+**日本語**: パス依存で姉妹リポジトリ(RMojo・open-cpu など)を参照するリポジトリは、任意機能(optional)でも cargo が解決するため、CI で同じ親フォルダーへ必ず clone する。新しい姉妹依存を足したら、同じ日に全ワークフロー(compat・wheels など)へ clone 行を足す。新しい REST は作らない。
+**English**: A repository with a path dependency on a sibling (RMojo, open-cpu, ...) must clone it into the same parent folder in CI, because cargo resolves path dependencies even for optional features. When adding a sibling dependency, add the clone line to every workflow (compat, wheels, ...) the same day. No new REST.

@@ -55,6 +55,7 @@ https://github.com/aon-co-jp
 影響しない)。
 
 ## HANDOFF
+- **2026-11-24 MFastAPI の CI 修正**: compat・wheels に RMojo の clone を追加し compat 成功(原因=パス依存の姉妹を CI が取得していなかった)。他の姉妹の CI は成功。未了=Mac・iPhone 実機、所有者待ちの項目。詳細は[PORTING.md](PORTING.md)末尾。*MFastAPI CI fixed by cloning the sibling RMojo; other sisters green; open: real Mac/iPhone devices and owner-side items. Details at the end of PORTING.md.*
 - **2026-11-23 再確認**: x-tenantは本番で依然claude-checkの1件のみ(実トラフィック待ち)。4姉妹・RMojo・pl2pl・open-tv-chatのCIは成功。MFastAPIは別作業の未コミット変更があり未接触。詳細は[PORTING.md](PORTING.md)末尾。
 - **2026-11-23 同期へのミラー削除の組み込み**: RS-Sync `a15bb7a`で、元に無く宛先にだけあるファイルの削除を同期に組み込み、WSLの実SFTPサーバーで通しも成功(記録は`935fb5b`)。ジョブ設定`mirror_delete`・`mirror_dry_run`・`max_deletes`。安全策: 既定オフ、ドライラン(消さず一覧報告)、削除上限(既定20件超なら1件も消さず報告)、元が空のときの保護。**未確認**: 本番VPSでの運用、実データでの長期運用。*Mirror delete wired into RS-Sync with dry run, cap and default-off safeguards; verified on a real SFTP server.*
 - **2026-11-23 同時開発の対象を追加 / Sisters extended**: 4姉妹(RPoem・open-cosmo・Reaxt・RPoRea)に **RMojo と MFastAPI** を加え、COBOL_to・Java_to とともに最優先で同時開発します(1つ変えたら他の確認と README/CLAUDE/PORTING/POLICY の更新を同日に)。*RMojo and MFastAPI join the four sisters; together with COBOL_to and Java_to they are the top priority and developed together (check the others and update README/CLAUDE/PORTING/POLICY the same day).*
