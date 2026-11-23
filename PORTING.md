@@ -5039,3 +5039,6 @@ Continuing from before. Read the 2026-11-23 sections at the end of `F:\runo\PORT
 ## 2026-11-23 追記: 語の時刻は実装済み / Word timestamps already done
 **日本語**: `rs-whisper` に交差注意DTWの語時刻と、`rs-whisper-la` の実時刻での切り捨てが入り、「ask」の重複は解消済み(rs-whisper `6792595`・`6c284cf`)。上の「タイムスタンプ未了」は古い記述。残りは base 以上での再測定(ダウンロード許可)と `open-tv-chat` への組み込み。
 **English**: Cross-attention DTW word timestamps and real-time trimming in `rs-whisper-la` are in (rs-whisper `6792595`, `6c284cf`), and the duplicated "ask" is fixed. The "timestamps open" lines above are stale. Remaining: re-measure with base or larger (needs download permission) and integrate into `open-tv-chat`.
+
+- **2026-11-23 追記(aruaru-db修正ブランチ)**: `fix/insert-quoted-values`(INSERT値リテラルの `,` `)` を引用符考慮で解析)は、別セッションが `467e3b1` で aruaru-db の main に取り込み済み(aruaru-query 61件成功)。再作業は不要。本番 aruaru-server への反映は未実施。
+- *aruaru-db fix branch is already merged into main (`467e3b1`, 61 aruaru-query tests pass); no rework needed. Production aruaru-server not updated.*
