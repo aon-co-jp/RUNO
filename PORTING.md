@@ -5049,3 +5049,7 @@ Continuing from before. Read the 2026-11-23 sections at the end of `F:\runo\PORT
 ## 2026-11-23 追記: WMPの書き込みの声の変化も解決(日本語・English)
 **日本語**: 所有者の確認で、PowerDVDの高音ノイズに加え、WMPのCD書き込みで声が低くなる件も解決しました。音声の不具合は両方とも完了です(原因の切り分けは、KB5132061の削除・3アプリのアンインストール・レベル調整を同時に行ったため、どれが決め手かは未区別)。
 **English**: The owner confirmed that the WMP CD-burn voice-pitch issue is also solved, in addition to the PowerDVD noise. Both audio issues are closed (KB5132061 removal, three uninstalls and level adjustment were done together, so which one was decisive is not separated).
+
+## 2026-11-23 追記: 旧TypeScript版インストーラーの削除を確認(日本語・English)
+**日本語**: open-raid-z `7faf0c5` で旧TS版 `open_runo_installer` の削除(38ファイル)が済み、`main` に反映済みです(MSI・NSISの通し試験は合格済み)。`open_runo_installer_core`(Rust)は新インストーラーが使うため残しています。11-17の未了1は完了です。残り: 管理者実行でのディスク一覧・文字サイズ確認、ストリーミングのVPS反映。
+**English**: The old TypeScript `open_runo_installer` was removed in open-raid-z `7faf0c5` (38 files) and is on `main` (MSI and NSIS tests had passed). `open_runo_installer_core` (Rust) stays because the new installer uses it. Open item 1 of 11-17 is done. Remaining: the disk list when run as admin, font-size checks, and deploying streaming to the VPS.
