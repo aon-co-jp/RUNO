@@ -1612,3 +1612,5 @@ Continuing from before. Read the 2026-11-23 sections at the end of `F:\runo\PORT
 - README, CLAUDE, PORTING, POLICY and similar files are edited in **Japanese and English every time**. The ten other languages plus Arabic and Persian are **not translated every time** (AI-translated, not yet native-checked).
 - Even when translations lag behind the latest edit, **the newest translated range is always shown at the very top, together with the latest Japanese**. The GitHub Actions workflow `docs-latest` (`tools/docs-latest.yml`, `tools/translations-latest.py`) writes `0-LATEST-TRANSLATIONS.md` (first in the `docs` branch), a link at the top of `README.md`, and the top of the run summary, with the newest section date per document and language and a note when it is older than the latest edit.
 - Convention: put a language heading (for example `### Deutsch`) under a dated `## YYYY-MM-DD ...` heading; per-language files are named `README-German.md` and so on.
+
+- 2026-11-24 `docs-latest`(翻訳索引つき)を151リポジトリへ配布済み、詳細は PORTING.md 末尾 / `docs-latest` with the translation index is rolled out to 151 repositories; details at the end of PORTING.md.
