@@ -1600,3 +1600,15 @@ Continuing from before. Read the 2026-11-23 sections at the end of `F:\runo\PORT
 ## 2026-11-24 状況 / Status
 **日本語**: rs-whisper のテスト4件が成功し、runo・rs-whisper・open-tv-chat は origin/main と同期済み。未了: base 以上のモデルでの再測定(ダウンロード許可が必要)、M2M100 1.2B の測定、open-tv-chat へのマイク入力の組み込み(音を鳴らす・録る試験はしない)、x-tenant の実トラフィック観測、Mac・iPhone 実機。決まり: 新しい REST は作らない、秘密は書かない、実機で確かめてから「完了」と書く。
 **English**: The 4 rs-whisper tests pass, and runo, rs-whisper and open-tv-chat are in sync with origin/main. Open: re-measure with base or larger (needs download permission), measure M2M100 1.2B, integrate microphone input into open-tv-chat (no sound-playing or recording tests), observe x-tenant with real traffic, real Mac/iPhone devices. Rules: no new REST, never write secrets, say "done" only after checking on a real system.
+
+## 2026-11-24 方針: 翻訳済みの最新版を、いつも一番上に示す / Policy: always show the newest translations at the top
+
+### 日本語
+- README・CLAUDE・PORTING・POLICY などは、**日本語と英語を毎回の基本として編集**します。世界10か国語+アラビア語+ペルシャ語は**毎回は翻訳しません**(AI翻訳・ネイティブ確認前)。
+- 翻訳が最新の編集に追いついていなくても、**翻訳済みの範囲の最新版を、日本語の最新版と一緒に、いつも一番上に表示**します。仕組みは GitHub Actions の `docs-latest`(`tools/docs-latest.yml`、`tools/translations-latest.py`)で、`docs` ブランチの先頭に並ぶ `0-LATEST-TRANSLATIONS.md`、`README.md` の最上段のリンク、実行サマリーの先頭に、文書ごと・言語ごとの最新の節の日付と「最新の編集より古い」旨を出します。
+- 見出しの付け方: 日付つきの `## YYYY-MM-DD ...` の下に、言語名の見出し(`### Deutsch` など)を置くと検出されます。言語別ファイルは `README-German.md` のように `-言語名` を付けます。
+
+### English
+- README, CLAUDE, PORTING, POLICY and similar files are edited in **Japanese and English every time**. The ten other languages plus Arabic and Persian are **not translated every time** (AI-translated, not yet native-checked).
+- Even when translations lag behind the latest edit, **the newest translated range is always shown at the very top, together with the latest Japanese**. The GitHub Actions workflow `docs-latest` (`tools/docs-latest.yml`, `tools/translations-latest.py`) writes `0-LATEST-TRANSLATIONS.md` (first in the `docs` branch), a link at the top of `README.md`, and the top of the run summary, with the newest section date per document and language and a note when it is older than the latest edit.
+- Convention: put a language heading (for example `### Deutsch`) under a dated `## YYYY-MM-DD ...` heading; per-language files are named `README-German.md` and so on.

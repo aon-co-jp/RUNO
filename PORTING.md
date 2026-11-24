@@ -5104,3 +5104,14 @@ Continuing from before. Read the HANDOFF in `F:\runo\CLAUDE.md` and the ends of 
 - x-tenant: production `AdmissionStats` shows only my `claude-check` request; check the `anonymous` share once real traffic arrives.
 **Open (in order)**: (1) check the MFastAPI wheels result; (2) re-measure rs-whisper with base or larger (needs download permission) and integrate streaming into open-tv-chat (no sound play/record tests); (3) observe x-tenant with real traffic; (4) deferred: fuser 0.19 (with fuser-android, real devices), aggligator update (multi-NIC devices); (5) owner-side: the aruaru-admin VPS deployment decision, removing the stale make-disk 0.1.31 registration, the WMP recheck, deleting the test SFTP key `/var/lib/ows-sftp/testkey` (allowed). No Mac/iPhone devices.
 **Rules**: reply in Japanese only; continue without asking; verify on real systems before "done"; never write secrets; no new REST (Connect/gRPC only); develop and test on the local PC (WSL), VPS only to deploy and verify; build VPS binaries in `Ubuntu-24.04` with `vps-build.sh` then `check-glibc.sh`; in `F:\runo` add only specific files (never `.tmp-*`); do not pull the VPS aruaru-llm / open-gitea clones; only deleting the original COBOL_to / Java_to needs confirmation; system-settings changes stay with the owner; write docs in Japanese and English, then commit and push (commit messages end with `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`).
+## 2026-11-24 方針: 翻訳済みの最新版を、いつも一番上に示す / Policy: always show the newest translations at the top
+
+### 日本語
+- README・CLAUDE・PORTING・POLICY などは、**日本語と英語を毎回の基本として編集**します。世界10か国語+アラビア語+ペルシャ語は**毎回は翻訳しません**(AI翻訳・ネイティブ確認前)。
+- 翻訳が最新の編集に追いついていなくても、**翻訳済みの範囲の最新版を、日本語の最新版と一緒に、いつも一番上に表示**します。仕組みは GitHub Actions の `docs-latest`(`tools/docs-latest.yml`、`tools/translations-latest.py`)で、`docs` ブランチの先頭に並ぶ `0-LATEST-TRANSLATIONS.md`、`README.md` の最上段のリンク、実行サマリーの先頭に、文書ごと・言語ごとの最新の節の日付と「最新の編集より古い」旨を出します。
+- 見出しの付け方: 日付つきの `## YYYY-MM-DD ...` の下に、言語名の見出し(`### Deutsch` など)を置くと検出されます。言語別ファイルは `README-German.md` のように `-言語名` を付けます。
+
+### English
+- README, CLAUDE, PORTING, POLICY and similar files are edited in **Japanese and English every time**. The ten other languages plus Arabic and Persian are **not translated every time** (AI-translated, not yet native-checked).
+- Even when translations lag behind the latest edit, **the newest translated range is always shown at the very top, together with the latest Japanese**. The GitHub Actions workflow `docs-latest` (`tools/docs-latest.yml`, `tools/translations-latest.py`) writes `0-LATEST-TRANSLATIONS.md` (first in the `docs` branch), a link at the top of `README.md`, and the top of the run summary, with the newest section date per document and language and a note when it is older than the latest edit.
+- Convention: put a language heading (for example `### Deutsch`) under a dated `## YYYY-MM-DD ...` heading; per-language files are named `README-German.md` and so on.
