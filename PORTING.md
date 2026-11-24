@@ -5082,3 +5082,25 @@ Continuing from before. Read the 2026-11-23 sections at the end of `F:\runo\PORT
 ## 2026-11-24 状況 / Status
 **日本語**: rs-whisper のテスト4件が成功し、runo・rs-whisper・open-tv-chat は origin/main と同期済み。未了: base 以上のモデルでの再測定(ダウンロード許可が必要)、M2M100 1.2B の測定、open-tv-chat へのマイク入力の組み込み、x-tenant の実トラフィック観測、Mac・iPhone 実機。決まり: 新しい REST は作らない、秘密は書かない。
 **English**: The 4 rs-whisper tests pass; runo, rs-whisper and open-tv-chat are in sync with origin/main. Open: re-measure with base or larger (needs download permission), M2M100 1.2B, microphone input in open-tv-chat, x-tenant with real traffic, real Mac/iPhone devices. Rules: no new REST, never write secrets.
+
+## 2026-11-24 引っ越し用の再開メッセージ / Portable resume message
+
+### 日本語(そのまま貼り付け)
+前の続きです。F:\runo\CLAUDE.md の HANDOFF と、F:\runo\PORTING.md・POLICY.md の末尾(2026-11-23〜24 の各節)を読んでから再開してください。確認なしで未了を自動で進めます。
+**到達点(2026-11-24)**
+- 姉妹リポジトリの CI は成功: RPoem・open-cosmo・Reaxt・RPoRea・RMojo・pl2pl・open-tv-chat。MFastAPI は compat の失敗(原因=パス依存の RMojo を CI が取得していなかった)を直し、compat は成功。wheels は未確認。`rs-whisper` は CI の実行履歴なし。
+- 音声ノイズ(PowerDVD)は KB5132061 の削除と LOXJIE のゲイン調整で解決済み。WMP の CD 書き込みで声が低くなる件は再確認待ち(48kHz の mp4 を 44.1kHz/16bit の WAV にしてから書く方法が有力)。
+- 翻訳は製品には M2M100 418M(MIT)。NLLB-200 は CC-BY-NC なので研究のみ。`rs-whisper-la` は語の時刻(DTW)で切り捨て可能(上限5秒で全文が正しい)。
+- x-tenant は本番 `AdmissionStats` に確認用 `claude-check` の1件のみ。実トラフィック後に `anonymous` の割合を見る。
+**未了(この順)**: (1)MFastAPI の wheels の結果確認、(2)rs-whisper のベース以上での再測定(ダウンロード許可が要る)と open-tv-chat へのストリーミング組み込み(音を鳴らす・録る試験はしない)、(3)実トラフィックでの x-tenant 観測、(4)見送り中: fuser 0.19(fuser-android と同時、実機つき)・aggligator 更新(複数NIC実機)、(5)所有者待ち: aruaru-admin の VPS 配備判断・make-disk 0.1.31 の空の登録の削除・WMP の再確認・検証用 SFTP 鍵 `/var/lib/ows-sftp/testkey` の削除(削除可)。Mac・iPhone の実機は無い。
+**決まり**: 返答は日本語のみ/確認せず自動で進める/本物で確認してから完了/秘密は書かない/新しい REST は作らない(Connect/gRPC のみ)/開発・試験は手元PC(WSL)、VPS は配備と確認のみ/VPS 用ビルドは `Ubuntu-24.04` で `vps-build.sh` と `check-glibc.sh`/`F:\runo` では特定のファイルだけ add(`.tmp-*` は commit しない)/VPS の aruaru-llm・open-gitea のクローンは pull しない/元の COBOL_to・Java_to の削除だけ確認/システム設定の変更は所有者/文書は日英で書き commit・push(末尾に `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`)。
+
+### English (paste-ready)
+Continuing from before. Read the HANDOFF in `F:\runo\CLAUDE.md` and the ends of `F:\runo\PORTING.md` and `POLICY.md` (the 2026-11-23 to 24 sections), then keep working through the open items without asking.
+**Where we are (2026-11-24)**
+- Sister CI is green: RPoem, open-cosmo, Reaxt, RPoRea, RMojo, pl2pl, open-tv-chat. MFastAPI's compat failure (CI never checked out the path-dependency sibling RMojo) is fixed and compat passes; wheels is not yet confirmed. `rs-whisper` has no CI run history.
+- The PowerDVD noise is solved (KB5132061 removed plus LOXJIE gain adjusted). The WMP CD-burn low-voice issue awaits a recheck (converting a 48 kHz mp4 to a 44.1 kHz/16-bit WAV first is the leading fix).
+- Products use M2M100 418M (MIT); NLLB-200 is CC-BY-NC, research only. `rs-whisper-la` can trim with DTW word times (correct full text with a 5 s limit).
+- x-tenant: production `AdmissionStats` shows only my `claude-check` request; check the `anonymous` share once real traffic arrives.
+**Open (in order)**: (1) check the MFastAPI wheels result; (2) re-measure rs-whisper with base or larger (needs download permission) and integrate streaming into open-tv-chat (no sound play/record tests); (3) observe x-tenant with real traffic; (4) deferred: fuser 0.19 (with fuser-android, real devices), aggligator update (multi-NIC devices); (5) owner-side: the aruaru-admin VPS deployment decision, removing the stale make-disk 0.1.31 registration, the WMP recheck, deleting the test SFTP key `/var/lib/ows-sftp/testkey` (allowed). No Mac/iPhone devices.
+**Rules**: reply in Japanese only; continue without asking; verify on real systems before "done"; never write secrets; no new REST (Connect/gRPC only); develop and test on the local PC (WSL), VPS only to deploy and verify; build VPS binaries in `Ubuntu-24.04` with `vps-build.sh` then `check-glibc.sh`; in `F:\runo` add only specific files (never `.tmp-*`); do not pull the VPS aruaru-llm / open-gitea clones; only deleting the original COBOL_to / Java_to needs confirmation; system-settings changes stay with the owner; write docs in Japanese and English, then commit and push (commit messages end with `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`).
