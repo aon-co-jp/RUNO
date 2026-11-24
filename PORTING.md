@@ -5119,3 +5119,36 @@ Continuing from before. Read the HANDOFF in `F:\runo\CLAUDE.md` and the ends of 
 ## 2026-11-24 追記: 翻訳索引の全リポジトリ配布の完了 / Translation index rolled out to every repository
 **日本語**: `docs-latest`(翻訳済みの最新版を一番上に出す索引つき)を、公開・非公開あわせて151リポジトリへ配布しました(失敗0)。runo・pl2pl・RPoem・Reaxt・RMojo の `docs` ブランチで `0-LATEST-TRANSLATIONS.md` が生成されたことを確認済みです。他の言語版は今回は付けていません(日英のみ)。未了: 残りリポジトリでの動作確認、姉妹リポジトリの未了。2026-11-24 21:00まで、1分ごとの自動巡回で進めます。
 **English**: `docs-latest` (with the newest-translations index at the top) was rolled out to 151 repositories, public and private, with 0 failures. `0-LATEST-TRANSLATIONS.md` was confirmed in the `docs` branches of runo, pl2pl, RPoem, Reaxt and RMojo. Other language versions are not added this time (Japanese and English only). Open: checking the remaining repositories and the sister repositories' open items. A 1-minute automatic loop runs until 2026-11-24 21:00.
+
+## 2026-11-24 方針の多言語版: 翻訳済みの最新版を一番上に示す(AI翻訳・ネイティブ確認前) / Policy in 11 more languages
+日本語・English は上の節にあります。Japanese and English are in the section above.
+
+### 简体中文
+README、CLAUDE、PORTING、POLICY 每次以日语和英语为基础编辑,其他语言(10种语言加阿拉伯语、波斯语)不会每次翻译。即使翻译落后于最新编辑,GitHub Actions 的 `docs-latest` 也会始终在最上方显示"已翻译范围内的最新版本"(`docs` 分支中的 `0-LATEST-TRANSLATIONS.md`、README 顶部链接、运行摘要开头),并注明其是否早于最新编辑。
+
+### 繁體中文
+README、CLAUDE、PORTING、POLICY 每次以日文和英文為基礎編輯,其他語言(10種語言加阿拉伯文、波斯文)不會每次翻譯。即使翻譯落後於最新編輯,GitHub Actions 的 `docs-latest` 也會永遠在最上方顯示「已翻譯範圍內的最新版本」(`docs` 分支中的 `0-LATEST-TRANSLATIONS.md`、README 頂端連結、執行摘要開頭),並註明是否早於最新編輯。
+
+### 한국어
+README, CLAUDE, PORTING, POLICY는 매번 일본어와 영어를 기본으로 편집하며, 다른 언어(10개 언어와 아랍어, 페르시아어)는 매번 번역하지 않습니다. 번역이 최신 편집보다 늦더라도 GitHub Actions의 `docs-latest`가 "번역된 범위의 최신 버전"을 항상 맨 위에 보여 줍니다(`docs` 브랜치의 `0-LATEST-TRANSLATIONS.md`, README 상단 링크, 실행 요약 맨 앞). 최신 편집보다 오래된 경우에는 그 사실도 표시합니다.
+
+### Deutsch
+README, CLAUDE, PORTING und POLICY werden jedes Mal auf Japanisch und Englisch bearbeitet; die übrigen Sprachen (zehn Sprachen sowie Arabisch und Persisch) werden nicht jedes Mal übersetzt. Auch wenn Übersetzungen der letzten Änderung hinterherhinken, zeigt `docs-latest` (GitHub Actions) immer ganz oben die neueste übersetzte Fassung an (`0-LATEST-TRANSLATIONS.md` im Branch `docs`, Link am Anfang der README, Anfang der Laufzusammenfassung) und vermerkt, wenn sie älter als die letzte Bearbeitung ist.
+
+### Français
+README, CLAUDE, PORTING et POLICY sont modifiés à chaque fois en japonais et en anglais ; les autres langues (dix langues plus l'arabe et le persan) ne sont pas traduites à chaque fois. Même si les traductions sont en retard sur la dernière modification, `docs-latest` (GitHub Actions) affiche toujours tout en haut la dernière version traduite (`0-LATEST-TRANSLATIONS.md` dans la branche `docs`, lien en tête du README, début du résumé d'exécution) et indique si elle est plus ancienne que la dernière modification.
+
+### Español
+README, CLAUDE, PORTING y POLICY se editan cada vez en japonés e inglés; los demás idiomas (diez idiomas más árabe y persa) no se traducen cada vez. Aunque las traducciones vayan por detrás de la última edición, `docs-latest` (GitHub Actions) muestra siempre arriba la versión traducida más reciente (`0-LATEST-TRANSLATIONS.md` en la rama `docs`, enlace al inicio del README y comienzo del resumen de ejecución) e indica si es anterior a la última edición.
+
+### Português
+README, CLAUDE, PORTING e POLICY são editados sempre em japonês e inglês; os outros idiomas (dez idiomas mais árabe e persa) não são traduzidos todas as vezes. Mesmo que as traduções fiquem atrás da última edição, o `docs-latest` (GitHub Actions) mostra sempre no topo a versão traduzida mais recente (`0-LATEST-TRANSLATIONS.md` na branch `docs`, link no início do README e começo do resumo da execução) e avisa quando ela é anterior à última edição.
+
+### Русский
+README, CLAUDE, PORTING и POLICY каждый раз редактируются на японском и английском; остальные языки (десять языков, арабский и персидский) переводятся не каждый раз. Даже если переводы отстают от последней правки, `docs-latest` (GitHub Actions) всегда показывает самую свежую переведённую версию вверху (`0-LATEST-TRANSLATIONS.md` в ветке `docs`, ссылка в начале README, начало сводки запуска) и отмечает, если она старше последней правки.
+
+### العربية
+تُحرَّر ملفات README وCLAUDE وPORTING وPOLICY في كل مرة باليابانية والإنجليزية، أما اللغات الأخرى (عشر لغات إضافة إلى العربية والفارسية) فلا تُترجم في كل مرة. وحتى لو تأخرت الترجمات عن آخر تعديل، يعرض `docs-latest` (GitHub Actions) دائمًا في الأعلى أحدث نسخة مترجمة (الملف `0-LATEST-TRANSLATIONS.md` في فرع `docs`، ورابط في أعلى README، وبداية ملخص التشغيل) ويشير إلى ما إذا كانت أقدم من آخر تعديل.
+
+### فارسی
+README، CLAUDE، PORTING و POLICY هر بار به ژاپنی و انگلیسی ویرایش می‌شوند و زبان‌های دیگر (ده زبان به‌علاوهٔ عربی و فارسی) هر بار ترجمه نمی‌شوند. حتی اگر ترجمه‌ها از آخرین ویرایش عقب باشند، `docs-latest` (GitHub Actions) همیشه تازه‌ترین نسخهٔ ترجمه‌شده را در بالا نشان می‌دهد (`0-LATEST-TRANSLATIONS.md` در شاخهٔ `docs`، پیوند بالای README و ابتدای خلاصهٔ اجرا) و اگر قدیمی‌تر از آخرین ویرایش باشد آن را مشخص می‌کند.

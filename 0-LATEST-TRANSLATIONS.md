@@ -67,16 +67,16 @@ Japanese and English are always the newest. Other languages are not translated e
 
 - 日本語 / ja: 2026-11-24 (latest)
 - English / en: 2026-11-24
-- 简体中文 / zh-Hans: 2026-11-21 (older than 2026-11-24)
-- 繁體中文 / zh-Hant: 2026-11-21 (older than 2026-11-24)
-- 한국어 / ko: 2026-11-21 (older than 2026-11-24)
-- Deutsch / de: 2026-11-21 (older than 2026-11-24)
-- Français / fr: 2026-11-21 (older than 2026-11-24)
-- Español / es: 2026-11-21 (older than 2026-11-24)
-- Português / pt: 2026-11-21 (older than 2026-11-24)
-- Русский / ru: 2026-11-21 (older than 2026-11-24)
-- العربية / ar: 2026-11-21 (older than 2026-11-24)
-- فارسی / fa: 2026-11-21 (older than 2026-11-24)
+- 简体中文 / zh-Hans: 2026-11-24
+- 繁體中文 / zh-Hant: 2026-11-24
+- 한국어 / ko: 2026-11-24
+- Deutsch / de: 2026-11-24
+- Français / fr: 2026-11-24
+- Español / es: 2026-11-24
+- Português / pt: 2026-11-24
+- Русский / ru: 2026-11-24
+- العربية / ar: 2026-11-24
+- فارسی / fa: 2026-11-24
 
 ## README.md
 
