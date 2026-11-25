@@ -276,3 +276,7 @@ Sources / 出典: [GoldenPath: versionless schema design](https://goldenpath.gra
   11. **Put compatibility checks into the tests**: tests that old paths and old fields still work after a change (like RS-Blog's old-REST-404 test, but for the "still works" side of what we keep).
   12. **Changes that cannot be migrated** (adding a required input field, removing a response field nothing else can fill in): **add a new-named operation** and retire the old one by rule 8.
   13. Internal APIs whose callers we control may use migration (translation) instead of keeping old handlers; externally facing APIs and slowly updating clients (phones, IoT) get longer deadlines.
+
+## 2026-11-25 追記: Qiita記事(GraphQL意識改革3ヶ条)/ Addendum: Qiita article
+**日本語**: 入口は1つ(分けない)、版を付けず add-only、層は薄く保ち認証等は別の責務へ、の3点は本方針と一致。非推奨の期限や影響確認は記事に無く、規則6〜13で補う。出典: https://qiita.com/jabba/items/8d77ab86641937847673(2018)。
+**English**: One entrance, no version with add-only, and a thin layer with auth elsewhere match this policy; deprecation deadlines and impact checks are not covered there and come from rules 6-13. Source above (2018).
