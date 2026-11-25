@@ -322,3 +322,19 @@ elease`(v0.2.14)がHKCU Runで先に立ち上がっていた(インストール�
 
 - **本人待ち(やっていない)**: RS-EC/RS-Blogのログイン後確認、`loopback` 切替、Mac署名、Notepad実入力、残ったTSF DLLの削除。
 - **注意**: 前の追記表で書いた「`F:\_adb-test` 等が残る」は、上記のとおり削除済み。VPS の `aruaru-db-web.service` と `open-gitea.service` には秘密(トークン/SMTPパスワード)が平文の環境変数で入っている(`EnvironmentFile=`+権限600への移設を推奨、値は記録しない)。
+
+## 2026-11-25 REST風ルートの再集計(簡易、origin/main基準) / Re-count of REST-like routes (rough, origin/main)
+
+### 日本語
+- **方法**: 各リポジトリの `origin/main` で `.route("/api/…")`・`.at("/api/…")` を数えた(簡易な文字列検索。試験用・Connect形式〈`/パッケージ.Service/Method`〉・ヘルス・静的は除外)。**正確な数ではなく目安**。手元の作業ツリーは遅れているため `origin/main` を使った。
+- **0本(`/api/`系なし)**: aruaru-search・e-gov・aon.tokyo・aruaru-IME・aruaru-db・open-cosmo(以前の記録どおり。open-cosmo・RPoem の残りの `.at` は試験用の例と `/page`・`/ping` などで自前APIではない)。
+- **残っている**: **RS-Ops 22本**(`/api/auth/*`・`/api/accounts`・`/api/*/repos` など。以前の記録どおり全面RESTで、Connect化が未了)。**open-gitea-rest 27本**(`/api/accounts*` など)は、この `origin/main` にまだ残っている。記録では open-gitea は31本をConnect化し本番も旧 `/api/repos` 404とあるため、`open-gitea-rest` と本体 `open-gitea` が別の系統か、アカウント系だけ未移行かを**まだ確認していない**。
+- **未確認(正直に)**: 全リポジトリの数え直しは行っていない(上記以外は未集計)。数字は検索ベースで、実際に動く経路の確認(本番で旧404)は今回していない。
+- **次**: RS-Ops の Connect 化、open-gitea-rest の `/api/accounts*` の扱いの確認。
+
+### English
+- **Method**: counted `.route("/api/…")` and `.at("/api/…")` on each repository's `origin/main` (a rough string search; tests, Connect-style paths `/package.Service/Method`, health and static routes excluded). **A guide, not an exact count.** Local working trees are behind, so `origin/main` was used.
+- **0 `/api/`-style routes**: aruaru-search, e-gov, aon.tokyo, aruaru-IME, aruaru-db and open-cosmo (as recorded before; the remaining `.at` hits in open-cosmo and RPoem are test fixtures and `/page`, `/ping` and similar, not own APIs).
+- **Still present**: **RS-Ops 22** (`/api/auth/*`, `/api/accounts`, `/api/*/repos` and so on; fully REST as recorded, Connect migration not done). **open-gitea-rest 27** (`/api/accounts*` and others) are still on this `origin/main`. The records say open-gitea moved 31 routes to Connect and production returns 404 for the old `/api/repos`, so it is **not yet confirmed** whether `open-gitea-rest` and the main `open-gitea` are different lines, or only the account routes remain.
+- **Unverified (honestly)**: not every repository was re-counted (only those above); the numbers are search-based, and no production check (old route 404) was done this time.
+- **Next**: migrate RS-Ops to Connect and settle what to do with `open-gitea-rest`'s `/api/accounts*`.
