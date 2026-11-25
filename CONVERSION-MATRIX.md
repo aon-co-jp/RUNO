@@ -7,8 +7,8 @@
 | COBOL(メインフレーム/UNIX/Linux/Windows) | ✅ COBOL_to | ✅ pl2pl web | 🟡 COBOL_to | 🟡 COBOL_to | 🟡 2RPoRea(RPoem経由) | ⬜ | ⬜ | ⬜ | 🟡 pl2pl cobol --os |
 | Java(Spring等) | 🟡 Java_to | ⬜ | ⬜ | ⬜ | 🟡 2RPoRea(RPoem経由) | ⬜ | — | ⬜ | ⬜ |
 | Python(Flask/Django/FastAPI) | 🟡 2Poem | ⬜ | — | 🟡 2MFastAPI | 🟡 2RPoRea(RPoem経由) | ⬜ | ⬜ | ⬜ | ⬜ |
-| PHP(Laravel) | 🟡 2RPoRea(2026-11-25 着手) | ⬜ | ⬜ | ⬜ | 🟡 2RPoRea | ⬜ | ⬜ | ⬜ | ⬜ |
-| Perl | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| PHP(Laravel) | 🟡 2RPoRea(2026-11-25、単純な return のみ本体まで) | ⬜ | ⬜ | ⬜ | 🟡 2RPoRea | ⬜ | ⬜ | ⬜ | ⬜ |
+| Perl(Mojolicious/Dancer2) | 🟡 2RPoRea(2026-11-25、単純な応答のみ本体まで) | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | C / C++ | ✅ pl2pl web(橋渡し) | ✅ pl2pl web | 🟡 pl2pl web | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | Fortran | 🟡 pl2pl web(橋渡し) | 🟡 pl2pl web | 🟡 pl2pl web | ⬜ | ⬜ | ⬜ | ⬜ | — | ⬜ |
 | Node.js(Express/Nest) | ⬜ | ⬜ | ⬜ | 🟡 2MFastAPI(任意) | 🟡 2RPoRea(501の骨組み) | ⬜ | ⬜ | ⬜ | ⬜ |

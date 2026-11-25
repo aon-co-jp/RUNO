@@ -5202,3 +5202,16 @@ README، CLAUDE، PORTING و POLICY هر بار به ژاپنی و انگلیس�
 - **A body is translated only when it is a single return** of a string, a concatenation of strings and route parameters (`'Hello, ' . $name`), or an array literal (also via `response()->json([...])`). Anything else (database calls, several statements) answers 501 with a TODO; business logic is never claimed as ported. PATCH is not supported yet (the RPoem compatibility layer has no helper; the count is reported). Original URLs are kept, since this migrates an existing app.
 - **Verified (actually started)**: a sample Laravel app was converted, built and started. `GET /` 200 "Welcome", `GET /hello/Taro` 200 "Hello, Taro!", `GET /users/5` 200 `{"id":7,"name":"Taro"}` (through a controller), `GET /api/status` 200 (JSON); `POST /users` and `DELETE /x` 501; unknown paths 404. 16 tests pass.
 - **Open**: plain PHP without Laravel; bodies with `$request` input, variables or `if`; PATCH; Perl; COBOL to Java; Mojo/RMojo as a target. The matrix is `CONVERSION-MATRIX.md` in runo.
+
+## 2026-11-25 追記: Perl(Mojolicious・Dancer2)→RPoem 変換 / Perl (Mojolicious, Dancer2) to RPoem conversion
+**日本語**
+- 2RPoRea が Perl の Web アプリ(Mojolicious::Lite と Dancer/Dancer2)を検出し、`convert` で RPoem サーバー(`backend-perl`)へ変換するようになった(`src/torporea/perl.py`)。`get/post/put/del/any '/経路' => sub {...}`(シグネチャ `sub ($c)` も可)を読み、`:name`・`<name>` を RPoem の `:name` にする。
+- **本体まで訳すのは単純な1つの応答だけ**: Mojolicious の `$c->render(text => ...)`・`$c->render(json => {...})`、Dancer の `return '文字列'`・最後の式・`to_json(...)`。文字列とルート引数(`$c->param('x')`・`route_parameters->get('x')`・`param('x')`)の `.` 連結に対応。変数展開する `"..."`、`status =>` などの追加指定、DB 呼び出しや複数の文は 501 と TODO。PATCH は未対応(件数を報告)。
+- **確認済み(実際に起動)**: Mojolicious と Dancer2 の例を変換してビルド・起動。`GET /` 200「Welcome」、`GET /hello/Taro` 200「Hello, Taro!」、`GET /api/status` 200(JSON)、`GET /d/42` 200「item 42」、`PUT /ping` 200「pong」(any)、`POST /users`・`DELETE /d/1` は 501、未定義は 404。テスト19件成功。
+- **未了**: CGI.pm・Catalyst などほかの Perl の方式、変数や if を含む本体、PATCH、COBOL→Java、Mojo/RMojo を変換先に。
+
+**English**
+- 2RPoRea now detects Perl web apps (Mojolicious::Lite and Dancer/Dancer2), and `convert` turns them into an RPoem server (`backend-perl`, `src/torporea/perl.py`). It reads `get/post/put/del/any '/path' => sub {...}` (signatures like `sub ($c)` too) and maps `:name` and `<name>` to RPoem's `:name`.
+- **Only a single simple response is translated**: Mojolicious `$c->render(text => ...)` and `$c->render(json => {...})`; Dancer `return 'string'`, a final expression, or `to_json(...)`. Strings joined with `.` to route parameters (`$c->param('x')`, `route_parameters->get('x')`, `param('x')`) are supported. Interpolating `"..."`, extra options such as `status =>`, database calls and several statements answer 501 with a TODO. PATCH is not supported yet (the count is reported).
+- **Verified (actually started)**: Mojolicious and Dancer2 samples were converted, built and started. `GET /` 200 "Welcome", `GET /hello/Taro` 200 "Hello, Taro!", `GET /api/status` 200 (JSON), `GET /d/42` 200 "item 42", `PUT /ping` 200 "pong" (any); `POST /users` and `DELETE /d/1` 501; unknown paths 404. 19 tests pass.
+- **Open**: other Perl styles such as CGI.pm and Catalyst; bodies with variables or `if`; PATCH; COBOL to Java; Mojo/RMojo as a target.
