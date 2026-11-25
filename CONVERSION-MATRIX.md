@@ -4,7 +4,7 @@
 
 | 変換元 \ 変換先 | RPoem | Poem(Axum) | FastAPI | MFastAPI | RPoRea / Reaxt | RMojo / Mojo | Java | Fortran | COBOL(別OS) |
 |---|---|---|---|---|---|---|---|---|---|
-| COBOL(メインフレーム/UNIX/Linux/Windows) | ✅ COBOL_to | ✅ pl2pl web | 🟡 COBOL_to | 🟡 COBOL_to | 🟡 2RPoRea(RPoem経由) | ⬜ | ⬜ | ⬜ | 🟡 pl2pl cobol --os |
+| COBOL(メインフレーム/UNIX/Linux/Windows) | ✅ COBOL_to | ✅ pl2pl web | 🟡 COBOL_to | 🟡 COBOL_to | 🟡 2RPoRea(RPoem経由) | 🟡 RMojo cobol2mojo(4本一致) | 🟡 COBOL_to --target java(9本一致、ファイル/SORT/SQLは未対応) | ⬜ | 🟡 pl2pl cobol --os |
 | Java(Spring等) | 🟡 Java_to | ⬜ | ⬜ | ⬜ | 🟡 2RPoRea(RPoem経由) | ⬜ | — | ⬜ | ⬜ |
 | Python(Flask/Django/FastAPI) | 🟡 2Poem | ⬜ | — | 🟡 2MFastAPI | 🟡 2RPoRea(RPoem経由) | ⬜ | ⬜ | ⬜ | ⬜ |
 | PHP(Laravel) | 🟡 2RPoRea(2026-11-25、単純な return のみ本体まで) | ⬜ | ⬜ | ⬜ | 🟡 2RPoRea | ⬜ | ⬜ | ⬜ | ⬜ |
