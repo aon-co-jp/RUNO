@@ -210,3 +210,35 @@ We always build the four **together**. Done: a Reaxt server can join the front d
 - **Existing code**: package names that already contain `.v1` (`rs_blog.v1`, `rs_ec.v1`, `open_runo.admin.v1` and so on) **stay for now so callers do not break**. A versionless alias is **added** and both are accepted; `.v1` is retired after use has moved (rule 3). New work and RS-Ops are versionless from the start.
 - **Honest note**: this records the policy. Applying it to every repository happens **step by step from now on**; many still contain `.v1`.
 - **About "REST hell"**: Connect removes much of it (URL-design drift, method choices, per-version copies). A sloppy design can still break under Connect; following the Versionless rules is the remedy.
+
+## 2026-11-25 追記: Versionless API の調査結果の取り込み(日英の検索・GitHub) / Research findings folded in (JA/EN web search and GitHub)
+
+### 日本語
+**調査の結果(英語・日本語のWeb検索とGitHub)**: 日本語の専用記事は少なく、資料は英語が中心だった。GitHub には同名の小さな学習用リポジトリがあるだけで、設計の手本になるものは見つからなかった。
+- **追加で進化させる(additive)が出発点**: エンドポイント・欄・パラメーターを足すだけなら、大きな版は要らない。**名前を変えたいときは新しい名前を足し、古い方を「非推奨」にして残す。**
+- **非推奨には期限を付ける**: 破壊的変更を承認した場合も、約6か月の猶予を置き、変更履歴で知らせ、影響を受ける利用者へ個別に連絡する例がある。応答ヘッダーとドキュメントに期限を示し、**少なくとも6〜12か月**(エコシステムによる)とする助言もある。
+- **GraphQL の考え方**: スキーマは1つを進化させ、非推奨には置き換え先を示し、**使用状況を見て十分に減ってから**消す。型・欄・ディレクティブの削除と、既存欄の形の変更は破壊的変更。
+- **落とし穴**: (1) **追加でも、既存の利用者が直さないと動かないなら破壊的**。(2) **列挙値(enum)を足すのは、利用者が未知の値を許容するときだけ安全**。(3) 「バージョンレス」は版管理が要らないという意味ではなく、**先を見通した設計が必要**で、古い利用者を無期限に支える負担も出る。(4) 安全上の欠陥や根本的に誤った動作の修正など、**版を切るしかない変更も残る**。(5) 互換は一部「人の問題」で、移行は利用者の更新の速さに左右される。
+- **REST との違いについての慎重な見方**: GraphQL が版管理で本質的に優れているわけではなく、REST でも欄を足し、古い欄を非推奨にすれば同じことはできる。違いは、返す欄を利用者が選べる分、変更が破壊的になりにくい点と、ツールの支援。
+- **私たちの規則への反映(上の1〜5に加える)**
+  6. **足す欄は省略可能にする**。必須にしない。
+  7. **列挙値を足すときは、利用者が未知の値を無視または既定扱いにできることを前提にする**。出力にだけ新しい値を足す場合は、先に利用者側(画面・SDK)を直す。
+  8. **非推奨にしたら、記録(ここの台帳と各リポジトリの CHANGELOG)に日付・置き換え先・消す期限を書く**。消すのは、ログで使用が0になり、**既定で6か月以上**待ってから。自分たちだけが呼び出し側の内部APIは、使用が0になったことの確認で足りる。
+  9. **安全上の緊急修正は例外**とし、理由と日付を記録して、必要なら版を切らずに新しい名前の操作で置き換える。
+- **私たちの立場**: 呼び出し側の多くが自分たちのアプリ(画面・インストーラー・姉妹リポジトリ)なので、使用状況を測りやすく、Versionless は取り入れやすい。外部へ公開するAPIは、期限をより長く取る。
+
+### English
+**Findings (English and Japanese web search, plus GitHub)**: there is little Japanese-specific writing; the material is mostly English. GitHub has only small learning repositories with this name, nothing to use as a design model.
+- **Additive evolution is the starting point**: if you only add endpoints, fields and parameters, no major version is needed. **To rename, add the new name and keep the old one marked deprecated.**
+- **Deprecation needs a deadline**: one vendor gives about six months of grace for approved breaking changes, announces them in a changelog and contacts affected customers; other advice is to show the deadline in response headers and docs, **at least 6 to 12 months** depending on the ecosystem.
+- **The GraphQL view**: evolve one schema, give replacement guidance on deprecations, and remove only **after observed usage is low enough**. Removing a type, field or directive and changing an existing field's shape are breaking changes.
+- **Pitfalls**: (1) **an addition is breaking if existing consumers must change to keep working**; (2) **adding an enum value is safe only if clients tolerate unknown values**; (3) "versionless" does not mean no versioning is needed: it **demands foresight** and means supporting old clients indefinitely; (4) **some changes still need a version**, such as fixing a security flaw or fundamentally wrong behavior; (5) compatibility is partly social, since migration follows clients' release cadence.
+- **A cautious view versus REST**: GraphQL is not inherently better at versioning; REST can add fields and deprecate old ones too. The difference is that clients choose their fields (so changes break less often) and the tooling support.
+- **Folded into our rules (in addition to 1 to 5 above)**
+  6. **New fields are optional**, never required.
+  7. **When adding an enum value, assume clients ignore or default unknown values.** If a new value appears only in output, fix clients (UI, SDK) first.
+  8. **After deprecating, record the date, the replacement and the removal deadline** (in this ledger and each repository's CHANGELOG). Remove only when logs show zero use **and at least 6 months have passed by default**. For internal APIs called only by our own apps, confirming zero use is enough.
+  9. **Emergency security fixes are the exception**: record the reason and date, and replace with a new-named operation rather than a version bump where possible.
+- **Our position**: most callers are our own apps (UIs, installers, sister repositories), so usage is easy to measure and Versionless is easy to adopt. Public-facing APIs get longer deadlines.
+
+Sources / 出典: [GoldenPath: versionless schema design](https://goldenpath.graphql.org/solutions/versionless-schema-design/), [GoldenPath: versioning](https://goldenpath.graphql.org/practices/versioning/), [GraphQL: schema design](https://graphql.org/learn/schema-design/), [WunderGraph: Versionless APIs](https://wundergraph.com/blog/versionless_apis_making_apis_backwards_compatible_forever_to_enable_businesses_to_collaborate), [InfoQ: API evolution without versioning](https://www.infoq.com/news/2022/10/api-evolution-without-versioning), [VA API standards: API evolution](https://department-of-veterans-affairs.github.io/va-api-standards/lifecycle/api-evolution), [Apideck: versioning & breaking changes](https://developers.apideck.com/versioning), [Speakeasy: versioning best practices](https://www.speakeasy.com/api-design/versioning), [LogRocket: versioning fields in GraphQL](https://blog.logrocket.com/versioning-fields-graphql).
