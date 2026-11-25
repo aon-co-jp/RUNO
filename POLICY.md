@@ -1177,3 +1177,9 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 ## 2026-11-24 状況 / Status
 **日本語**: rs-whisper のテスト4件が成功し、runo・rs-whisper・open-tv-chat は origin/main と同期済み。未了: base 以上のモデルでの再測定(ダウンロード許可が必要)、M2M100 1.2B の測定、open-tv-chat へのマイク入力の組み込み、x-tenant の実トラフィック観測、Mac・iPhone 実機。決まり: 新しい REST は作らない、秘密は書かない。
 **English**: The 4 rs-whisper tests pass; runo, rs-whisper and open-tv-chat are in sync with origin/main. Open: re-measure with base or larger (needs download permission), M2M100 1.2B, microphone input in open-tv-chat, x-tenant with real traffic, real Mac/iPhone devices. Rules: no new REST, never write secrets.
+
+## 2026-11-25 同時開発の方針 / Policy: develop together
+
+**日本語**: 方針(2026-11-25、ユーザー指示): 未了は確認なしで完成まで自動で進める。需要が少ない・1からの大規模な開発が必要でも、別の方式で済ませず真摯に作り直す。特に COBOL_to・Java_to・MFastAPI・2MFastAPI(他の言語・フレームワークから MFastAPI 互換へ変換。Node.js・TypeScript は例外的に選択可で、選ばない選択も可)・RMojo・RPoRea・2RPoRea(他の言語から RPoRea=RPoem+Reaxt へ変換。Reaxt は React・Next.js・Nuxt.js・Nest.js 相当)・Reaxt を同時に開発する。2RPoRea は 2026-11-25 に新設(検出 scan のみ、変換は未着手)。
+
+**English**: Policy (2026-11-25, user instruction): carry unfinished work through to completion without asking. Even when demand is low or a large from-scratch rewrite is needed, do the real work instead of substituting another approach. Developed together: COBOL_to, Java_to, MFastAPI, 2MFastAPI (converts other languages and frameworks to MFastAPI-compatible code; Node.js and TypeScript are an optional exception and choosing neither is allowed), RMojo, RPoRea, 2RPoRea (converts other languages to RPoRea = RPoem + Reaxt; Reaxt is the Rust equivalent of React, Next.js, Nuxt.js and Nest.js) and Reaxt. 2RPoRea was created on 2026-11-25 (detection `scan` only; conversion not started).
