@@ -5189,3 +5189,16 @@ README، CLAUDE، PORTING و POLICY هر بار به ژاپنی و انگلیس�
 - **Top-priority instruction (user, 2026-11-25)**: give top priority to **cross-conversion** from COBOL (mainframe, Linux, UNIX, Windows and so on), Java, Fortran, PHP, Perl and others into FastAPI, Poem, RPoem, RMojo/Mojo, MFastAPI, RPoRea, Fortran and others. Owners: COBOL_to, Java_to, pl2pl, 2MFastAPI and 2RPoRea, developed together.
 - **Honest current coverage**: COBOL to RPoem/Axum/FastAPI/MFastAPI (simple programs); Java (Spring) to an RPoem scaffold (bodies TODO except simple returns); Python to RPoem (2Poem); C/C++/Fortran to Rust (pl2pl, simple code); COBOL to COBOL for another OS (pl2pl cobol). **Not yet**: business-logic conversion from PHP and Perl, COBOL to Java, COBOL to Fortran, Java to Fortran/COBOL, Mojo/RMojo as a target, and most reverse directions.
 - **Next (in order)**: (1) build a source-by-target matrix and list the empty pairs; (2) PHP to RPoem/MFastAPI (starting from Laravel routes); (3) Perl likewise; (4) COBOL to Java; (5) add Mojo/RMojo as a target.
+
+## 2026-11-25 追記: PHP(Laravel)→RPoem 変換 / PHP (Laravel) to RPoem conversion
+**日本語**
+- 2RPoRea の `convert` が PHP(Laravel)を RPoem サーバー(`backend-php`)へ変換するようになった(`src/torporea/php.py`)。`routes/web.php`・`routes/api.php`(`/api` 付き)の `Route::get/post/put/delete/any` を読み、クロージャ・`fn() =>`・`[XController::class, 'm']`・`'XController@m'` の本体をたどる。
+- **本体まで訳すのは「return 1つだけ」の場合のみ**: 文字列、文字列とルート引数の連結(`'Hello, ' . $name`)、配列リテラル(`response()->json([...])` も可)。それ以外(DB 呼び出しや複数の文)は 501 と TODO にする。業務ロジックを移せたとは書かない。PATCH は RPoem 互換層に補助関数が無いため未対応(件数を報告)。元の URL はそのまま残す(既存アプリの移行のため)。
+- **確認済み(実際に起動)**: Laravel の例を変換してビルド・起動し、`GET /` 200「Welcome」、`GET /hello/Taro` 200「Hello, Taro!」、`GET /users/5` 200 `{"id":7,"name":"Taro"}`(コントローラー経由)、`GET /api/status` 200(JSON)、`POST /users`・`DELETE /x` は 501、未定義は 404。テスト16件成功。
+- **未了**: Laravel 以外の素の PHP、`$request` の入力や変数・if を含む本体、PATCH、Perl、COBOL→Java、Mojo/RMojo を変換先に。対応表は runo の `CONVERSION-MATRIX.md`。
+
+**English**
+- 2RPoRea's `convert` now turns PHP (Laravel) into an RPoem server (`backend-php`, `src/torporea/php.py`). It reads `Route::get/post/put/delete/any` in `routes/web.php` and `routes/api.php` (with the `/api` prefix) and follows closures, `fn() =>`, `[XController::class, 'm']` and `'XController@m'` to their bodies.
+- **A body is translated only when it is a single return** of a string, a concatenation of strings and route parameters (`'Hello, ' . $name`), or an array literal (also via `response()->json([...])`). Anything else (database calls, several statements) answers 501 with a TODO; business logic is never claimed as ported. PATCH is not supported yet (the RPoem compatibility layer has no helper; the count is reported). Original URLs are kept, since this migrates an existing app.
+- **Verified (actually started)**: a sample Laravel app was converted, built and started. `GET /` 200 "Welcome", `GET /hello/Taro` 200 "Hello, Taro!", `GET /users/5` 200 `{"id":7,"name":"Taro"}` (through a controller), `GET /api/status` 200 (JSON); `POST /users` and `DELETE /x` 501; unknown paths 404. 16 tests pass.
+- **Open**: plain PHP without Laravel; bodies with `$request` input, variables or `if`; PATCH; Perl; COBOL to Java; Mojo/RMojo as a target. The matrix is `CONVERSION-MATRIX.md` in runo.
