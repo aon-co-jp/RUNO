@@ -184,3 +184,29 @@ We always build the four **together**. Done: a Reaxt server can join the front d
 - **Уже работает**: сервер Reaxt может присоединиться к Cosmo (`POST /_reaxt/graphql`); шлюз делит один вопрос между серверами и собирает ответы; `@key` связывает одного и того же человека или предмет из разных серверов (вложенно, до 4 шагов); `@requires`, `@provides`, `@skip`, `@include` (в том числе во фрагментах без условия типа); действия Reaxt имеют типы и открываются как сущности `@key`; на двух настоящих серверах один вопрос успешно объединён.
 - **Планируется**: ① фрагменты в плане соединения (готово); ② безопасная поддержка `... on Тип`; ③ перечитывание значений после записи; ④ `Option` и более сложные типы в Reaxt; ⑤ более широкие проверки с реальными соединениями; ⑥ использование RPoRea из других языков (C ABI): сначала Mojo, затем Mac, Android и iPhone.
 - **Правило работы**: незавершённое мы продолжаем **автоматически, не спрашивая подтверждения**. Сначала проверяем на настоящих серверах и только потом пишем «готово». Секреты (пароли) в файлы не пишем, новых REST-API не создаём.
+
+## 2026-11-25 追記: Versionless API(バージョンを持たないAPI)の方針 / Versionless API policy
+
+### 日本語
+- **決定(2026-11-25、ユーザー指示)**: すべてのリポジトリで **Versionless API** の考え方を採る。URL・パッケージ名に `v1`・`v2` を付けず、**互換性を壊さずに足していく**。
+- **決まり**
+  1. **足すだけ**: 新しい操作・新しい欄を足す。既存の欄の意味を変えない・消さない・必須にしない。
+  2. **受け取る側は寛容に**: 知らない欄は無視する(エラーにしない)。欄が無いときは既定値を使う。
+  3. **やめるときは段階的に**: 古い操作や欄は「非推奨」と記録し、ログで使用が0になったことを確かめてから消す。期限は明記する。
+  4. **新しいAPIのパッケージ名に版を入れない**(例: `rs_ops.Accounts/List`)。
+  5. **どうしても壊す変更が要るときは、新しい名前の操作を足す**(例: `ListV2` ではなく、意味の分かる別名)。旧は上の3の手順で畳む。
+- **既存への適用**: すでに `.v1` を含む既存のパッケージ名(`rs_blog.v1`・`rs_ec.v1`・`open_runo.admin.v1` など)は、**呼び出し側を壊さないため当面そのまま**にする。版なしの別名を**追加**して両方受け、使用が移ったあとで `.v1` を畳む(上の3)。新規と RS-Ops は最初から版なし。
+- **正直な注意**: これは方針の記録で、全リポジトリへの適用は**これから順に**行う。まだ `.v1` が残っているリポジトリが多い。
+- **「REST地獄」について**: Connect 化で、URL 設計の揺れ・メソッドの使い分け・バージョンごとの複製は減る。ただし、設計をいい加減にすれば Connect でも壊れる。Versionless の決まりを守ることが、その対策になる。
+
+### English
+- **Decision (2026-11-25, user instruction)**: every repository adopts the **Versionless API** idea. No `v1`/`v2` in URLs or package names; **evolve by adding, without breaking compatibility**.
+- **Rules**
+  1. **Only add**: add new operations and fields. Never change the meaning of, remove, or make required an existing field.
+  2. **Be liberal in what you accept**: ignore unknown fields (do not error); use defaults for missing ones.
+  3. **Retire in stages**: record old operations and fields as deprecated, confirm from logs that use has dropped to zero, then remove them, with a stated deadline.
+  4. **No version in the package name of new APIs** (for example `rs_ops.Accounts/List`).
+  5. **If a breaking change is unavoidable, add a new operation with a meaningful new name** (not `ListV2`) and retire the old one by rule 3.
+- **Existing code**: package names that already contain `.v1` (`rs_blog.v1`, `rs_ec.v1`, `open_runo.admin.v1` and so on) **stay for now so callers do not break**. A versionless alias is **added** and both are accepted; `.v1` is retired after use has moved (rule 3). New work and RS-Ops are versionless from the start.
+- **Honest note**: this records the policy. Applying it to every repository happens **step by step from now on**; many still contain `.v1`.
+- **About "REST hell"**: Connect removes much of it (URL-design drift, method choices, per-version copies). A sloppy design can still break under Connect; following the Versionless rules is the remedy.
