@@ -5,16 +5,16 @@ Japanese and English are always the newest. Other languages are not translated e
 
 ## API-POLICY.md
 
-- 日本語 / ja: 2026-11-19 (latest)
-- English / en: 2026-11-19
-- 简体中文 / zh-Hans: 2026-11-19
-- 繁體中文 / zh-Hant: 2026-11-19
-- 한국어 / ko: 2026-11-19
-- Deutsch / de: 2026-11-19
-- Français / fr: 2026-11-19
-- Español / es: 2026-11-19
-- Português / pt: 2026-11-19
-- Русский / ru: 2026-11-19
+- 日本語 / ja: 2026-11-25 (latest)
+- English / en: 2026-11-25
+- 简体中文 / zh-Hans: 2026-11-19 (older than 2026-11-25)
+- 繁體中文 / zh-Hant: 2026-11-19 (older than 2026-11-25)
+- 한국어 / ko: 2026-11-19 (older than 2026-11-25)
+- Deutsch / de: 2026-11-19 (older than 2026-11-25)
+- Français / fr: 2026-11-19 (older than 2026-11-25)
+- Español / es: 2026-11-19 (older than 2026-11-25)
+- Português / pt: 2026-11-19 (older than 2026-11-25)
+- Русский / ru: 2026-11-19 (older than 2026-11-25)
 - العربية / ar: not yet / まだ
 - فارسی / fa: not yet / まだ
 
