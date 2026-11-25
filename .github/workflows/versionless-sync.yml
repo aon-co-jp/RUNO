@@ -1,0 +1,31 @@
+name: versionless-sync
+# 新しく作られたリポジトリにも、CLAUDE.md へ Versionless API の方針を自動で追記する。
+# Appends the Versionless API policy to CLAUDE.md of newly created repositories.
+on:
+  schedule:
+    - cron: "37 * * * *"   # 毎時37分(UTC)
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "書かずに一覧だけ(1)"
+        default: "0"
+permissions:
+  contents: read
+concurrency:
+  group: versionless-sync
+  cancel-in-progress: false
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 組織全体に書けるトークンの有無を確認
+        env:
+          TOKEN: ${{ secrets.ORG_SYNC_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then echo "::error::シークレット ORG_SYNC_TOKEN が未設定です(組織の全リポジトリの contents:write を持つトークン)"; exit 1; fi
+      - name: 追記
+        env:
+          GH_TOKEN: ${{ secrets.ORG_SYNC_TOKEN }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || '0' }}
+        run: bash tools/versionless-sync.sh
