@@ -5232,3 +5232,39 @@ README، CLAUDE، PORTING و POLICY هر بار به ژاپنی و انگلیس�
 ## 2026-11-25 version-control通知(6リポジトリ)の対応 / Version-control notice (6 repos)
 - 日本語: `url` 2.5.9(RUSTSEC-2026-0592)を RPoem `38c41e6`・open-cosmo `7ca02ff`・rs-link-fusion `05a7571` に反映、RPoem・open-cosmo は jsonschema 0.63 へ(試験成功)。**tao 0.38 は見送り**(tray-icon 0.26.1 と gtk-3 の二重リンクで解決不能)。maid-cafe-programming-school は typescript 7・@types/node 26・vsce 4(`1531c0f`、tsconfig に `types` を追加、compile 成功、VS Code 実機は未確認)。VPS の 2MFastAPI・RPoem・RUNO・maid-cafe-programming-school・open-cosmo は fast-forward 済み(再起動なし)。**未了**: VPS の rs-link-fusion は未コミット変更(.gitignore・CLAUDE.md・installer 削除)があり9遅れのまま触っていない。rs-link-fusion のメジャー更新は引き続き見送り。
 - English: `url` 2.5.9 (RUSTSEC-2026-0592) landed in RPoem `38c41e6`, open-cosmo `7ca02ff` and rs-link-fusion `05a7571`; RPoem and open-cosmo moved to jsonschema 0.63 (tests pass). **tao 0.38 is deferred** (tray-icon 0.26.1 and tao 0.38 both link gtk-3). maid-cafe-programming-school moved to typescript 7, @types/node 26 and vsce 4 (`1531c0f`; `types` added to tsconfig; compiles; not tried in a real VS Code). The VPS clones of 2MFastAPI, RPoem, RUNO, maid-cafe-programming-school and open-cosmo were fast-forwarded (no restarts). **Open**: the VPS rs-link-fusion clone has uncommitted changes and stays 9 behind, untouched; rs-link-fusion majors remain deferred.
+
+## 2026-11-25 引っ越し(別アカウントでの再開用)/ Hand-off for moving to another account
+
+### 日本語
+**到達点(各セッションの報告を集約。詳細は各リポジトリの PORTING.md 末尾)**
+- **RMojo / MFastAPI**: RMojo に時間上限(`max_ms`)とメモリ上限(リスト・文字列・range は2,000万要素で MemoryError)、`POLICY.md` を追加(push済み、CPython 差分0)。MFastAPI 段階1(lib化とステップ上限)完了。
+- **COBOL_to / Java_to / 2MFastAPI / 2RPoRea / pl2pl**: COBOL→Java(`--target java`)は20本が javac を通り、9本が Python 版と出力一致(ファイル入出力・SORT・SQL の11本は TODO。生成サーバーの起動確認は未)。RMojo は COBOL→Mojo 4本が本物の Mojo で一致(WSL `Ubuntu-24.04`)。2MFastAPI は PHP Laravel→FastAPI(200/501 確認、MFastAPI 高速化下は未確認)。2RPoRea は PATCH とローカル変数に対応(RPoem `178d6d4`)、Java_to は PATCH を本物で登録(`ff542ea`)。pl2pl c2rust は配列・break/continue に対応(`c275791`、テスト56件)。**COBOL_to の Java ファイル/SORT/SQL 担当はAPIエラーで途中終了**(未完)。
+- **maid-cafe-programming-school**: 評価を日英で追記し `POLICY.md` 新設(`40a7457`)。スクールとしては機能不足(カリキュラム・自動採点・進捗・人の支援・アカウント)。次の一手=ローカルでテストを実行して合否を返す小さな自動採点演習。拡張機能の VS Code 実機確認と Marketplace 公開(発行者トークン、所有者)は未。
+- **aruaru-search**: Connect 化済み・VPS反映済み(旧 REST 404)。未了=brave/excite/hackernews 休止の復帰待ち、`data/engines.json` の Baidu 保存値。
+- **rsa-rs / version-control**: rsa-rs v0.1.0(Marvin 対策の互換置き換え、9リポジトリが `[patch.crates-io]` で使用)、version-control 拡張(0504ad1、VPS配備済み、旧版 `version-control.bak-20261124`)。未了=次の定時巡回でメール通知・エラー無しの確認、LINE の設定(所有者)。
+- **open-bar**: 映像同期の改良と プレゼンス API の Connect 化が**未コミット**(8ファイル+POLICY.md)。未了=`cd server; cargo test` の停止原因調査、Windows で `video_mpv` を8回(`OPEN_BAR_MPV` 設定)、`cargo test --workspace --lib`・`real_files`。旧アプリ v0.1.1 は旧 URL に送るため、VPS 反映は所有者に確認してから。DoP の実機試験は所有者が操作するとき以外しない。
+
+**未了の優先順**: (1) MFastAPI 段階2(rmojo-py〈PyO3・GIL解放〉と `mojo_endpoint(runtime="rmojo")`、自動切替、`x-mfastapi-runtime`)、(2) RMojo の実メモリ(RSS)上限、(3) COBOL_to の Java 未対応11本・RMojo 残り16本・Java_to・pl2pl、(4) open-bar の上記確認とコミット、(5) rs-whisper の base 以上での再測定(ダウンロード許可が要る)と open-tv-chat への組み込み、(6) Mac・iPhone 実機(実機なし)。
+
+**注意**: RMojo は `cargo test --release` が `open_cpu.dll` のリンクで失敗(通常の `cargo test` は可)。CPython 差分は `python tests/run.py <exeの絶対パス>`。VPS 用ビルドは WSL `Ubuntu-24.04` と `check-glibc.sh`。WSL の git は push 不可(Windows 側で)。他セッションが push していることがあるので `git pull --rebase`。`cargo fmt --all` は禁止。
+
+**決まり**: 確認せず自動で進める/本物で確認してから「完了」/秘密は書かない/新しい REST は作らない/音を鳴らす・録る試験はしない/元の COBOL_to・Java_to の削除だけ確認/返答は日本語のみ/開発・試験は手元PC、VPS は配備と確認だけ/コミット末尾に `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`。
+
+**再開用メッセージ(そのまま貼り付け)**: 前の続きです。`F:\runo\PORTING.md` 末尾「2026-11-25 引っ越し」と、F:\RMojo・F:\MFastAPI・F:\open-bar・F:\rsa-rs・F:\version-control の各 PORTING.md/CLAUDE.md 末尾を読んでから、未了を上の優先順で確認なしに自動で進めてください。open-bar の未コミット変更は捨てず、まず `git status` を確認します。
+
+### English
+**Where things stand (collected from each session; details at the end of each repo's PORTING.md)**
+- **RMojo / MFastAPI**: RMojo gained a wall-time limit (`max_ms`), a memory cap (lists, strings and range stop at 20M elements with MemoryError) and `POLICY.md` (pushed; CPython diff 0). MFastAPI stage 1 (lib split and step limit) is done.
+- **COBOL_to / Java_to / 2MFastAPI / 2RPoRea / pl2pl**: COBOL-to-Java (`--target java`) compiles 20 programs with javac and 9 match the Python output (11 using file I/O, SORT or SQL are TODO; the generated server was not started yet). RMojo converts COBOL to Mojo: 4 match under real Mojo (WSL `Ubuntu-24.04`). 2MFastAPI converts PHP Laravel to FastAPI (200/501 checked; not tried with MFastAPI acceleration). 2RPoRea handles PATCH and local variables (RPoem `178d6d4`); Java_to registers real PATCH (`ff542ea`). pl2pl c2rust handles arrays and break/continue (`c275791`, 56 tests). **The COBOL_to Java file/SORT/SQL worker ended early on an API error** (unfinished).
+- **maid-cafe-programming-school**: assessment added in ja/en and `POLICY.md` created (`40a7457`). Not yet a school (no curriculum, auto-graded exercises, progress, human support, accounts). Next: one small locally auto-graded exercise. Not done: real VS Code check of the extension and Marketplace publishing (publisher token, owner).
+- **aruaru-search**: on Connect and deployed (old REST 404). Open: waiting for brave/excite/hackernews to resume, the saved Baidu value in `data/engines.json`.
+- **rsa-rs / version-control**: rsa-rs v0.1.0 (Marvin-safe compatible replacement, used by 9 repos via `[patch.crates-io]`); version-control extensions (0504ad1, deployed; old binary `version-control.bak-20261124`). Open: confirm e-mail and no errors at the next scheduled run; LINE setup (owner).
+- **open-bar**: video-sync improvements and the presence API on Connect are **uncommitted** (8 files + POLICY.md). Open: find why `cd server; cargo test` hangs, run `video_mpv` 8 times on Windows (set `OPEN_BAR_MPV`), `cargo test --workspace --lib` and `real_files`. Published app v0.1.1 posts to the old URL, so deploy to the VPS only after asking the owner. No DoP hardware tests unless the owner operates.
+
+**Open, in priority order**: (1) MFastAPI stage 2 (rmojo-py with PyO3 and GIL release, `mojo_endpoint(runtime="rmojo")`, automatic fallback, `x-mfastapi-runtime`); (2) a true RSS cap in RMojo; (3) COBOL_to's 11 unsupported Java programs, RMojo's remaining 16, Java_to, pl2pl; (4) the open-bar checks above, then commit; (5) re-measure rs-whisper with base or larger (needs download permission) and integrate into open-tv-chat; (6) real Mac/iPhone devices (none).
+
+**Notes**: in RMojo `cargo test --release` fails linking `open_cpu.dll` (plain `cargo test` works); run the CPython diff as `python tests/run.py <absolute exe path>`; build VPS binaries in WSL `Ubuntu-24.04` with `check-glibc.sh`; WSL git cannot push (use Windows git); other sessions may push, so `git pull --rebase`; no `cargo fmt --all`.
+
+**Rules**: continue without asking; verify on real systems before "done"; never write secrets; no new REST; no sound-playing or recording tests; only deleting the original COBOL_to/Java_to needs confirmation; reply in Japanese only; develop and test on the local PC, VPS for deploy and verify only; end commits with `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`.
+
+**Resume message (paste as is)**: Continuing from before. Read "2026-11-25 引っ越し" at the end of `F:\runo\PORTING.md`, then the ends of the PORTING.md/CLAUDE.md files in F:\RMojo, F:\MFastAPI, F:\open-bar, F:\rsa-rs and F:\version-control, and work through the open items in the order above without asking. Do not discard open-bar's uncommitted changes; run `git status` first.

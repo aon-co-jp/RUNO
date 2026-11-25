@@ -66,7 +66,7 @@ Japanese and English are always the newest. Other languages are not translated e
 ## PORTING.md
 
 - 日本語 / ja: 2026-11-25 (latest)
-- English / en: 2026-11-24 (older than 2026-11-25)
+- English / en: 2026-11-25
 - 简体中文 / zh-Hans: 2026-11-24 (older than 2026-11-25)
 - 繁體中文 / zh-Hant: 2026-11-24 (older than 2026-11-25)
 - 한국어 / ko: 2026-11-24 (older than 2026-11-25)
