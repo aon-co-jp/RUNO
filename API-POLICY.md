@@ -242,3 +242,37 @@ We always build the four **together**. Done: a Reaxt server can join the front d
 - **Our position**: most callers are our own apps (UIs, installers, sister repositories), so usage is easy to measure and Versionless is easy to adopt. Public-facing APIs get longer deadlines.
 
 Sources / 出典: [GoldenPath: versionless schema design](https://goldenpath.graphql.org/solutions/versionless-schema-design/), [GoldenPath: versioning](https://goldenpath.graphql.org/practices/versioning/), [GraphQL: schema design](https://graphql.org/learn/schema-design/), [WunderGraph: Versionless APIs](https://wundergraph.com/blog/versionless_apis_making_apis_backwards_compatible_forever_to_enable_businesses_to_collaborate), [InfoQ: API evolution without versioning](https://www.infoq.com/news/2022/10/api-evolution-without-versioning), [VA API standards: API evolution](https://department-of-veterans-affairs.github.io/va-api-standards/lifecycle/api-evolution), [Apideck: versioning & breaking changes](https://developers.apideck.com/versioning), [Speakeasy: versioning best practices](https://www.speakeasy.com/api-design/versioning), [LogRocket: versioning fields in GraphQL](https://blog.logrocket.com/versioning-fields-graphql).
+
+## 2026-11-25 追記: 参考資料2点の取り込み(Zenn「Versionless APIという世界」・WunderGraph) / Two references folded in (Zenn article and WunderGraph)
+
+### 日本語
+**参考**: [Zenn: Versionless APIという世界(kinzal、2022-12)](https://zenn.dev/kinzal/articles/74a761de1cc52d)、[WunderGraph: Versionless APIs(Jens Neuse、2021-09、2026年に更新)](https://wundergraph.com/blog/versionless_apis_making_apis_backwards_compatible_forever_to_enable_businesses_to_collaborate)。
+- **言葉の意味**: Versionless は「版を管理しない」ではなく、**クライアントを壊さずAPIを進化させ続けられる**こと。サーバーレスと同じで、版が無いのではなく**版を気にしなくてよくなる**こと。GraphQL が REST より本質的に版管理に強いわけではない。Zenn の筆者も、REST でも適用できそうだとしている。→ **私たちの Connect(`POST /パッケージ.Service/Method` と JSON)は、この JSON-RPC 型の入口にあたり、相性がよい。**
+- **WunderGraph の仕組み**: スキーマを内部の「仮想的な約束」として扱い、クライアントの操作を、JSON-RPC の窓口と**移行スクリプト(migration)**で新しいスキーマへ書き換える。クライアントには**版のハッシュ**を埋め込み、移行テストが通れば、クライアントを壊さずに更新できる。サポートするクライアント(例: 過去2か月に通信したもの)を指定して検査する。
+- **移行(migration)でできること・できないこと(Zenn)**
+  - 要求(request): **削除はいつでも可**。更新は元の情報で作れる場合だけ(例 timestamp→DateTime)。**必須の入力欄を足すのは不可**(情報が無い)。
+  - 応答(response): **追加はいつでも可**。更新は元の情報で作れる場合だけ。**削除は、別の問い合わせで補えない限り不可**。
+  - **古い処理(resolver)を残す方法**との比較: 残せば完全に互換だが、保守するコードが増え、DB を変えたとき古い処理も直す必要がある。**クライアントの更新が遅い(スマホなど)ほど古い処理が溜まる**。提供側がクライアントを制御できないなら移行方式、制御できる(BFF など)なら古い処理を残す手もある。
+- **必要になるもの**: (1) **トレース(誰がどの古い版を使っているか)**。古い版・移行を消す判断に必須。(2) **スキーマの後方互換チェックをCIに**。過去N か月以内のクライアントが動かなくなる変更を禁止する。**禁止するのは「互換のない変更」ではなく「クライアントが動かなくなる変更」**で、影響の無い変更は自由。
+- **ほかの現実**: IoT 機器やスマホアプリは更新されにくく、更新が出てから古い版を畳めるまで1年以上かかることもある。互換をいつまでも保つのは負担でもあり、破壊的な変更が必要な場面は実際にある。
+- **私たちの規則への追加**
+  10. **版の代わりに、どの呼び出し側がどの操作・欄を使っているかを記録する**(アクセスログの集計。`x-tenant` や呼び出し元名を使う)。消す判断はこの記録で行う。
+  11. **互換チェックを試験に入れる**: 旧経路・旧欄の呼び出しが、変更後も動くことを確かめる試験を置く(RS-Blog の旧REST 404 の試験と同じ要領で、残す操作の「動く」側も)。
+  12. **移行できない変更**(必須入力欄の追加、他で補えない応答欄の削除)は、**新しい名前の操作を足して**、旧は規則8で畳む。
+  13. 呼び出し側を制御できる内部APIは、古い処理を残さず移行(読み替え)で済ませてよい。制御できない外部向けや、更新の遅い端末(スマホ・IoT)向けは期限を長く取る。
+
+### English
+**References**: [Zenn: "The world of Versionless APIs" (kinzal, 2022-12)](https://zenn.dev/kinzal/articles/74a761de1cc52d) and [WunderGraph: Versionless APIs (Jens Neuse, 2021-09, updated 2026)](https://wundergraph.com/blog/versionless_apis_making_apis_backwards_compatible_forever_to_enable_businesses_to_collaborate).
+- **What the word means**: Versionless does not mean "no versioning"; it means you can **keep evolving the API without breaking clients**. Like "serverless", versions still exist, you just **do not have to think about them**. GraphQL is not inherently better than REST at this, and the Zenn author also thinks it applies to REST. → **Our Connect (`POST /package.Service/Method` with JSON) is this JSON-RPC-style facade, so it fits well.**
+- **WunderGraph's mechanism**: treat the schema as an internal, virtual contract, and rewrite client operations onto the new schema through a JSON-RPC facade and **migration scripts**. A **version hash** is embedded in each client; when the migration test suite is green, the update ships without breaking clients. You choose which clients to support (for example those seen in the last two months) and test against them.
+- **What migration can and cannot do (Zenn)**
+  - Requests: **removal always works**. Updates work only when the old information suffices (timestamp to DateTime). **Adding a required input field cannot be migrated** (no information).
+  - Responses: **addition always works**. Updates work only when the old information suffices. **Removal cannot be migrated unless another query can fill it in.**
+  - **Versus keeping the old resolvers**: keeping them is fully compatible but the code to maintain grows, and a database change forces edits to the old resolvers too. **The slower clients update (mobile and so on), the more old resolvers pile up.** If you cannot control clients, prefer migration; if you can (a BFF, for example), keeping old resolvers is an option.
+- **What you need**: (1) **tracing (who uses which old version)**, essential for deciding when to delete an old version or migration; (2) **a schema backward-compatibility check in CI** that forbids changes breaking clients seen in the last N months. **Forbid changes that break clients, not every incompatible change**; changes with no client impact are free.
+- **Other realities**: IoT devices and mobile apps update slowly; it can take a year or more after an update before the old version can be retired. Keeping compatibility forever is a burden too, and breaking changes are sometimes truly needed.
+- **Added to our rules**
+  10. **Instead of versions, record which caller uses which operation and field** (aggregate access logs; use `x-tenant` or the caller name). Deletion decisions rest on this record.
+  11. **Put compatibility checks into the tests**: tests that old paths and old fields still work after a change (like RS-Blog's old-REST-404 test, but for the "still works" side of what we keep).
+  12. **Changes that cannot be migrated** (adding a required input field, removing a response field nothing else can fill in): **add a new-named operation** and retire the old one by rule 8.
+  13. Internal APIs whose callers we control may use migration (translation) instead of keeping old handlers; externally facing APIs and slowly updating clients (phones, IoT) get longer deadlines.
