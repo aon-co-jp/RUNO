@@ -5172,3 +5172,7 @@ README، CLAUDE، PORTING و POLICY هر بار به ژاپنی و انگلیس�
 ## 2026-11-25 追記: MFastAPI は Mojo から使えること / Addendum: MFastAPI must be usable from Mojo
 **日本語**: MFastAPI は **Mojo から使用できる仕様**を保つ(Python 構文・Rust 実装・Mojo 対応、Windows では RMojo の `compat/wsl-bridge` 経由で WSL 上の Mojo を使う)。2MFastAPI の変換結果も Mojo から使えること。現状: `mojo/` は参照実装で、段階B・Cのサーバーは実験的。Mojo からの呼び出しの実機確認は、確認済みの範囲だけを「確認済み」と書く。11:30 まで確認なしで自動で進める。
 **English**: MFastAPI keeps the **specification of being usable from Mojo** (Python syntax, Rust core, Mojo support; on Windows the real Mojo in WSL is driven through RMojo's `compat/wsl-bridge`). Output of 2MFastAPI must be usable from Mojo too. Current state: `mojo/` is a reference implementation and its stage B/C servers are experimental. Only what was actually run is called "verified". Continue automatically without asking until 11:30.
+
+## 2026-11-25 追記: fetch/axios の Server Action 対応付けを修正 / Fix: fetch/axios to Server Action mapping
+**日本語**: `test_fetch_detection_maps_to_action` の失敗原因は、`jsx.py` の正規表現に `\b`・`\1` が制御文字として書き込まれていたことでした。正しい正規表現に直し、テスト13件がすべて成功しました。次は、委譲した出力(`backend-java`・`backend-cobol`)を起動して HTTP の応答を確かめます。
+**English**: `test_fetch_detection_maps_to_action` failed because `\b` and `\1` had been written into the regexes in `jsx.py` as control characters. The regexes are fixed and all 13 tests pass. Next: start the delegated outputs (`backend-java`, `backend-cobol`) and check their HTTP responses.
