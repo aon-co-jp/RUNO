@@ -320,3 +320,7 @@ Sources / 出典: [GoldenPath: versionless schema design](https://goldenpath.gra
 ## 2026-11-26 運用メモ(.v1即削除) / Note
 **日本語**: `.v1`は猶予なしで即削除(ユーザー決定)。呼び出し側とサーバーは同時に切り替え、第三者規格は触らない。小規模API分の現状と再開手順は`PORTING.md`末尾。
 **English**: `.v1` is removed at once, with no grace period (user decision). Switch callers and servers together; leave third-party standards alone. Status and resume steps for the small APIs are at the end of `PORTING.md`.
+
+## 2026-11-26 追記: openenglish.* の .v1 即削除を承認 / Approval to remove openenglish `.v1` at once
+**日本語**: ユーザー本人が、`openenglish.*` の `.v1` を猶予なしで即削除し(古い配布版は動かなくなる)、リリース・VPS入れ替えまで進めることを承認した。第三者規格は対象外。進捗は `PORTING.md` 末尾の同名節。
+**English**: The owner approved removing `.v1` from `openenglish.*` at once (old distributed builds will stop working) and going through release and VPS swap. Third-party standards are out of scope. Progress is in the same-named section at the end of `PORTING.md`.
