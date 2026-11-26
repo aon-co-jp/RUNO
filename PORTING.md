@@ -4920,8 +4920,8 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 **English**: Re-checked production `AdmissionStats` (read-only): still only `claude-check`; real callers' `x-tenant` remains unobserved (waiting for real traffic). Everything left needs the owner's machine or devices (LOXJIE driver rollback, UniConverter removal, default-format change, Mac/iPhone, aruaru-IME v0.2.30 exe install test). Nothing remains that can be done from here alone.
 
 ## 2026-11-23 再開用メッセージ(翻訳・SFTP・x-tenant) / Resume message
-**日本語**: 前の続きです。`F:uno\PORTING.md` 末尾を読み、未了を確認なしで進めてください。(1)whisper常駐化+窓短縮+繰り返し検出(`open-tv-chat/PORTING.md`末尾)、(2)dist_syncの実SFTP確認とSFTP削除の通し、(3)実トラフィックでの`x-tenant`観測。所有者待ち: 音声切り分け・Mac/iPhone・IME exe・検証用鍵の削除。決まり: 本物で確認してから完了、秘密は書かない、新しいRESTは作らない、返答は日本語のみ。
-**English**: Read the end of `F:uno\PORTING.md` and continue without asking: whisper resident + shorter window + repetition guard, a real SFTP check of dist_sync and delete, and `x-tenant` with real traffic. Owner-only: audio isolation, Mac/iPhone, the IME exe, deleting the test key.
+**日本語**: 前の続きです。`F:\runo\PORTING.md` 末尾を読み、未了を確認なしで進めてください。(1)whisper常駐化+窓短縮+繰り返し検出(`open-tv-chat/PORTING.md`末尾)、(2)dist_syncの実SFTP確認とSFTP削除の通し、(3)実トラフィックでの`x-tenant`観測。所有者待ち: 音声切り分け・Mac/iPhone・IME exe・検証用鍵の削除。決まり: 本物で確認してから完了、秘密は書かない、新しいRESTは作らない、返答は日本語のみ。
+**English**: Read the end of `F:\runo\PORTING.md` and continue without asking: whisper resident + shorter window + repetition guard, a real SFTP check of dist_sync and delete, and `x-tenant` with real traffic. Owner-only: audio isolation, Mac/iPhone, the IME exe, deleting the test key.
 
 ## 2026-11-23 追記: rs-whisper の繰り返し防止(日本語・English)
 **日本語**: 窓が短すぎて同じ語を延々と繰り返す問題に対し、`rs-whisper` の復号に「同じトークンが6回続いたら止める」防止を足しました(rs-whisper の最新コミット)。窓を短すぎる `500` にした11秒の音声は、以前は224語まで「your your …」と続いていたのが、**止まるようになりました**(ただし内容は不完全のまま: 窓が音声より短いのが原因なので、窓は音声の長さ以上にする)。既定(窓1500)の出力は従来と同じです。この防止は同じ**1語**の繰り返しだけを止めるので、複数語の繰り返しには効きません。**未了**: 複数語の繰り返しの検出、オーバーラップと無音検出、`open-tv-chat` への組み込み。
