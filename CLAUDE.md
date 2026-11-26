@@ -55,6 +55,7 @@ https://github.com/aon-co-jp
 影響しない)。
 
 ## HANDOFF
+- **2026-11-26 引っ越し用: openenglish の .v1 即削除(承認済み・着手直後) / Move memo**: ユーザー本人が `.v1` の即削除とリリース・VPS入れ替えを承認。`F:\open-english` は分岐しているので pull せず新規cloneで作業。`aruaru_llm.Llm` は触らない。未了と再開メッセージは[PORTING.md](PORTING.md)末尾(日英)。*Owner approved removing openenglish `.v1` at once plus release and VPS swap; work in a fresh clone (do not pull `F:\open-english`); leave `aruaru_llm.Llm` alone; open items and the resume message are at the end of PORTING.md.*
 - **2026-11-24 MFastAPI の CI 修正**: compat・wheels に RMojo の clone を追加し compat 成功(原因=パス依存の姉妹を CI が取得していなかった)。他の姉妹の CI は成功。未了=Mac・iPhone 実機、所有者待ちの項目。詳細は[PORTING.md](PORTING.md)末尾。*MFastAPI CI fixed by cloning the sibling RMojo; other sisters green; open: real Mac/iPhone devices and owner-side items. Details at the end of PORTING.md.*
 - **2026-11-23 再確認**: x-tenantは本番で依然claude-checkの1件のみ(実トラフィック待ち)。4姉妹・RMojo・pl2pl・open-tv-chatのCIは成功。MFastAPIは別作業の未コミット変更があり未接触。詳細は[PORTING.md](PORTING.md)末尾。
 - **2026-11-23 同期へのミラー削除の組み込み**: RS-Sync `a15bb7a`で、元に無く宛先にだけあるファイルの削除を同期に組み込み、WSLの実SFTPサーバーで通しも成功(記録は`935fb5b`)。ジョブ設定`mirror_delete`・`mirror_dry_run`・`max_deletes`。安全策: 既定オフ、ドライラン(消さず一覧報告)、削除上限(既定20件超なら1件も消さず報告)、元が空のときの保護。**未確認**: 本番VPSでの運用、実データでの長期運用。*Mirror delete wired into RS-Sync with dry run, cap and default-off safeguards; verified on a real SFTP server.*
