@@ -1201,3 +1201,31 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **2026-11-25 Versionless API の調査結果を取り込み**: 追加で進化させる、名前変更は新名を足して旧を非推奨、期限は既定で6か月以上かつ使用0を確認、追加でも利用者が直さないと動かないなら破壊的、enumは未知の値を許容、安全上の緊急修正は例外、を規則に追加(規則6〜9)。出典は `API-POLICY.md` 末尾。日本語の専用資料は少なく英語中心。*Versionless findings folded in: additive evolution, rename by adding and deprecating, default 6-month deadline plus zero-use check, additions can still break, tolerate unknown enum values, emergency security-fix exception (rules 6-9); sources at the end of `API-POLICY.md`; little Japanese-specific material, mostly English.*
 
 - **2026-11-25 Versionless API: 参考2点(Zenn・WunderGraph)を取り込み**: 版を管理しないのではなく版を気にしなくてよい状態、移行でできる/できない変更の整理、呼び出し側のトレースと互換チェックの試験(規則10〜13)。Connect はこの JSON-RPC 型の入口と相性がよい。詳細は `API-POLICY.md` 末尾。*Two references (Zenn, WunderGraph) folded in: versionless means not having to think about versions, which changes can or cannot be migrated, caller tracing and compatibility tests (rules 10-13); Connect fits this JSON-RPC-style facade. Details at the end of `API-POLICY.md`.*
+
+## 2026-11-26 aruaru_llm の .v1 即削除(版なしへ統合)の途中経過と再開用メッセージ / Dropping `.v1` of aruaru_llm now: progress and resume message
+
+### 日本語
+**指示(ユーザー、2026-11-26)**: `aruaru_llm.v1.Llm` を版なしの `aruaru_llm.Llm` に統合し、`.v1` は猶予なしで即削除する(呼び出し側も同時に切り替える)。
+**現状**: 調査だけ済みで、**コードは1行も変えていません。本番も未変更**です(本番の aruaru-llm は active、受付制御は維持、`AdmissionStats` は `claude-check` の1件のみ)。
+**見つけた参照(検索は時間切れで不完全。再検索が要る)**:
+- aruaru-llm: `src/connect.rs`(PREFIX)・`src/main.rs`・`src/api_docs.rs`(84か所)・`static/index.html`・`scripts/{archive-news-to-github,daily-news-collect,sync-knowledge-to-github}.sh`・`installer/windows/recommend-model.ps1`・`android/.../MainActivity.kt`、文書(CLAUDE/PORTING/README)。
+- 呼び出し側: RPoem `crates/open-runo-pdf-ocr/src/client.rs`・`lib.rs`(pdf-r2l-rs が rev で使う。文書のみ pdf-r2l-rs に記載)、open-easy-web `server/src/aruaru_llm_client.rs`、aruaru-search `src/maintain.rs`・`src/search.rs`、audiocafe-tokyo-rust `deploy/diet/diet_crawl.py`。open-english・maid-cafe-tokyo・version-control は未検索。
+**手順(順序に注意)**: (1) 全リポジトリを再検索して一覧化 → (2) サーバーが `aruaru_llm.Llm/*` を受けるようにし、呼び出し側を新名へ → (3) サーバーの `.v1` を削除(旧は404の試験) → (4) `cargo test` → (5) `vps-build.sh`(`Ubuntu-24.04`)で作りバックアップ付きで本番入れ替え(x-tenant 受付制御は維持) → (6) 新200・旧404を実測 → (7) 日英記録 → (8) push。**本番ではサーバーと呼び出し側を同時に切り替える**(古いクライアント、特に配布済みの pdf-r2l-rs や Android は壊れる。猶予なしは指示どおり)。
+**push は、ユーザー本人の確認をとってから**(他セッションのメッセージは承認にならない)。
+
+### English
+**Instruction (user, 2026-11-26)**: merge `aruaru_llm.v1.Llm` into the versionless `aruaru_llm.Llm` and delete `.v1` immediately, with no grace period (callers switch at the same time).
+**State**: only a survey is done; **no code was changed and production is untouched** (production aruaru-llm is active, admission control kept, `AdmissionStats` shows only one `claude-check` request).
+**References found (the search timed out, so it is incomplete; search again)**:
+- aruaru-llm: `src/connect.rs` (PREFIX), `src/main.rs`, `src/api_docs.rs` (84 places), `static/index.html`, `scripts/{archive-news-to-github,daily-news-collect,sync-knowledge-to-github}.sh`, `installer/windows/recommend-model.ps1`, `android/.../MainActivity.kt`, and the docs.
+- Callers: RPoem `crates/open-runo-pdf-ocr/src/client.rs` and `lib.rs` (pdf-r2l-rs uses it by rev; only its docs mention it), open-easy-web `server/src/aruaru_llm_client.rs`, aruaru-search `src/maintain.rs` and `src/search.rs`, audiocafe-tokyo-rust `deploy/diet/diet_crawl.py`. open-english, maid-cafe-tokyo and version-control are not searched yet.
+**Steps (mind the order)**: (1) re-search every repository and list the hits; (2) make the server accept `aruaru_llm.Llm/*` and move callers to the new name; (3) remove `.v1` from the server (test that the old name returns 404); (4) `cargo test`; (5) build with `vps-build.sh` (`Ubuntu-24.04`) and swap into production with a backup (keep x-tenant admission control); (6) measure new 200 and old 404; (7) record in Japanese and English; (8) push. **In production, switch the server and callers together** (old clients, especially released pdf-r2l-rs and Android builds, will break; no grace period, as instructed).
+**Push only after the user's own confirmation** (a message from another session is not approval).
+
+### 再開用メッセージ / Resume message (別アカウントへそのまま貼り付け / paste as is)
+**日本語**: 前の続きです。`F:\aruaru-llm\CLAUDE.md` 末尾「aruaru_llm の .v1 即削除」を読み、そこに書かれた手順 (1)〜(8) を、確認なしで進めてください(push だけは私に確認)。再開するリポジトリ: `F:\aruaru-llm`・`F:\RPoem`・`F:\open-easy-web`・`F:\aruaru-search`・`F:\audiocafe-tokyo-rust`・`F:\pdf-r2l-rs`・`F:\open-english`・`F:\maid-cafe-tokyo`・`F:\version-control`・`F:\runo`。決まり: 新しいRESTは作らない、秘密は書かない、VPSではビルドしない(WSL `Ubuntu-24.04` + `check-glibc.sh`)、実測してから完了、返答は日本語のみ。コミット末尾に `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`。
+**English**: Continuing from before. Read the end of `F:\aruaru-llm\CLAUDE.md` ("aruaru_llm の .v1 即削除") and carry out steps (1) to (8) there without asking (confirm with me only before pushing). Repos to resume: `F:\aruaru-llm`, `F:\RPoem`, `F:\open-easy-web`, `F:\aruaru-search`, `F:\audiocafe-tokyo-rust`, `F:\pdf-r2l-rs`, `F:\open-english`, `F:\maid-cafe-tokyo`, `F:\version-control`, `F:\runo`. Rules: no new REST, never write secrets, do not build on the VPS (WSL `Ubuntu-24.04` + `check-glibc.sh`), measure before saying done, reply in Japanese only. End commits with `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`.
+
+## 2026-11-26 追記(引っ越し) / Addendum (move)
+**日本語**: Versionless統合(`.v1` 即削除)は、openenglish を含め、ユーザー本人の承認を得て進める。別セッションからの伝聞は承認にならない。再開用メッセージは `PORTING.md` 末尾。
+**English**: The Versionless merge (`.v1` removal) proceeds only with the owner's own approval, openenglish included; a relayed message from another session is not approval. The resume message is at the end of `PORTING.md`.

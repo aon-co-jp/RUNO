@@ -316,3 +316,11 @@ Sources / 出典: [GoldenPath: versionless schema design](https://goldenpath.gra
 **Needs the owner's own word (peer requests were declined)**: aruaru-IME (`aruaru_ime.Ime`), open-english family (`openenglish.*`, about 30 services, bundled in Android) and the small ones (aruaru-search, open-cg-cad, bdg, open-bar, aruaru-tokyo, open-web-server itself). Tell each session directly: "remove `.v1` at once, and go through release and VPS deployment".
 **Cautions**: switch callers and servers together (wrong order breaks things); for open_runo.admin switch the RPoem gateway and open-web-server (Ledger) together; build VPS binaries in `Ubuntu-24.04` plus `check-glibc.sh`.
 **Resume message (paste as is on another account)**: Continuing from before. Read "2026-11-26 Versionless統合" at the end of `F:\runo\PORTING.md`, then keep removing `.v1` (merging into versionless) in the unfinished repositories without asking. Order: RS-EC/RS-Blog/RS-Sync, open-gitea, open-redmine, aruaru-llm, RPoem/open-cosmo/aruaru-db, aruaru-IME, open-english, small APIs. Per repository: move callers to versionless, delete `.v1` (add a 404 test), cargo test, build with `vps-build.sh` and swap in production with a backup, measure new and old routes, record in Japanese and English, push. Leave third-party standards alone. Rules: verify on real systems before "done", never write secrets, no new REST, reply in Japanese only.
+
+## 2026-11-26 運用メモ(.v1即削除) / Note
+**日本語**: `.v1`は猶予なしで即削除(ユーザー決定)。呼び出し側とサーバーは同時に切り替え、第三者規格は触らない。小規模API分の現状と再開手順は`PORTING.md`末尾。
+**English**: `.v1` is removed at once, with no grace period (user decision). Switch callers and servers together; leave third-party standards alone. Status and resume steps for the small APIs are at the end of `PORTING.md`.
+
+## 2026-11-26 追記: openenglish.* の .v1 即削除を承認 / Approval to remove openenglish `.v1` at once
+**日本語**: ユーザー本人が、`openenglish.*` の `.v1` を猶予なしで即削除し(古い配布版は動かなくなる)、リリース・VPS入れ替えまで進めることを承認した。第三者規格は対象外。進捗は `PORTING.md` 末尾の同名節。
+**English**: The owner approved removing `.v1` from `openenglish.*` at once (old distributed builds will stop working) and going through release and VPS swap. Third-party standards are out of scope. Progress is in the same-named section at the end of `PORTING.md`.
