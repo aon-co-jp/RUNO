@@ -2730,7 +2730,7 @@ Device: moto g53y (`ZY22J7RFND`, adb at `C:\Users\noruk\AppData\Local\Android\Sd
 - **open-easy-web**: `/ime/api/key`・`/ime/api/session`の旧経路を削除(`6344880`)、VPS再ビルド・再起動(バックアップ`/root/open-easy-web-server.bak-20261109`)。新経路は`/ime/api/aruaru_ime.v1.Ime/Key|Session`。
 - **aruaru-IME**: v0.2.25(`bdf237d`)で常駐エンジンの旧経路も削除。VPSエンジン(4660)は旧`/key`・`/session`=404、新=400(ハンドラ到達)。旧経路ヒットは全期間7件で11-09 15:58が最後。2026-12-06の削除作業は不要。
 **未了・要確認**
-1. (解決済み 2026-11-17) VPSの`downloads/VERSION`は0.2.25でタグと一致。
+1. (解決済み。2026-11-26時点で0.2.30) VPSの`downloads/VERSION`は最新タグと一致。
 2. Android実機の通し試験(別セッション`rest-android`担当)、open-easy-webのAndroidアプリは0.1.0のまま。
 3. VPS `/root/aruaru-db`の`Cargo.lock`に未コミット差分(`rust-json`2行、ビルド由来)。コミットせず整理。
 4. 古いTSF DLL(v0.2.23以前)のクライアントは旧経路が404で変換不可になる。影響の兆候は未確認。
@@ -2746,7 +2746,7 @@ Device: moto g53y (`ZY22J7RFND`, adb at `C:\Users\noruk\AppData\Local\Android\Sd
 - **open-easy-web**: legacy `/ime/api/key` and `/ime/api/session` removed (`6344880`), VPS rebuilt and restarted (backup `/root/open-easy-web-server.bak-20261109`). New path: `/ime/api/aruaru_ime.v1.Ime/Key|Session`.
 - **aruaru-IME**: v0.2.25 (`bdf237d`) removed the daemon's legacy routes too. VPS engine (4660): old `/key`, `/session` = 404, new = 400 (reaches the handler). Legacy hits: 7 in total, last on 11-09 15:58. The planned 2026-12-06 removal is unnecessary.
 **Open / to verify**
-1. (Resolved 2026-11-17) VPS `downloads/VERSION` is 0.2.25, matching the tag.
+1. (Resolved; 0.2.30 as of 2026-11-26) VPS `downloads/VERSION` matches the latest tag.
 2. End-to-end Android device test (owned by the `rest-android` session); the open-easy-web Android app is still 0.1.0.
 3. Uncommitted `Cargo.lock` diff in VPS `/root/aruaru-db` (2 `rust-json` lines from the build): do not commit, clean up.
 4. Old TSF DLL clients (v0.2.23 or earlier) now get 404 and cannot convert; no sign of real impact found.
