@@ -20,7 +20,9 @@
 | — | COBOL・Mojo(pl2pl・RPoRea 等) | 変換元サンプル/バインディング | — | — | 不可(変換対象の見本・他言語向け入口) |
 
 ## 進捗
-- 2026-11-26: 一覧作成のみ。**まだ1件も Rust 化していない**。次は優先1(audiocafe-tokyo-php の本番で動く PHP 経路の洗い出し → Rust 版へ移植・本番入れ替え)。
+- 2026-11-26: 一覧作成(`bb812d3`)。
+- 2026-11-26: **優先1の一部を完了** — audiocafe.tokyo の多言語ページ51本(`/aruaru/`・`/aruaru-lady/`・`/rakuten-mobile/` の `index-<言語>.php`)を audiocafe-tokyo-rust へ移植(`be24174`)。本番でPHP版とバイト一致・経路を4401→4400へ切り替え・PHPへのアクセス0を実測。*51 multilingual pages ported, byte-identical, production switched.*
+- 未了(優先1の残り): トップ `/index.php`(8,382行)、残り全部を受ける経路(4401)、`aruaru/cron.php`・`aruaru-lady/cron.php`(毎朝)。これらが済むまで `audiocafe-php-legacy`・`audiocafe-cron-php` は止めない。*Remaining: top /index.php, the catch-all route and the two daily cron.php jobs; the PHP services stay until then.*
 
 ## English summary
 Inventory of 102 repositories with non-Rust code (GitHub language bytes, not line counts). Priority 1 is the PHP still running for audiocafe.tokyo; Python CLIs are owned by parallel sessions; browser JS, Android/iOS UI, VS Code extensions, build scripts, shaders, the whisper.cpp fork and COBOL/Mojo samples cannot or need not be ported. Status: inventory only, nothing ported yet.
