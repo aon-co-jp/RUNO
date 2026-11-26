@@ -5433,3 +5433,36 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **Mistake on record**: I ran `git checkout CLAUDE.md README.md` in RS-Blog and RS-EC and discarded another session's uncommitted edits (unrecoverable). Always check `git diff` before reverting.
 **Open**: QR login and `otp_qr` in production for RS-Blog/RS-EC (always restore `otp` afterwards); remaining calls (Categories/Tags/Pages/Comments, Accounts/Orders and so on); removing `.v1` at once (versionless aliases exist, `.v1` remains); the VPS open-gitea clones (uncommitted `Cargo.lock` and behind; ask before touching).
 **Resume message (paste as is)**: Continuing from before. Read "2026-11-26 引っ越し用の再開メッセージ(RustSec依存更新・本番ログイン確認)" at the end of `F:\runo\PORTING.md`, then work through the open items of `RS-Blog`, `RS-EC` (fresh clones recommended), `karu-tokyo` and `runo`. First remove `.v1` at once in RS-Blog/RS-EC (move callers to versionless, 404 test, cargo test, build with `vps-build.sh`, swap with a backup, measure new and old routes). Rules: verify on real systems before "done", never write secrets, no new REST, `git diff` before reverting, ask before touching open-gitea, reply in Japanese only.
+
+
+## 2026-11-26 引っ越し用の再開メッセージ(Ledger接続・REST全廃の残り・RS-Blog QRログイン) / Move memo and resume message (Ledger wiring, remaining REST abolition, RS-Blog QR login)
+
+### 日本語
+**再開するリポジトリ**: `F:\runo`(記録のみ)、`RPoem`、`open-web-server`、`open-cosmo`、`RS-Blog`、`RS-EC`、`aruaru-IME`、`open-gitea`(いずれも新規cloneで可。手元クローンは`origin/main`と分岐していることがあるので`git pull`しない)。
+**済み(本番で確認)**
+- Ledger→RPoem: open-web-serverの`OPEN_RUNO_API_KEY`を設定して再起動(5ドメイン200)、`Admin/DbMutate`の実書き込み(200+`db_commit_id`、同キー再送で冪等、誤キー401)。確認用の`_verify`行は不要なら削除可。
+- aruaru-llm Generateの遅延は2026-11-18に解消・反映済み(VPSで8トークン約6秒)。手元での再現調査は不要。
+- RS-Blog: Categories/Tags/Pages/Commentsの本番確認済み。RS-Blog・RS-EC: rand 0.10・sha2 0.11更新後もテスト成功(27件・48件)。
+- open-cosmoは本番で起動しない判断を記録(`bac0c13`、**未push**)。aruaru-IMEの起動項目はインストール版v0.2.26へ修正(再起動後の自動起動は未確認)。
+**未了(この順)**
+1. **RS-BlogのQRログイン**: ログイン方式を一時的に`otp_qr`にし、2通目のOTPメールを送信済み。**本人がコードを入力**して確認し、終わったら必ず`otp`へ戻す(戻っているかをまず確認)。RS-ECの注文・決済・QRログインも同様(1サービスずつ。OTPは5分で失効)。
+2. `.v1`即削除の残り(直前の「2026-11-26 Versionless統合」節の順)。
+3. `STATIC_TOKEN_MODE=loopback`への切替は、本人のメールOTP+TOTPログインとBearerでの`ListTenants`確認の後。
+4. open-giteaのVPSクローン(分岐)は本人確認の上で。Mac・iPhone実機、aruaru-IMEのメモ帳実入力は実機待ち。
+**注意**: VPSではビルドしない(WSL `Ubuntu-24.04`+`check-glibc.sh`)。秘密・OTPは出さず、入力もしない。元に戻す前に`git diff`で他セッションの編集を確認。応答は日本語のみ。
+**再開用メッセージ(そのまま貼り付け)**: 前の続きです。`F:\runo\PORTING.md`末尾の「2026-11-26 引っ越し用の再開メッセージ(Ledger接続…)」を読んでから、まずRS-Blogのログイン方式が`otp`に戻っているか確認し、`otp_qr`のままなら私のOTP入力でQRログインを確認して`otp`へ戻してください。その後、`.v1`即削除の残りを確認なしで進めてください。VPSはWSLでビルド→バックアップ→差し替え→実測、新しいRESTは作らない、秘密は出さない、返答は日本語のみ。
+
+### English
+**Repositories to resume**: `F:\runo` (records only), `RPoem`, `open-web-server`, `open-cosmo`, `RS-Blog`, `RS-EC`, `aruaru-IME`, `open-gitea` (fresh clones are fine; local clones may have diverged from `origin/main`, so do not `git pull`).
+**Done (verified in production)**
+- Ledger to RPoem: `OPEN_RUNO_API_KEY` set in open-web-server and restarted (5 domains 200); a real `Admin/DbMutate` write worked (200 + `db_commit_id`, idempotent resend, wrong key 401). The `_verify` test row may be deleted.
+- The aruaru-llm Generate slowness was fixed and deployed on 2026-11-18 (about 6 s for 8 tokens on the VPS); no local reproduction needed.
+- RS-Blog: Categories/Tags/Pages/Comments checked in production. RS-Blog and RS-EC tests pass after the rand 0.10 and sha2 0.11 updates (27 and 48 tests).
+- The decision not to run open-cosmo in production is recorded (`bac0c13`, **not pushed**). The aruaru-IME startup entry now points to the installed v0.2.26 (auto-start after reboot not yet verified).
+**Open (in this order)**
+1. **RS-Blog QR login**: the login mode was temporarily set to `otp_qr` and a second OTP mail was sent. **The owner types the code** to confirm; afterwards always restore `otp` (first check that it is already back). RS-EC checkout and QR login likewise, one service at a time (OTPs expire in 5 minutes).
+2. The remaining `.v1` removals (order in the previous section "2026-11-26 Versionless統合").
+3. The `STATIC_TOKEN_MODE=loopback` switch, only after the owner's e-mail OTP + TOTP login and a `ListTenants` check with the Bearer token.
+4. The VPS open-gitea clone (diverged) only after asking the owner. Mac/iPhone and typing in Notepad with aruaru-IME need real devices.
+**Cautions**: never build on the VPS (WSL `Ubuntu-24.04` plus `check-glibc.sh`). Never print or enter secrets or OTP codes. Check `git diff` before reverting so other sessions' edits are not lost. Reply in Japanese only.
+**Resume message (paste as is)**: Continuing from before. Read "2026-11-26 引っ越し用の再開メッセージ(Ledger接続…)" at the end of `F:\runo\PORTING.md`. First check that RS-Blog's login mode is back to `otp`; if it is still `otp_qr`, confirm the QR login with my OTP entry and then restore `otp`. After that, keep removing the remaining `.v1` without asking. VPS: build in WSL, back up, swap, measure; no new REST; no secrets; reply in Japanese only.

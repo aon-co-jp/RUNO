@@ -1245,3 +1245,8 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 ## 2026-11-26 運用の決まり(追記) / Operating rules (addendum)
 **日本語**: (1) 変更を元に戻す(`git checkout`・`reset`)前に必ず `git diff` で中身を確認する(他セッションの未コミット編集を消さないため)。(2) 本番ログインの確認は管理者メールOTPで、1サービスずつ、確認用データは削除しログアウトする。`otp_qr` 等へ変えたら必ず `otp` へ戻す。(3) APIは版なし(Versionless)・Connectのみ、新しいRESTは作らない。
 **English**: (1) Check `git diff` before reverting changes (`git checkout`, `reset`) so other sessions' uncommitted edits are not lost. (2) Production login checks use the admin e-mail OTP, one service at a time; delete test data and log out; restore `otp` after trying `otp_qr`. (3) APIs are Versionless and Connect only; no new REST.
+
+
+## 2026-11-26 運用の決まり(引っ越し時の追記) / Operating rules for moves (addendum)
+**日本語**: (1) 引っ越し・再開の前に、ログイン方式などの一時的な変更(例: `otp_qr`)が元に戻っているかを確認し、戻っていなければ戻す。(2) 再開メッセージは日本語と英語の両方を、`PORTING.md`末尾に貼り付けられる形で書き、`README.md`・`CLAUDE.md`(HANDOFF)からリンクする。(3) 未pushのコミットは再開メッセージに必ず書く。(4) OTP・秘密は書かず、入力もしない。
+**English**: (1) Before a move or resume, check that temporary changes such as the login mode (for example `otp_qr`) were restored, and restore them if not. (2) Write resume messages in both Japanese and English at the end of `PORTING.md` in paste-ready form, and link them from `README.md` and `CLAUDE.md` (HANDOFF). (3) Always list unpushed commits in the resume message. (4) Never write or enter OTP codes or secrets.
