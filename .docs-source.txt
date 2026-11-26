@@ -1,3 +1,3 @@
 source: aon-co-jp/RUNO
-commit: 8b23d13666f26f921f70af77bf0c9c9b6f47e554
-updated: 2026-11-26T09:30:22Z
+commit: 6f0d0140006f716798882ff2a1a6dc49594dce3e
+updated: 2026-11-26T11:01:13Z

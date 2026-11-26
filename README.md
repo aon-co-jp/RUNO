@@ -1640,3 +1640,29 @@ Continuing from before. Read the 2026-11-23 sections at the end of `F:\runo\PORT
 - **2026-11-25 Versionless API の調査結果を取り込み**: 追加で進化させる、名前変更は新名を足して旧を非推奨、期限は既定で6か月以上かつ使用0を確認、追加でも利用者が直さないと動かないなら破壊的、enumは未知の値を許容、安全上の緊急修正は例外、を規則に追加(規則6〜9)。出典は `API-POLICY.md` 末尾。日本語の専用資料は少なく英語中心。*Versionless findings folded in: additive evolution, rename by adding and deprecating, default 6-month deadline plus zero-use check, additions can still break, tolerate unknown enum values, emergency security-fix exception (rules 6-9); sources at the end of `API-POLICY.md`; little Japanese-specific material, mostly English.*
 
 - **2026-11-25 Versionless API: 参考2点(Zenn・WunderGraph)を取り込み**: 版を管理しないのではなく版を気にしなくてよい状態、移行でできる/できない変更の整理、呼び出し側のトレースと互換チェックの試験(規則10〜13)。Connect はこの JSON-RPC 型の入口と相性がよい。詳細は `API-POLICY.md` 末尾。*Two references (Zenn, WunderGraph) folded in: versionless means not having to think about versions, which changes can or cannot be migrated, caller tracing and compatibility tests (rules 10-13); Connect fits this JSON-RPC-style facade. Details at the end of `API-POLICY.md`.*
+
+## 2026-11-26 Versionless統合(.v1の即削除)の到達点と再開メッセージ / Versionless merge (.v1 removed at once): status and resume message
+
+### 日本語
+**決定(ユーザー、2026-11-26)**: 自前APIの版つき(`.v1`)と版なしを統合し、`.v1` は猶予なしで即削除する。配布済みの古いアプリが動かなくなることは了承済み。第三者規格(`grpc.health.v1`・`grpc.reflection.v1`・OTLP)は触らない。
+**完了(本番反映・実測済み)**
+- open-easy-web: `.v1` 削除(`e8288be`)。本番で `.v1`=404、版なし=401、v2=404、healthz 200、エラー0。cargo test 139件成功。旧バイナリ `open-easy-web-server.before-v1del-20261126`。
+- 呼び出し側の修正: open-upstream-watch(OTP呼び出し)・version-control(お知らせ送信)を版なしへ、push・VPS入れ替え済み。18:20の定期実行で「e-mail: sent」を確認。
+- RS-Sync・RS-Blog・RS-EC は版なしの別名を追加済み(`.v1` の削除は未了)。
+- 別件の安全対策: open-web-server の `Api/GrantItem`・`Charge` が認証なしで通っていたのを、管理APIと同じ認証必須に修正し本番反映(`d1da465`、認証なしは401)。
+**進行中・未了(担当セッションへ依頼済み)**: RS-EC/RS-Blog/RS-Sync、open-gitea、open-redmine、aruaru-llm(`aruaru_llm.Llm`と呼び出し側すべて)、RPoem・open-cosmo・aruaru-db(`open_runo.admin`)。依頼は送信済みで、利用上限(19時にリセット)のため一度止まり再送した(rest-cosmo-db は未到達の可能性)。
+**ユーザー本人の指示が要る(ピアの依頼では動かないと断られた)**: aruaru-IME(`aruaru_ime.Ime`)、open-english 系(`openenglish.*`、約30サービス、Android同梱)、小規模(aruaru-search・open-cg-cad・bdg・open-bar・aruaru-tokyo・open-web-server 本体など)。それぞれのセッションへ「`.v1` を即削除、リリースとVPS反映まで進めて」と直接伝える。
+**注意**: 呼び出し側とサーバーは同時に切り替える(順序を誤ると止まる)。open_runo.admin は RPoem ゲートウェイと open-web-server(Ledger)を同時に。VPS 用ビルドは `Ubuntu-24.04`+`check-glibc.sh`。
+**再開用メッセージ(別アカウントでそのまま貼り付け)**: 前の続きです。`F:\runo\PORTING.md` 末尾「2026-11-26 Versionless統合」を読んでから、`.v1` の即削除(版なしへ統合)を、未了のリポジトリで確認なしで進めてください。順番: RS-EC/RS-Blog/RS-Sync、open-gitea、open-redmine、aruaru-llm、RPoem/open-cosmo/aruaru-db、aruaru-IME、open-english、小規模API。各リポジトリで 呼び出し側を版なしへ→`.v1` 削除(404試験)→cargo test→`vps-build.sh`でビルドしバックアップ付きで本番入れ替え→新/旧の実測→日英記録→push。第三者規格は触らない。決まり: 本物で確認してから完了、秘密は書かない、新しいRESTは作らない、返答は日本語のみ。
+
+### English
+**Decision (user, 2026-11-26)**: merge the versioned (`.v1`) and versionless names of our own APIs and remove `.v1` at once, with no grace period. Breaking already-distributed old apps is accepted. Third-party standards (`grpc.health.v1`, `grpc.reflection.v1`, OTLP) stay untouched.
+**Done (deployed and measured)**
+- open-easy-web: `.v1` removed (`e8288be`). In production `.v1` 404, versionless 401, v2 404, healthz 200, no errors; 139 tests pass; old binary `open-easy-web-server.before-v1del-20261126`.
+- Caller fixes: open-upstream-watch (OTP calls) and version-control (notice sending) moved to versionless, pushed and swapped on the VPS; the 18:20 scheduled run logged "e-mail: sent".
+- RS-Sync, RS-Blog and RS-EC have a versionless alias (their `.v1` is not yet removed).
+- Separate safety fix: open-web-server's `Api/GrantItem` and `Charge` were reachable without authentication; they now require the same auth as the admin API and are deployed (`d1da465`, 401 without auth).
+**In progress / open (requested from the owning sessions)**: RS-EC/RS-Blog/RS-Sync, open-gitea, open-redmine, aruaru-llm (`aruaru_llm.Llm` and all callers), RPoem, open-cosmo and aruaru-db (`open_runo.admin`). Requests were sent, hit the usage limit (reset at 19:00) and were re-sent; rest-cosmo-db may not have received it.
+**Needs the owner's own word (peer requests were declined)**: aruaru-IME (`aruaru_ime.Ime`), open-english family (`openenglish.*`, about 30 services, bundled in Android) and the small ones (aruaru-search, open-cg-cad, bdg, open-bar, aruaru-tokyo, open-web-server itself). Tell each session directly: "remove `.v1` at once, and go through release and VPS deployment".
+**Cautions**: switch callers and servers together (wrong order breaks things); for open_runo.admin switch the RPoem gateway and open-web-server (Ledger) together; build VPS binaries in `Ubuntu-24.04` plus `check-glibc.sh`.
+**Resume message (paste as is on another account)**: Continuing from before. Read "2026-11-26 Versionless統合" at the end of `F:\runo\PORTING.md`, then keep removing `.v1` (merging into versionless) in the unfinished repositories without asking. Order: RS-EC/RS-Blog/RS-Sync, open-gitea, open-redmine, aruaru-llm, RPoem/open-cosmo/aruaru-db, aruaru-IME, open-english, small APIs. Per repository: move callers to versionless, delete `.v1` (add a 404 test), cargo test, build with `vps-build.sh` and swap in production with a backup, measure new and old routes, record in Japanese and English, push. Leave third-party standards alone. Rules: verify on real systems before "done", never write secrets, no new REST, reply in Japanese only.
