@@ -5351,3 +5351,17 @@ README، CLAUDE، PORTING و POLICY هر بار به ژاپنی و انگلیس�
 ### 再開用メッセージ / Resume message (別アカウントへそのまま貼り付け / paste as is)
 **日本語**: 前の続きです。`F:\aruaru-llm\CLAUDE.md` 末尾「aruaru_llm の .v1 即削除」を読み、そこに書かれた手順 (1)〜(8) を、確認なしで進めてください(push だけは私に確認)。再開するリポジトリ: `F:\aruaru-llm`・`F:\RPoem`・`F:\open-easy-web`・`F:\aruaru-search`・`F:\audiocafe-tokyo-rust`・`F:\pdf-r2l-rs`・`F:\open-english`・`F:\maid-cafe-tokyo`・`F:\version-control`・`F:\runo`。決まり: 新しいRESTは作らない、秘密は書かない、VPSではビルドしない(WSL `Ubuntu-24.04` + `check-glibc.sh`)、実測してから完了、返答は日本語のみ。コミット末尾に `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`。
 **English**: Continuing from before. Read the end of `F:\aruaru-llm\CLAUDE.md` ("aruaru_llm の .v1 即削除") and carry out steps (1) to (8) there without asking (confirm with me only before pushing). Repos to resume: `F:\aruaru-llm`, `F:\RPoem`, `F:\open-easy-web`, `F:\aruaru-search`, `F:\audiocafe-tokyo-rust`, `F:\pdf-r2l-rs`, `F:\open-english`, `F:\maid-cafe-tokyo`, `F:\version-control`, `F:\runo`. Rules: no new REST, never write secrets, do not build on the VPS (WSL `Ubuntu-24.04` + `check-glibc.sh`), measure before saying done, reply in Japanese only. End commits with `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`.
+
+## 2026-11-26 引っ越し対応の再開メッセージ / Resume message for the account move
+
+### 日本語(そのまま貼り付け)
+前の続きです。`F:\runo\PORTING.md` 末尾の2026-11-25・2026-11-26の節を読んでから再開してください。
+- **完了**: MFastAPI 段階2(rmojo-py、`runtime="rmojo"`、FastAPI 実機で200/504/422確認)。pl2pl `f2c`(単純な Fortran→C、`fffb0b2`、試験2件、gcc でビルド確認)。
+- **優先(この順)**: (1) pl2pl の相互変換の続き = `c2f`、C↔C++、Rust→C/Fortran(WSL に gfortran が無いので、導入の許可を得て実機一致を確認)。(2) COBOL_to の Java ファイル入出力・SORT・SQL(未対応11本)、Java_to、RMojo の RSS 上限と COBOL→Mojo 残り16本。(3) rmojo-py の Linux/macOS CI・wheel・list/dict。(4) rs-whisper の base 以上での再測定(ダウンロード許可が要る)と open-tv-chat 組み込み。(5) open-bar の未コミット変更(`git status` を先に、捨てない)。Mac・iPhone 実機は無い。
+- **決まり**: 確認せず自動で進める/本物で確認してから完了と書く/秘密は書かない/新しい REST は作らない/音を鳴らす・録る試験はしない/元の COBOL_to・Java_to の削除だけ確認/コミット末尾に `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`/返答は日本語のみ/開発・試験は手元PC、VPS は配備と確認だけ。
+
+### English
+Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end of `F:\runo\PORTING.md` first.
+- **Done**: MFastAPI stage 2 (rmojo-py, `runtime="rmojo"`, verified 200/504/422 with a real FastAPI app). pl2pl `f2c` (simple Fortran to C, `fffb0b2`, 2 tests, builds with gcc).
+- **Priority (in order)**: (1) continue pl2pl mutual conversion: `c2f`, C to/from C++, Rust to C/Fortran (WSL has no gfortran; get permission to install it and verify against it). (2) COBOL_to Java file I/O, SORT, SQL (11 unmatched programs), Java_to, RMojo RSS cap and the remaining 16 COBOL-to-Mojo programs. (3) rmojo-py Linux/macOS CI, wheels, list/dict. (4) re-measure rs-whisper with base or larger (needs download permission) and integrate into open-tv-chat. (5) open-bar uncommitted changes (`git status` first; do not discard). No Mac/iPhone devices.
+- **Rules**: continue without asking; verify on real systems before "done"; never write secrets; no new REST; no sound-playing/recording tests; only deleting the original COBOL_to/Java_to needs confirmation; commits end with `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`; reply in Japanese only; develop and test on the local PC, use the VPS only for deploy and checks.
