@@ -5290,3 +5290,7 @@ README، CLAUDE، PORTING و POLICY هر بار به ژاپنی و انگلیس�
 
 - **2026-11-26 追記(前面経由のLedger通し確認が成功、ただし認証なしで通る点が要対応)**: 本番 `https://runo.tokyo/open_web_server.api.v1.Api/GrantItem` へ実送信し、200・`db_commit_id`・同キー再送で同一ID(冪等)を確認。本番DBに確認用の1行(`account_id=claude-e2e`、`item_id=test-item`)が入っている。**要対応(セキュリティ)**: この呼び出しは認証ヘッダーなしで通った。課金アイテム付与が公開インターネットから誰でも叩ける状態の可能性があるため、認証(Bearer/APIキー)の要否を確認し、不要に公開されているなら閉じる(未対応)。
 - *End-to-end through the production front succeeded (200, `db_commit_id`, idempotent resend); one test row is in the production DB. **Security follow-up**: the call succeeded without any auth header, so item granting may be callable by anyone on the internet; check whether auth is required and close the route if it is exposed unintentionally (not done).*
+
+## 2026-11-26 追記: fuser 0.19 試験用のルート付きエミュレーター / Rooted emulator for the fuser 0.19 test
+**日本語**: AVD `fuser_root`(android-34 google_apis x86_64、userdebug)を起動し、`adb root` で uid=0、`/dev/fuse` あり、SELinux は Enforcing、カーネル 6.1.23 を確認しました(実機 A401OP には触れていません)。次は fuser-android を 0.19 へ改造して open-raid-z と同時に移行し、エミュレーターで FUSE マウントを試します(macOS は実機なしで未確認)。未了: 改造・マウント試験。
+**English**: AVD `fuser_root` (android-34 google_apis x86_64, userdebug) boots; `adb root` gives uid=0, `/dev/fuse` exists, SELinux is Enforcing, kernel 6.1.23 (the physical A401OP was not touched). Next: port fuser-android to 0.19 together with open-raid-z and try a FUSE mount on the emulator (macOS untested, no device). Open: the port and the mount test.
