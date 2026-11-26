@@ -1691,3 +1691,37 @@ Continuing from before. Read the 2026-11-23 sections at the end of `F:\runo\PORT
 ## 2026-11-26 version-control通知2件の対応 / Two version-control notices handled
 **日本語**: (1) VPSの`/root/repository/RUNO`(未コミット無し)を`fetch`+`merge --ff-only`で最新化(30遅れ→0)。(2) RUSTSEC-2026-0594(cookie)・0592(url): 通知の`open-easy-web-app`はGitHubに無く、VPSのそのクローンの実体は`aon-co-jp/open-easy-web`。`server/Cargo.lock`を cookie 0.18.3・url 2.5.9 に更新し試験139件成功、push(`302c824`)。本番`open-easy-web.service`(`/root/open-easy-web-app/...`)は、本番版`e8288be`+同じロック更新を`vps-build.sh`(Ubuntu-24.04、glibc 2.39以下OK)で作って入れ替え(旧版`*.before-vc1126`)。入れ替え前後で`/`・`/open-easy-web/`=200、`.v1`=404で同一、active、エラーログ0、不足ライブラリ0。**未了**: VPSの`/root/repository/open-easy-web-app`と`/root/open-easy-web-app`は`server/Cargo.lock`に未コミット変更があるため触っていない(7遅れのまま)。`main`の`69f288e`(open_runo.admin等の`.v1`削除)は呼び出し先の切替と同時にする必要があるため、本番へは入れていない。
 **English**: (1) The VPS clone `/root/repository/RUNO` (no local changes) was fast-forwarded (30 behind to 0). (2) RUSTSEC-2026-0594 (cookie) and 0592 (url): `open-easy-web-app` does not exist on GitHub; the VPS clone of that name is `aon-co-jp/open-easy-web`. `server/Cargo.lock` now has cookie 0.18.3 and url 2.5.9; 139 tests pass; pushed (`302c824`). Production `open-easy-web.service` was swapped with a build of the production commit `e8288be` plus the same lock update (`vps-build.sh`, glibc check OK; old binary `*.before-vc1126`). Before and after: `/` and `/open-easy-web/` 200, `.v1` 404, active, no errors, no missing libraries. **Open**: the VPS clones `/root/repository/open-easy-web-app` and `/root/open-easy-web-app` have an uncommitted `server/Cargo.lock` change and were left untouched (still 7 behind). `69f288e` on `main` (removing `.v1` of open_runo.admin etc.) is not deployed, since it must switch together with its callees.
+
+## 2026-11-26 リミット前のチェックポイント(相互変換・並行セッション) / Checkpoint before the limit
+
+### 日本語
+**完了(push済み・実測済み)**
+- COBOL_to `c8f2587`: Java出力がファイル入出力・SORT/MERGE・SQL(`setSqlHandler`)・範囲つきINSPECTに対応。対象19本がPython出力と一致(miscはPython側が例外で比較不可)。生成サーバーはcurlで200/404/400/405。cargo test 26件。
+- RMojo `63d4e4b`: COBOL→Mojoで20本中12本が実Mojo 1.2でPythonと一致。sql1〜7とmiscは作業中。
+- 2MFastAPI `f2336a1`・`beea23a`: Laravel→MFastAPI。コントローラー・prefix/name/middleware/controllerグループ・resource・Request・Eloquent(SQLAlchemy Core)・Blade(Jinja2)。middlewareは実装を入れるまで既定で501。テスト17件、uvicorn+curlで実測。未対応=validate()・リレーション/更新/削除・DB::・Bladeコンポーネント。
+- pl2pl c2rust `157ae23`: int/double昇格・配列引数・2次元配列・構造体・ポインター出力引数。gcc/rustcで出力一致、テスト60件。ポインター変数・malloc・文字列・マクロ・ファイル・標準関数は作業中。
+- pl2pl c2f・C↔C++・Rust→C/Fortran: `93d1467`(別セッション)。
+- x-tenant記録: runo `68d962f` ほか各リポジトリ。open-giteaの認証なし`ListRepos`は仕様と判断。
+- version-control通知: VPSのRUNOクローン最新化、open-easy-webのcookie/url脆弱性修正 `302c824`・本番反映(記録 `ddaab03`)。VPSのopen-easy-web-appクローン2つは未コミット変更ありで未着手。
+- Rust化の一覧: `RUSTIFY-INVENTORY.md`(`bb812d3`、102リポジトリ)。実際のRust化はaudiocafe-tokyo-phpから着手中。
+
+**進行中のセッション**: `.v1`即削除の残り、RPoRea(behind_proxyのserve組み込み・WebSocket/h2c・X-Forwarded-Proto)、Rust化。
+**所有者の操作が要る**: RS-BlogのQRログイン・open-giteaの管理操作(メールOTP)、RS-Syncの実同期(トークン)、`F:\_wt-*`・`F:\_work_*`・`F:\_restdeploy`の削除。
+
+**再開用メッセージ**: 前の続きです。`F:\runo\PORTING.md`末尾「2026-11-26 リミット前のチェックポイント」を読み、未了(RMojoのsql1〜7・misc、pl2pl c2rustのポインター/文字列等、2MFastAPIのvalidate/リレーション、`.v1`即削除、RPoRea、Rust化)を確認なしで進めてください。区切りごとにREADME/CLAUDE/PORTING/POLICYを日英で更新してpush。決まり: 実測してから完了、秘密は書かない、新RESTなし、返答は日本語のみ。
+
+### English
+**Done (pushed and measured)**
+- COBOL_to `c8f2587`: Java output supports file I/O, SORT/MERGE, SQL (`setSqlHandler`) and INSPECT with AFTER/BEFORE; 19 samples match Python (misc cannot be compared, Python itself throws). The generated server answers 200/404/400/405 via curl; 26 tests pass.
+- RMojo `63d4e4b`: COBOL to Mojo, 12 of 20 samples match Python on real Mojo 1.2; sql1-7 and misc in progress.
+- 2MFastAPI `f2336a1`, `beea23a`: Laravel to MFastAPI with controllers, prefix/name/middleware/controller groups, resource, Request, Eloquent (SQLAlchemy Core) and Blade (Jinja2). Middleware routes return 501 until implemented. 17 tests, measured with uvicorn and curl. Not yet: validate(), relations/update/delete, DB::, Blade components.
+- pl2pl c2rust `157ae23`: int/double promotion, array params, 2D arrays, structs, pointer out-params; output matches gcc vs rustc; 60 tests. Pointer variables, malloc, strings, macros, files and std functions in progress.
+- pl2pl c2f, C<->C++, Rust->C/Fortran: `93d1467` (separate session).
+- x-tenant records: runo `68d962f` and each repo; open-gitea's unauthenticated `ListRepos` judged as by design.
+- version-control notices: VPS RUNO clone updated; open-easy-web cookie/url fix `302c824` deployed (record `ddaab03`). Two VPS open-easy-web-app clones have uncommitted changes and were left alone.
+- Rustify inventory: `RUSTIFY-INVENTORY.md` (`bb812d3`, 102 repos); actual porting started with audiocafe-tokyo-php.
+
+**Sessions in progress**: remaining `.v1` removal, RPoRea (behind_proxy in serve, WebSocket/h2c, X-Forwarded-Proto), Rustify.
+**Needs the owner**: RS-Blog QR login and open-gitea admin flow (e-mail OTP), RS-Sync real sync (token), deleting `F:\_wt-*`, `F:\_work_*`, `F:\_restdeploy`.
+
+**Resume message**: Continuing from before. Read "2026-11-26 リミット前のチェックポイント" at the end of `F:\runo\PORTING.md`, then keep working through the open items (RMojo sql1-7 and misc, pl2pl c2rust pointers/strings, 2MFastAPI validate/relations, `.v1` removal, RPoRea, Rustify) without asking. Update README/CLAUDE/PORTING/POLICY in Japanese and English at each milestone and push. Rules: measure before saying done, never write secrets, no new REST, reply in Japanese only.
