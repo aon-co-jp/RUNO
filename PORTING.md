@@ -5857,3 +5857,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `number_format($x, 桁数, 小数点, 桁区切り)`(3番目・4番目の引数、PHP 8のように3引数も可)に対応。実測(curl): `('1234567.891',2,',','.')`=`1.234.567,89`、`('1234.5',1,'.',' ')`=`1 234.5`、`('1234.5',2,',')`=`1,234,50`(PHPと同じ)。テスト70件成功。未了: withInput(セッション層)。
 **English**: `number_format($x, decimals, decimal_point, thousands_sep)` now works, including the 3-argument form of PHP 8. Measured with curl: `1.234.567,89`, `1 234.5`, `1,234,50`, matching PHP. 70 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput ほか)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
+
+
+## 2026-11-28 07:53 追記: ビューの三項演算子 / Update: ternary in views
+**日本語**: ビューで `{{ $k ? 'a' : 'b' }}` と `{{ $k ?: 'b' }}` を使えるようにした(PHPの真偽: 空文字・`'0'`・空配列は偽、結果はエスケープ)。実測(curl): `$a='x'`・`$z='0'` で `yes no x d`、`'<b>'`は`&lt;b&gt;`。テスト71件成功。未了: withInput(セッション層)、条件が比較式の三項演算子。
+**English**: `{{ $k ? 'a' : 'b' }}` and `{{ $k ?: 'b' }}` now work in views (PHP truthiness: empty string, `'0'` and empty arrays are false; output escaped). Measured with curl: `yes no x d`, and `'<b>'` is escaped. 71 tests pass. Open: withInput (session layer), ternaries with comparison conditions.
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・比較式の三項演算子)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
