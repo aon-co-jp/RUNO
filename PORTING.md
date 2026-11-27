@@ -5663,3 +5663,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **23:20 追記 / Addendum**: 2RPoRea `93254f3` で `abort(code[, msg])` を変換(curl実測 200/422、テスト30件)。*2RPoRea converts `abort()` (measured 200/422, 30 tests).*
 
 - **23:30 追記 / Addendum**: 2RPoRea `3221ccc` で `redirect('/path')` を302へ変換(curl実測、テスト31件)。*2RPoRea converts `redirect()` to 302 (measured, 31 tests).*
+
+- **23:40 追記 / Addendum**: 2RPoRea `9f23132` で `back()` を変換(Refererへ302、curl実測、テスト32件)。*2RPoRea converts `back()` (302 to Referer, measured, 32 tests).*
