@@ -5953,3 +5953,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `@for` の開始値・終了値に `count($xs)` と整数のデータ(`$n`)を書けるようになった(変換時に値へ置き換えて展開)。実測(curl): `012|210`。テスト86件成功。未了: withInput(セッション層)。
 **English**: `@for` starts and bounds can now use `count($xs)` and integer view data (`$n`), substituted at convert time and unrolled. Measured with curl: `012|210`. 86 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput など)を確認なしで進める。見出し時刻は`date`で確認、実測してから完了、返答は日本語のみ。
+
+
+## 2026-11-28 08:16 追記: @while の条件をビューのデータから / Update: @while bounds from view data
+**日本語**: `@while` の条件の右辺に `count($xs)` と整数のデータ(`$n`)を書けるようになった。実測(curl): `012|012`。テスト87件成功。未了: withInput(セッション層)。
+**English**: The right side of an `@while` condition can now be `count($xs)` or integer view data (`$n`). Measured with curl: `012|012`. 87 tests pass. Open: withInput (session layer).
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput など)を確認なしで進める。見出し時刻は`date`で確認、実測してから完了、返答は日本語のみ。
