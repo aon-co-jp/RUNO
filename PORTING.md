@@ -5679,3 +5679,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **訂正 / Correction**: 直前の「22:58」「23:02」の見出しは実時刻ではなく、実際は22:52〜22:55。*The "22:58"/"23:02" labels above were not real times; actual work was 22:52-22:55.*
 
 - **22:57 追記 / Addendum**: 2RPoRea `32c9dc6` で名前付きルート転送の余ったキーをクエリ文字列に(curl実測、テスト37件)。*2RPoRea appends extra keys as a query string (measured, 37 tests).*
+
+- **23:00 追記 / Addendum**: 2RPoRea `2be6b22` でルートパラメーターをクエリ値として正しくエンコード(curl実測、テスト37件)。*2RPoRea encodes route parameters as query values (measured, 37 tests).*
