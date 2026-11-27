@@ -5977,3 +5977,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `{ $n * 3 }`・`{ ($n + 1) * 2 - 1 }`・`{ $n / 4 }`(PHPと同じく0.5)の計算式と、`{ strtoupper($xs[0]) }`・`{ strlen('abc') }`(文字列や配列の要素への関数)を表示できるようになった。実測(curl): `A|6|3|5|0.5`。テスト90件成功。未了: withInput(セッション層)。
 **English**: Views now render arithmetic such as `{ $n * 3 }`, `{ ($n + 1) * 2 - 1 }` and `{ $n / 4 }` (0.5, as in PHP), and functions on literals or items such as `{ strtoupper($xs[0]) }` and `{ strlen('abc') }`. Measured with curl: `A|6|3|5|0.5`. 90 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput など)を確認なしで進める。見出し時刻は`date`で確認、実測してから完了、返答は日本語のみ。
+
+
+## 2026-11-28 08:22 追記: データなしビューの計算式 / Update: arithmetic in views without data
+**日本語**: データを渡さないビューでも `{ 1 + 2 * 3 }`・`{ strlen('ab') }` を変換時に計算するようにした(前回は未確認と書いた点の修正)。分からない `{ $unknown }` は501のまま。実測(curl): `7|2`。テスト91件成功。未了: withInput(セッション層)。
+**English**: Views without data now also compute `{ 1 + 2 * 3 }` and `{ strlen('ab') }` at convert time (fixing what was noted as unverified last time); an unknown `{ $unknown }` stays 501. Measured with curl: `7|2`. 91 tests pass. Open: withInput (session layer).
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput など)を確認なしで進める。見出し時刻は`date`で確認、実測してから完了、返答は日本語のみ。
