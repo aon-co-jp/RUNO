@@ -5697,3 +5697,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **23:17 追記 / Addendum**: 2RPoRea `dd3b236` で配列形の has/filled/hasAny/anyFilled を変換(curl実測4件一致、テスト44件)。*Array forms of has/filled/hasAny/anyFilled translate (measured, 44 tests).*
 
 - **23:19 追記 / Addendum**: 2RPoRea `dfb7fb6` で `input(k) === v` 等の比較を条件として変換(curl実測4件一致、テスト45件、PHPの緩い==の型変換とは差あり)。*Input comparisons in conditions translate (measured, 45 tests; differs from PHP loose ==).*
+
+- **23:21 追記 / Addendum**: 2RPoRea `adbc11d` で elseif / else if の連鎖を変換(curl実測4件一致、テスト46件)。*elseif chains translate (measured, 46 tests).*
