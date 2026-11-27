@@ -5881,3 +5881,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `Route::view` のデータで `'u' => ['name' => 'Ann', ...]` の連想配列を受け取り、ビューで `{{ $u['k'] }}`(エスケープ)と `{!! $u['k'] !!}` を使えるようにした。無いキーは501のまま。実測(curl): `Ann <i>x</i> &lt;i&gt;x&lt;/i&gt;`。テスト74件成功。未了: withInput(セッション層)、連想配列の `@foreach ($u as $k => $v)`。
 **English**: `Route::view` data now accepts associative arrays like `'u' => ['name' => 'Ann', ...]`, and views can use `{{ $u['k'] }}` (escaped) and `{!! $u['k'] !!}`; a missing key stays a 501 TODO. Measured with curl: `Ann <i>x</i> &lt;i&gt;x&lt;/i&gt;`. 74 tests pass. Open: withInput (session layer), `@foreach ($u as $k => $v)` over associative arrays.
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・連想配列の@foreach)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
+
+
+## 2026-11-28 08:00 追記: @foreach のキー / Update: @foreach with keys
+**日本語**: `@foreach ($u as $k => $v)` を、連想配列(キー名)とリスト(0からの番号)の両方で使えるようにした(`$loop`も従来どおり)。実測(curl): `<li>name=Ann</li><li>tag=&lt;i&gt;</li>` と `0:a 1:b`。テスト75件成功。未了: withInput(セッション層)。
+**English**: `@foreach ($u as $k => $v)` now works over associative arrays (key names) and lists (indexes from 0), with `$loop` as before. Measured with curl: `name=Ann`, `tag=&lt;i&gt;`, `0:a 1:b`. 75 tests pass. Open: withInput (session layer).
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput ほか)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
