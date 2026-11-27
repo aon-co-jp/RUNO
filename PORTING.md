@@ -5695,3 +5695,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **23:15 追記 / Addendum**: 2RPoRea `7b6d035` で `$request->boolean()` を条件として変換(curl実測5件一致、テスト43件)。*2RPoRea translates boolean() in conditions (measured, 43 tests).*
 
 - **23:17 追記 / Addendum**: 2RPoRea `dd3b236` で配列形の has/filled/hasAny/anyFilled を変換(curl実測4件一致、テスト44件)。*Array forms of has/filled/hasAny/anyFilled translate (measured, 44 tests).*
+
+- **23:19 追記 / Addendum**: 2RPoRea `dfb7fb6` で `input(k) === v` 等の比較を条件として変換(curl実測4件一致、テスト45件、PHPの緩い==の型変換とは差あり)。*Input comparisons in conditions translate (measured, 45 tests; differs from PHP loose ==).*
