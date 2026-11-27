@@ -6007,3 +6007,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: ビューで `{ $xs[0] . '-' . $xs[1] }`・`{ ucfirst($xs[1]) . '!' }` の連結と、`{ $u['age'] + 1 }`・`{ $ns[0] * $ns[1] }` の要素を使った計算を変換時に行うようにした(引用符の中の `.` や小数は区切らない)。実測(curl): `B!|a-b|10|21|a.bc|2.5`。テスト95件成功。未了: withInput(セッション層)。
 **English**: Views now compute concatenation such as `{ $xs[0] . '-' . $xs[1] }` and `{ ucfirst($xs[1]) . '!' }`, and arithmetic on items such as `{ $u['age'] + 1 }` and `{ $ns[0] * $ns[1] }` (a `.` inside quotes or a decimal is not split). Measured with curl: `B!|a-b|10|21|a.bc|2.5`. 95 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput など)を確認なしで進める。試験用ビューは既存名と重ならないか先に確認。見出し時刻は`date`で確認、実測してから完了、返答は日本語のみ。
+
+## 2026-11-28 08:3x 2RPoRea 比較の三項演算子 / Comparison ternary
+**日本語**: ビューで `{{ L 比較 R ? 'a' : 'b' }}` を変換時に解決(L/R は `count()`・要素 `$u['k']`・`$xs[i]`・数値・要素を含む計算、比較は == === != !== < > <= >=、数値同士は数値比較)。テスト96件成功、実サーバーで `/tz` = `many|kid|ten` を実測。未了: `withInput`(セッション層が必要)。
+**English**: Views now resolve `{{ L op R ? 'a' : 'b' }}` at convert time (L/R: `count()`, items `$u['k']`/`$xs[i]`, numbers, arithmetic over items; ops == === != !== < > <= >=; numbers compare numerically). 96 tests pass; measured `/tz` = `many|kid|ten` on the real server. Open: `withInput` (needs a session layer).
+**再開用メッセージ / Resume**: `F:\2RPoRea\PORTING.md` 末尾を読み、php 変換の未了を確認なしで進める。/ Read the end of `F:\2RPoRea\PORTING.md` and continue the php-conversion open items without asking.
