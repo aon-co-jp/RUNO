@@ -5683,3 +5683,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **23:00 追記 / Addendum**: 2RPoRea `2be6b22` でルートパラメーターをクエリ値として正しくエンコード(curl実測、テスト37件)。*2RPoRea encodes route parameters as query values (measured, 37 tests).*
 
 - **23:04 追記 / Addendum**: 2RPoRea `2ef36b6` で `Route::redirect`/`permanentRedirect` を変換(curl実測 302/301、テスト38件)。*2RPoRea converts Route::redirect shortcuts (measured 302/301, 38 tests).*
+
+- **23:06 追記 / Addendum**: 2RPoRea `de5ec10` で静的な `Route::view` を変換(Blade構文入りは501、curl実測、テスト39件)。*2RPoRea converts static Route::view (Blade views stay 501; measured, 39 tests).*
