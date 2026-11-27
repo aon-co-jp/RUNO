@@ -5893,3 +5893,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `@forelse(...) ... @empty ... @endforelse` に対応(リテラルの配列が空なら`@empty`側、空でなければ`@foreach`と同じ。キーつき・`$loop`も可)。実測(curl): `['a','b']`は`<i>a</i><i>b</i>`、`[]`は`<p>none</p>`。テスト76件成功。未了: withInput(セッション層)。
 **English**: `@forelse(...) ... @empty ... @endforelse` now works (the `@empty` part for an empty literal array, otherwise like `@foreach`, keys and `$loop` included). Measured with curl: `<i>a</i><i>b</i>` and `<p>none</p>`. 76 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput ほか)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
+
+
+## 2026-11-28 08:02 追記: $loop->odd / even / Update: $loop->odd / even
+**日本語**: `@foreach` 内で `@if($loop->odd)`・`@if($loop->even)`(否定 `!` も可)を使えるようにした(Bladeと同じく1件目が奇数)。実測(curl、`['a','b','c']`): `class="o"`・`" e"`・`"o"`。テスト77件成功。未了: withInput(セッション層)、`$loop->depth`・`$loop->parent`(入れ子)。
+**English**: `@if($loop->odd)` and `@if($loop->even)` (also negated with `!`) now work inside `@foreach`, with the first item odd as in Blade. Measured with curl over `['a','b','c']`: o, e, o. 77 tests pass. Open: withInput (session layer), `$loop->depth` and `$loop->parent` (nesting).
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・$loop->depth/parent)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
