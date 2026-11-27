@@ -5673,3 +5673,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **22:52 追記 / Addendum**: 2RPoRea `3bdb298` で `->header()` を変換(curl実測、テスト34件)。*2RPoRea converts `->header()` (measured, 34 tests).*
 
 - **22:58 追記 / Addendum**: 2RPoRea `d983ae5` で `redirect()->route()`/`to_route()` を変換(curl実測、テスト35件)。*2RPoRea converts named-route redirects (measured, 35 tests).*
+
+- **23:02 追記 / Addendum**: 2RPoRea `9c52071` でパラメーター付き名前付きルートへの転送を変換(curl実測 /me/42→/users/42、テスト36件)。*2RPoRea converts named-route redirects with parameters (measured, 36 tests).*
