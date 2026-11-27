@@ -5899,3 +5899,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `@foreach` 内で `@if($loop->odd)`・`@if($loop->even)`(否定 `!` も可)を使えるようにした(Bladeと同じく1件目が奇数)。実測(curl、`['a','b','c']`): `class="o"`・`" e"`・`"o"`。テスト77件成功。未了: withInput(セッション層)、`$loop->depth`・`$loop->parent`(入れ子)。
 **English**: `@if($loop->odd)` and `@if($loop->even)` (also negated with `!`) now work inside `@foreach`, with the first item odd as in Blade. Measured with curl over `['a','b','c']`: o, e, o. 77 tests pass. Open: withInput (session layer), `$loop->depth` and `$loop->parent` (nesting).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・$loop->depth/parent)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
+
+
+## 2026-11-28 08:03 追記: 入れ子の @foreach / Update: nested @foreach
+**日本語**: 別々のリテラル配列を回す入れ子の `@foreach` を、内側から順に展開するようにした。実測(curl、行`['1','2']`×列`['a','b']`): `<tr><td>a</td><td>b</td><th>1</th></tr><tr>…<th>2</th></tr>`。テスト78件成功。未了: withInput(セッション層)、外側の値を内側で回す入れ子(`$r->items`等)、`$loop->depth`/`parent`。
+**English**: Nested `@foreach` over separate literal arrays now unrolls, innermost first. Measured with curl over rows `['1','2']` x cols `['a','b']`. 78 tests pass. Open: withInput (session layer), inner loops over the outer item, `$loop->depth`/`parent`.
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・$loop->depth/parent)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
