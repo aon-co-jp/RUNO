@@ -5821,3 +5821,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 ### 2026-11-28 07:39 再開用メッセージ / Resume message
 **日本語**: 前の続きです。2RPoRea `src/torporea/php.py`(Laravel→RPoem)はテスト65件。条件は has/filled/missing/boolean・配列形・`===`(完全一致)・`==`(PHP 8 の緩い比較、生成コードの `php_loose_eq`)・かっこ・elseif。Route::view で `{{ }}`・`??`・関数(入れ子・複数引数)・`{!! !!}`・コメント・`@{{ }}`・`@if`/`@isset`/`@unless`・`@switch`・`@foreach`+`$loop`・`@for`・`@php`の代入・`@while`まで。実測は `F:\_fix\lv` を convert し `F:\_fix\lv3.sh`(WSL Ubuntu-24.04)。未了: 小数の `@php`、withInput、リクエスト値のビュー。決まり: 実測してから完了、秘密は書かない、新RESTなし、返答は日本語のみ。
 **English**: Continuing. 2RPoRea `src/torporea/php.py` has 65 tests. Conditions: has/filled/missing/boolean, array forms, strict `===`, loose `==` following PHP 8 (`php_loose_eq` in the generated code), parentheses, elseif. Route::view supports `{{ }}`, `??`, functions (nested, multi-argument), `{!! !!}`, comments, `@{{ }}`, `@if`/`@isset`/`@unless`, `@switch`, `@foreach` with `$loop`, `@for`, `@php` assignments and `@while`. Measure via `F:\_fix\lv` and `F:\_fix\lv3.sh`. Open: float `@php`, withInput, request-valued views. Rules: measure before done, no secrets, no new REST, Japanese replies.
+
+
+## 2026-11-28 07:42 追記: ビューの request() / Update: request() in views
+**日本語**: `Route::view` のビューで `{{ request('k') }}`・`{{ request('k', '既定') }}` を、入力値をHTMLエスケープして表示できるようにした(新しい部品 `query_esc`)。実測(curl): 未指定=`Hi guest!`、`?name=Ann`=`Hi Ann!`、`<b>&'`=`&lt;b&gt;&amp;&#039;`(Bladeの`e()`と同じ)。テスト48件成功。未了: withInput(セッション層)、`@php` の小数。
+**English**: `{{ request('k') }}` and `{{ request('k', 'default') }}` now work in `Route::view` views, HTML-escaped (new part `query_esc`). Measured with curl: no value gives the default, `Ann` shows as is, `<b>&'` is escaped like Blade's `e()`. 48 tests pass. Open: withInput (session layer), floats in `@php`.
+**再開用メッセージ / Resume**: `F:RPoRea\PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・`@php`の小数)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
