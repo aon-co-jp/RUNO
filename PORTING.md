@@ -5971,3 +5971,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `@foreach(range(A, B[, 刻み]) as $i)`(増加・減少、`$k => $i` も)に対応した。整数の定数のみ、1000件で打ち切り。データの無いビューでも動く。実測(curl): `123|10,5,0,|0=0 1=2 2=4 `。テスト89件成功。未了: withInput(セッション層)。
 **English**: `@foreach(range(A, B[, step]) as $i)` (up or down, also `$k => $i`) now works; integer constants only, capped at 1000; works in views without data. Measured with curl: `123|10,5,0,|0=0 1=2 2=4 `. 89 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput など)を確認なしで進める。見出し時刻は`date`で確認、実測してから完了、返答は日本語のみ。
+
+
+## 2026-11-28 08:21 追記: ビューの計算式と要素への関数 / Update: arithmetic and functions on items in views
+**日本語**: `{ $n * 3 }`・`{ ($n + 1) * 2 - 1 }`・`{ $n / 4 }`(PHPと同じく0.5)の計算式と、`{ strtoupper($xs[0]) }`・`{ strlen('abc') }`(文字列や配列の要素への関数)を表示できるようになった。実測(curl): `A|6|3|5|0.5`。テスト90件成功。未了: withInput(セッション層)。
+**English**: Views now render arithmetic such as `{ $n * 3 }`, `{ ($n + 1) * 2 - 1 }` and `{ $n / 4 }` (0.5, as in PHP), and functions on literals or items such as `{ strtoupper($xs[0]) }` and `{ strlen('abc') }`. Measured with curl: `A|6|3|5|0.5`. 90 tests pass. Open: withInput (session layer).
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput など)を確認なしで進める。見出し時刻は`date`で確認、実測してから完了、返答は日本語のみ。
