@@ -5863,3 +5863,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: ビューで `{{ $k ? 'a' : 'b' }}` と `{{ $k ?: 'b' }}` を使えるようにした(PHPの真偽: 空文字・`'0'`・空配列は偽、結果はエスケープ)。実測(curl): `$a='x'`・`$z='0'` で `yes no x d`、`'<b>'`は`&lt;b&gt;`。テスト71件成功。未了: withInput(セッション層)、条件が比較式の三項演算子。
 **English**: `{{ $k ? 'a' : 'b' }}` and `{{ $k ?: 'b' }}` now work in views (PHP truthiness: empty string, `'0'` and empty arrays are false; output escaped). Measured with curl: `yes no x d`, and `'<b>'` is escaped. 71 tests pass. Open: withInput (session layer), ternaries with comparison conditions.
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・比較式の三項演算子)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
+
+
+## 2026-11-28 07:55 追記: 比較式の三項演算子 / Update: comparison ternaries
+**日本語**: ビューで `{{ $k OP 値 ? 'a' : 'b' }}`(`== != === !== < > <= >=`、値は文字列か数値)を使えるようにした。PHP 8と同じく、数値の文字列どうしは数値として比べる。実測(curl、`$n='10'`・`$s='abc'`): `T F T F T F T`(`'10'=='1e1'`は真、`'10'===10`は偽、`'10'<'9'`は偽、PHPと同じ)。テスト72件成功。未了: withInput(セッション層)。
+**English**: `{{ $k OP value ? 'a' : 'b' }}` (`== != === !== < > <= >=`, string or number value) now works in views; numeric strings compare as numbers like PHP 8. Measured with curl: `T F T F T F T`, matching PHP. 72 tests pass. Open: withInput (session layer).
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput ほか)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
