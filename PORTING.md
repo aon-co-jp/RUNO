@@ -6022,3 +6022,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: 比較式の `@if` を内側から繰り返し解決し、入れ子(最大8段)に対応。テスト98件成功、実サーバーで `/nz` = `[ K]` を実測。未了: `withInput`(セッション層が必要)、`@elseif` の比較式。
 **English**: Comparison `@if` blocks are resolved repeatedly from the inside out, so nesting works (up to 8 levels). 98 tests pass; measured `/nz` = `[ K]` on the real server. Open: `withInput` (needs a session layer), comparisons in `@elseif`.
 **再開用メッセージ / Resume**: `F:\2RPoRea\PORTING.md` 末尾を読み、php 変換の未了を確認なしで進める。/ Read the end of `F:\2RPoRea\PORTING.md` and continue the php-conversion open items without asking.
+
+## 2026-11-28 08:36 2RPoRea @elseif の比較式 / Comparisons in @elseif
+**日本語**: `@if(...) ... @elseif(...) ... [@else ...] @endif`(本文に入れ子の @if が無いもの)を入れ子の @if/@else に書き換え、比較式として変換時に解決。テスト99件成功、実サーバーで `/ez` = `C` を実測。未了: 単純な `@if($k)` と `@elseif` の組み合わせ(前段の処理が `@elseif` を `@else` と取り違える恐れ、未確認)、`withInput`(セッション層が必要)。
+**English**: `@if(...) ... @elseif(...) ... [@else ...] @endif` (no nested @if in the bodies) is rewritten into nested @if/@else and resolved as comparisons at convert time. 99 tests pass; measured `/ez` = `C` on the real server. Open: a plain `@if($k)` combined with `@elseif` (the earlier pass may mistake `@elseif` for `@else`; unverified), and `withInput` (needs a session layer).
+**再開用メッセージ / Resume**: `F:\2RPoRea\PORTING.md` 末尾を読み、php 変換の未了を確認なしで進める。/ Read the end of `F:\2RPoRea\PORTING.md` and continue the php-conversion open items without asking.
