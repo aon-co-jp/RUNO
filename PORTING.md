@@ -5677,3 +5677,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **23:02 追記 / Addendum**: 2RPoRea `9c52071` でパラメーター付き名前付きルートへの転送を変換(curl実測 /me/42→/users/42、テスト36件)。*2RPoRea converts named-route redirects with parameters (measured, 36 tests).*
 
 - **訂正 / Correction**: 直前の「22:58」「23:02」の見出しは実時刻ではなく、実際は22:52〜22:55。*The "22:58"/"23:02" labels above were not real times; actual work was 22:52-22:55.*
+
+- **22:57 追記 / Addendum**: 2RPoRea `32c9dc6` で名前付きルート転送の余ったキーをクエリ文字列に(curl実測、テスト37件)。*2RPoRea appends extra keys as a query string (measured, 37 tests).*
