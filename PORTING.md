@@ -5659,3 +5659,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **23:00 追記 / Addendum**: 2RPoRea `864841b` で `$request->has()/filled()` の条件分岐を変換(curl実測、テスト28件)。*2RPoRea converts `has()/filled()` branches (measured, 28 tests).*
 
 - **23:10 追記 / Addendum**: 2RPoRea `25e30e1` で has/filled の &&・|| 組み合わせを変換(curl実測、テスト29件)。*2RPoRea converts combined has/filled conditions (measured, 29 tests).*
+
+- **23:20 追記 / Addendum**: 2RPoRea `93254f3` で `abort(code[, msg])` を変換(curl実測 200/422、テスト30件)。*2RPoRea converts `abort()` (measured 200/422, 30 tests).*
