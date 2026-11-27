@@ -5711,3 +5711,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **23:29 追記 / Addendum**: 2RPoRea `a2e5317` でBladeの `@{{ }}` を文字どおり出力(curl実測、テスト49件)。*Blade @{{ }} escape (measured, 49 tests).*
 
 - **23:31 追記 / Addendum**: 2RPoRea `7435627` でBladeの @if/@isset を固定データで変換、行中の制御構文も501へ(curl実測、テスト50件)。*Blade @if/@isset with literal data; inline directives stay 501 (measured, 50 tests).*
+
+- **23:32 追記 / Addendum**: 2RPoRea `0383dd6` でBladeの @unless を固定データで変換(curl実測、テスト51件)。*Blade @unless (measured, 51 tests).*
