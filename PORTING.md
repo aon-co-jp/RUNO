@@ -6076,3 +6076,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `return back()->with('k', '文字列')` を変換(`rporea_flash` クッキーへ1回だけフラッシュ)。ビューの `{{ session('k') }}` はエスケープして表示し、読んだらクッキーを消す。実測: `/fw` が302でRefererへ戻り、次の表示で `[Saved &lt;ok&gt;]`、クッキーなしでは `[]`。未了: `@if(session('k'))`・`redirect('/x')->with()`・変数を渡す with。
 **English**: `return back()->with('k', 'literal')` is converted (flashed once in the `rporea_flash` cookie); `{{ session('k') }}` in a view shows it escaped and expires the cookie. Measured: `/fw` redirects back (302) and the next view shows `[Saved &lt;ok&gt;]`, `[]` without the cookie. Open: `@if(session('k'))`, `redirect('/x')->with()`, with() of variables.
 **再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(@if(session())・redirect()->with()・validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
+
+## 2026-11-28 @if(session('k')) / @if(session('k'))
+**日本語**: ビューの `@if(session('k')) ... [@else ...] @endif`(本文は文字と `{{ session('k') }}` だけ)を変換。真偽はPHPと同じ(無い・空・"0" は偽)。実測: フラッシュありで `<b>Saved &lt;ok&gt;</b>`、なしで ` none`。未了: `redirect('/x')->with()`・変数を渡す with・validate の DB 規則。
+**English**: `@if(session('k')) ... [@else ...] @endif` in views (bodies of plain text and `{{ session('k') }}`) is converted with PHP truthiness (missing, empty, "0" are false). Measured: with the flash `<b>Saved &lt;ok&gt;</b>`, without it ` none`. Open: `redirect('/x')->with()`, with() of variables, validate DB rules.
+**再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(redirect()->with()・変数の with・validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
