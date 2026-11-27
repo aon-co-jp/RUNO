@@ -5661,3 +5661,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **23:10 追記 / Addendum**: 2RPoRea `25e30e1` で has/filled の &&・|| 組み合わせを変換(curl実測、テスト29件)。*2RPoRea converts combined has/filled conditions (measured, 29 tests).*
 
 - **23:20 追記 / Addendum**: 2RPoRea `93254f3` で `abort(code[, msg])` を変換(curl実測 200/422、テスト30件)。*2RPoRea converts `abort()` (measured 200/422, 30 tests).*
+
+- **23:30 追記 / Addendum**: 2RPoRea `3221ccc` で `redirect('/path')` を302へ変換(curl実測、テスト31件)。*2RPoRea converts `redirect()` to 302 (measured, 31 tests).*
