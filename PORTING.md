@@ -5869,3 +5869,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: ビューで `{{ $k OP 値 ? 'a' : 'b' }}`(`== != === !== < > <= >=`、値は文字列か数値)を使えるようにした。PHP 8と同じく、数値の文字列どうしは数値として比べる。実測(curl、`$n='10'`・`$s='abc'`): `T F T F T F T`(`'10'=='1e1'`は真、`'10'===10`は偽、`'10'<'9'`は偽、PHPと同じ)。テスト72件成功。未了: withInput(セッション層)。
 **English**: `{{ $k OP value ? 'a' : 'b' }}` (`== != === !== < > <= >=`, string or number value) now works in views; numeric strings compare as numbers like PHP 8. Measured with curl: `T F T F T F T`, matching PHP. 72 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput ほか)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
+
+
+## 2026-11-28 07:56 追記: 配列の添字 / Update: list index
+**日本語**: ビューで `{{ $xs[N] }}`(エスケープ)と `{!! $xs[N] !!}` を、リテラルの配列に使えるようにした。範囲外の添字は501のまま。実測(curl、`['a','<b>']`): `a &lt;b&gt; <b> 2`。テスト73件成功。未了: withInput(セッション層)、連想配列の `$x['k']`。
+**English**: `{{ $xs[N] }}` (escaped) and `{!! $xs[N] !!}` now work on literal lists in views; an out-of-range index stays a 501 TODO. Measured with curl: `a &lt;b&gt; <b> 2`. 73 tests pass. Open: withInput (session layer), associative `$x['k']`.
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・連想配列)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
