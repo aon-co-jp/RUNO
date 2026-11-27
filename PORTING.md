@@ -6012,3 +6012,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: ビューで `{{ L 比較 R ? 'a' : 'b' }}` を変換時に解決(L/R は `count()`・要素 `$u['k']`・`$xs[i]`・数値・要素を含む計算、比較は == === != !== < > <= >=、数値同士は数値比較)。テスト96件成功、実サーバーで `/tz` = `many|kid|ten` を実測。未了: `withInput`(セッション層が必要)。
 **English**: Views now resolve `{{ L op R ? 'a' : 'b' }}` at convert time (L/R: `count()`, items `$u['k']`/`$xs[i]`, numbers, arithmetic over items; ops == === != !== < > <= >=; numbers compare numerically). 96 tests pass; measured `/tz` = `many|kid|ten` on the real server. Open: `withInput` (needs a session layer).
 **再開用メッセージ / Resume**: `F:\2RPoRea\PORTING.md` 末尾を読み、php 変換の未了を確認なしで進める。/ Read the end of `F:\2RPoRea\PORTING.md` and continue the php-conversion open items without asking.
+
+## 2026-11-28 08:33 2RPoRea @if の比較式 / @if with comparisons
+**日本語**: `@if(L 比較 R) ... [@else ...] @endif` を変換時に解決(三項演算子と同じ値・比較、本文に入れ子の @if が無い場合)。テスト97件成功、実サーバーで `/iz` = `M| K|T` を実測。未了: 入れ子の比較 @if、`withInput`(セッション層が必要)。
+**English**: `@if(L op R) ... [@else ...] @endif` is resolved at convert time (same values and operators as the ternary; body without nested @if). 97 tests pass; measured `/iz` = `M| K|T` on the real server. Open: nested comparison @if, `withInput` (needs a session layer).
+**再開用メッセージ / Resume**: `F:\2RPoRea\PORTING.md` 末尾を読み、php 変換の未了を確認なしで進める。/ Read the end of `F:\2RPoRea\PORTING.md` and continue the php-conversion open items without asking.
