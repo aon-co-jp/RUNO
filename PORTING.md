@@ -5845,3 +5845,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: ビューで `round($x, 桁数)`(0〜10桁、0.5は0から遠い側)を使えるようにした。実測(curl): `round('1.955',2)`=1.96、`round('1.955',0)`=2、`round('-2.345',2)`=-2.35、`round('3.10',1)`=3.1(PHPと同じ)。テスト68件成功。未了: withInput(セッション層)、`number_format` の桁数。
 **English**: `round($x, digits)` (0 to 10 digits, half away from zero) now works in views. Measured with curl: 1.96, 2, -2.35, 3.1, matching PHP. 68 tests pass. Open: withInput (session layer), `number_format` decimals.
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・number_format の桁数)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
+
+
+## 2026-11-28 07:50 追記: number_format の小数桁 / Update: number_format decimals
+**日本語**: ビューで `number_format($x, 桁数)`(0〜10桁、小数の値も可、0.5は0から遠い側、PHP 8と同じく`-0.00`は`0.00`)を使えるようにした。引数1つのリテラル呼び出し(`number_format('1000')`)も対応。実測(curl): `1,234.57 1,235 0.00 1,000`(PHPと同じ)。テスト69件成功。未了: withInput(セッション層)、`number_format` の区切り文字引数(3・4番目)。
+**English**: `number_format($x, decimals)` (0 to 10, decimal values allowed, half away from zero, `-0.00` shown as `0.00` like PHP 8) now works in views, as do single-literal calls such as `number_format('1000')`. Measured with curl: `1,234.57 1,235 0.00 1,000`, matching PHP. 69 tests pass. Open: withInput (session layer), the separator arguments (3rd and 4th) of `number_format`.
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・number_format の区切り文字)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
