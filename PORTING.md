@@ -5699,3 +5699,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **23:19 追記 / Addendum**: 2RPoRea `dfb7fb6` で `input(k) === v` 等の比較を条件として変換(curl実測4件一致、テスト45件、PHPの緩い==の型変換とは差あり)。*Input comparisons in conditions translate (measured, 45 tests; differs from PHP loose ==).*
 
 - **23:21 追記 / Addendum**: 2RPoRea `adbc11d` で elseif / else if の連鎖を変換(curl実測4件一致、テスト46件)。*elseif chains translate (measured, 46 tests).*
+
+- **23:23 追記 / Addendum**: 2RPoRea `511371b` でルートパラメーターの比較を&&・||の条件に混ぜて変換(curl実測4件一致、テスト47件)。*Route-param comparisons in compound conditions (measured, 47 tests).*
