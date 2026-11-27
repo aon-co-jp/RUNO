@@ -5851,3 +5851,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: ビューで `number_format($x, 桁数)`(0〜10桁、小数の値も可、0.5は0から遠い側、PHP 8と同じく`-0.00`は`0.00`)を使えるようにした。引数1つのリテラル呼び出し(`number_format('1000')`)も対応。実測(curl): `1,234.57 1,235 0.00 1,000`(PHPと同じ)。テスト69件成功。未了: withInput(セッション層)、`number_format` の区切り文字引数(3・4番目)。
 **English**: `number_format($x, decimals)` (0 to 10, decimal values allowed, half away from zero, `-0.00` shown as `0.00` like PHP 8) now works in views, as do single-literal calls such as `number_format('1000')`. Measured with curl: `1,234.57 1,235 0.00 1,000`, matching PHP. 69 tests pass. Open: withInput (session layer), the separator arguments (3rd and 4th) of `number_format`.
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・number_format の区切り文字)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
+
+
+## 2026-11-28 07:52 追記: number_format の区切り文字 / Update: number_format separators
+**日本語**: `number_format($x, 桁数, 小数点, 桁区切り)`(3番目・4番目の引数、PHP 8のように3引数も可)に対応。実測(curl): `('1234567.891',2,',','.')`=`1.234.567,89`、`('1234.5',1,'.',' ')`=`1 234.5`、`('1234.5',2,',')`=`1,234,50`(PHPと同じ)。テスト70件成功。未了: withInput(セッション層)。
+**English**: `number_format($x, decimals, decimal_point, thousands_sep)` now works, including the 3-argument form of PHP 8. Measured with curl: `1.234.567,89`, `1 234.5`, `1,234,50`, matching PHP. 70 tests pass. Open: withInput (session layer).
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput ほか)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
