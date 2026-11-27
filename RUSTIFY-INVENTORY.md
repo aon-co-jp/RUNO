@@ -132,3 +132,5 @@ Inventory of 102 repositories with non-Rust code (GitHub language bytes, not lin
 | aruaru.pro |  public | 121KB | Shell 0KB |
 | pdf-r2l-script-linux |  public | 8KB | Shell 0KB, PowerShell 0KB |
 | pdf-r2l-linux |  public | 7KB | Shell 0KB, PowerShell 0KB |
+
+- **2026-11-27 audiocafe.tokyo 静的ファイル / static files**: 旧PHP(4401)の静的ファイル9フォルダーを Rust(audiocafe-tokyo-rust `a0a0eae`・`fb19c11`)へ移し本番切替。156ファイルがバイト一致、公開要求はPHPに届かない(実測)。残り=`/index.php`・catch-all・`cron.php` 2本。*Nine static folders moved from PHP to Rust and switched live; 156 files byte-identical; left: `/index.php`, catch-all, two `cron.php`.*
