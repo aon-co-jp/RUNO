@@ -6017,3 +6017,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `@if(L 比較 R) ... [@else ...] @endif` を変換時に解決(三項演算子と同じ値・比較、本文に入れ子の @if が無い場合)。テスト97件成功、実サーバーで `/iz` = `M| K|T` を実測。未了: 入れ子の比較 @if、`withInput`(セッション層が必要)。
 **English**: `@if(L op R) ... [@else ...] @endif` is resolved at convert time (same values and operators as the ternary; body without nested @if). 97 tests pass; measured `/iz` = `M| K|T` on the real server. Open: nested comparison @if, `withInput` (needs a session layer).
 **再開用メッセージ / Resume**: `F:\2RPoRea\PORTING.md` 末尾を読み、php 変換の未了を確認なしで進める。/ Read the end of `F:\2RPoRea\PORTING.md` and continue the php-conversion open items without asking.
+
+## 2026-11-28 08:35 2RPoRea 入れ子の比較 @if / Nested comparison @if
+**日本語**: 比較式の `@if` を内側から繰り返し解決し、入れ子(最大8段)に対応。テスト98件成功、実サーバーで `/nz` = `[ K]` を実測。未了: `withInput`(セッション層が必要)、`@elseif` の比較式。
+**English**: Comparison `@if` blocks are resolved repeatedly from the inside out, so nesting works (up to 8 levels). 98 tests pass; measured `/nz` = `[ K]` on the real server. Open: `withInput` (needs a session layer), comparisons in `@elseif`.
+**再開用メッセージ / Resume**: `F:\2RPoRea\PORTING.md` 末尾を読み、php 変換の未了を確認なしで進める。/ Read the end of `F:\2RPoRea\PORTING.md` and continue the php-conversion open items without asking.
