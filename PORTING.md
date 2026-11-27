@@ -6066,3 +6066,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: クロージャ冒頭の `$request->validate([...])` を変換(規則は required・string・numeric・integer・nullable・min:N・max:N。メッセージはLaravel既定の英語)。失敗時は back() へ302し、エラーを `rporea_err`、入力を `rporea_old`(password系は除外)へフラッシュ。成功時は残りの本文を実行。他の規則(email等)は501のまま。実測: 不正入力で302→`[The name field must not be greater than 5 characters.][The age field must be an integer.]abcdefg/-`、正しい入力で `ok`。
 **English**: `$request->validate([...])` at the start of a closure is converted (rules: required, string, numeric, integer, nullable, min:N, max:N; Laravel's default English messages). On failure it redirects back (302) and flashes errors to `rporea_err` and input to `rporea_old` (password fields excluded); on success the rest runs. Other rules (email etc.) stay 501. Measured: bad input gives the two messages plus old input; good input gives `ok`.
 **再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(validate の他規則〈email・confirmed等〉・一般の session())を確認なしで進めてください。返答は日本語のみ。
+
+## 2026-11-28 validate() に email・confirmed / email and confirmed rules
+**日本語**: `validate()` の規則に `email`(簡易判定)と `confirmed`(`<key>_confirmation` と一致)を追加。実測: 不正入力で `[The mail field must be a valid email address.][The password field confirmation does not match.]` を含む4件、正しい入力で `ok`。unique 等DBを使う規則は501のまま。
+**English**: Added `email` (simple check) and `confirmed` (matches `<key>_confirmation`) to `validate()`. Measured: bad input shows four messages including the email and confirmation ones; good input gives `ok`. DB rules such as unique stay 501.
+**再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(validate の DB 規則・一般の session())を確認なしで進めてください。返答は日本語のみ。
