@@ -5929,3 +5929,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: 配列の配列を外側から展開する入れ子の `@foreach` で、外側の本体の `$loop->iteration` 等と、内側の `$loop->index`・`$loop->last`・`$loop->parent->index` が使えるようになった。実測(curl): `1:0.0a 0.1b! |2:1.0c! |`。テスト82件成功。外側の本体の `@continue`/`@break` と、内側の `@if($loop->parent->…)` は501のまま。未了: withInput(セッション層)。
 **English**: In nested `@foreach` loops unrolled from the outside over arrays of arrays, the outer body's `$loop->iteration` etc. and the inner `$loop->index`, `$loop->last` and `$loop->parent->index` now work. Measured with curl: `1:0.0a 0.1b! |2:1.0c! |`. 82 tests pass. `@continue`/`@break` in the outer body and `@if($loop->parent->...)` inside stay 501. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・外側本体の@continue/@break)を確認なしで進める。見出し時刻は`date`で確認、実測してから完了、返答は日本語のみ。
+
+
+## 2026-11-28 08:10 追記: 外側本体の @continue/@break / Update: @continue/@break in the outer body
+**日本語**: 配列の配列を外側から展開する入れ子の `@foreach` で、外側の本体に置いた `@continue`・`@break`(条件つき・`@if($loop->first)` の中も)が使えるようになった。実測(curl): `c|d|`。テスト83件成功。内側の `@foreach` の中に置いた `@continue`/`@break` は、外側から展開する場合は501のまま。未了: withInput(セッション層)。
+**English**: In nested `@foreach` loops unrolled from the outside, `@continue`/`@break` in the outer body (with conditions, or inside `@if($loop->first)`) now work. Measured with curl: `c|d|`. 83 tests pass. `@continue`/`@break` inside the inner `@foreach` in that case stay 501. Open: withInput (session layer).
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・外側から展開する場合の内側@continue/@break)を確認なしで進める。見出し時刻は`date`で確認、実測してから完了、返答は日本語のみ。
