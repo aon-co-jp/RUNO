@@ -5667,3 +5667,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **23:40 追記 / Addendum**: 2RPoRea `9f23132` で `back()` を変換(Refererへ302、curl実測、テスト32件)。*2RPoRea converts `back()` (302 to Referer, measured, 32 tests).*
 
 - **訂正 / Correction (22:47)**: 直前の追記の「23:00〜23:40」は見出しの誤りで、実際の作業時刻は22:37〜22:46。*The "23:00-23:40" labels above were wrong; the actual work times were 22:37-22:46.*
+
+- **22:50 追記 / Addendum**: 2RPoRea `935480a` で `response(本文, コード)`・`response()->json(..., コード)` を変換(curl実測 201/410、テスト33件)。*2RPoRea converts response() with a status code (measured 201/410, 33 tests).*
