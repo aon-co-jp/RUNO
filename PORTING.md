@@ -5713,3 +5713,7 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **23:31 追記 / Addendum**: 2RPoRea `7435627` でBladeの @if/@isset を固定データで変換、行中の制御構文も501へ(curl実測、テスト50件)。*Blade @if/@isset with literal data; inline directives stay 501 (measured, 50 tests).*
 
 - **23:32 追記 / Addendum**: 2RPoRea `0383dd6` でBladeの @unless を固定データで変換(curl実測、テスト51件)。*Blade @unless (measured, 51 tests).*
+
+### 23:34 再開用メッセージ(更新) / Resume message (updated)
+**日本語**: 前の続きです。2RPoRea `src/torporea/php.py`(Laravel→RPoem)はテスト51件。条件(has/filled/missing/boolean・配列形・input/ルートパラメーター比較・かっこ・elseif)、abort/redirect/back/route()、Route::view(固定データ、`{{ }}`・`{!! !!}`・`{{-- --}}`・`@{{ }}`・`@if`/`@isset`/`@unless`)まで。実測は `F:\_fix\lv` を convert し `F:\_fix\lv2.sh`(WSL Ubuntu-24.04)。未了: withInput(セッション層)、`@foreach` 等の繰り返し、変数値のビュー、PHPの緩い==。決まり: 実測してから完了、秘密は書かない、新RESTなし、返答は日本語のみ。
+**English**: Continuing. 2RPoRea `src/torporea/php.py` (Laravel to RPoem) has 51 tests: conditions (has/filled/missing/boolean, array forms, input and route-param comparisons, parentheses, elseif), abort/redirect/back/route(), and Route::view with literal data (`{{ }}`, `{!! !!}`, `{{-- --}}`, `@{{ }}`, `@if`/`@isset`/`@unless`). Measure by converting `F:\_fix\lv` and running `F:\_fix\lv2.sh` (WSL Ubuntu-24.04). Open: withInput (session layer), loops such as `@foreach`, views with variable values, PHP loose ==. Rules: measure before done, no secrets, no new REST, reply in Japanese only.
