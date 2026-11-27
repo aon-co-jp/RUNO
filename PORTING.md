@@ -5689,3 +5689,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **23:08 追記 / Addendum**: 2RPoRea `5db1ac0` で `Route::view` のデータを `{{ $x }}` へエスケープ付きで埋め込み(curl実測、テスト40件)。*2RPoRea fills Route::view data into {{ $x }} with escaping (measured, 40 tests).*
 
 - **23:11 追記 / Addendum**: 2RPoRea `b374b3e` でかっこ付きの条件(has/filled、&&・||・!)を変換、curl実測4件一致・テスト41件。withInputはセッション無しで未対応。*Parenthesized conditions translate (measured, 41 tests); withInput unsupported (no sessions).*
+
+- **23:13 追記 / Addendum**: 2RPoRea `13f2338` で `$request->missing()` を変換(curl実測3件一致、テスト42件)。*2RPoRea translates missing() (measured, 42 tests).*
