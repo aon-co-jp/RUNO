@@ -5693,3 +5693,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **23:13 追記 / Addendum**: 2RPoRea `13f2338` で `$request->missing()` を変換(curl実測3件一致、テスト42件)。*2RPoRea translates missing() (measured, 42 tests).*
 
 - **23:15 追記 / Addendum**: 2RPoRea `7b6d035` で `$request->boolean()` を条件として変換(curl実測5件一致、テスト43件)。*2RPoRea translates boolean() in conditions (measured, 43 tests).*
+
+- **23:17 追記 / Addendum**: 2RPoRea `dd3b236` で配列形の has/filled/hasAny/anyFilled を変換(curl実測4件一致、テスト44件)。*Array forms of has/filled/hasAny/anyFilled translate (measured, 44 tests).*
