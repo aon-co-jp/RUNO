@@ -5965,3 +5965,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `@while` の本体の `@php($i += N)`・`@php($i -= N)` に対応した(1000回で打ち切り)。実測(curl): `0,3,6,|642`。テスト88件成功。未了: withInput(セッション層)。
 **English**: `@php($i += N)` and `@php($i -= N)` inside `@while` bodies now work (capped at 1000). Measured with curl: `0,3,6,|642`. 88 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput など)を確認なしで進める。見出し時刻は`date`で確認、実測してから完了、返答は日本語のみ。
+
+
+## 2026-11-28 08:19 追記: @foreach(range(...)) / Update: @foreach over range()
+**日本語**: `@foreach(range(A, B[, 刻み]) as $i)`(増加・減少、`$k => $i` も)に対応した。整数の定数のみ、1000件で打ち切り。データの無いビューでも動く。実測(curl): `123|10,5,0,|0=0 1=2 2=4 `。テスト89件成功。未了: withInput(セッション層)。
+**English**: `@foreach(range(A, B[, step]) as $i)` (up or down, also `$k => $i`) now works; integer constants only, capped at 1000; works in views without data. Measured with curl: `123|10,5,0,|0=0 1=2 2=4 `. 89 tests pass. Open: withInput (session layer).
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput など)を確認なしで進める。見出し時刻は`date`で確認、実測してから完了、返答は日本語のみ。
