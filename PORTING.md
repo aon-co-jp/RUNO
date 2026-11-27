@@ -5691,3 +5691,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **23:11 追記 / Addendum**: 2RPoRea `b374b3e` でかっこ付きの条件(has/filled、&&・||・!)を変換、curl実測4件一致・テスト41件。withInputはセッション無しで未対応。*Parenthesized conditions translate (measured, 41 tests); withInput unsupported (no sessions).*
 
 - **23:13 追記 / Addendum**: 2RPoRea `13f2338` で `$request->missing()` を変換(curl実測3件一致、テスト42件)。*2RPoRea translates missing() (measured, 42 tests).*
+
+- **23:15 追記 / Addendum**: 2RPoRea `7b6d035` で `$request->boolean()` を条件として変換(curl実測5件一致、テスト43件)。*2RPoRea translates boolean() in conditions (measured, 43 tests).*
