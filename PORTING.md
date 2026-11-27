@@ -5681,3 +5681,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **22:57 追記 / Addendum**: 2RPoRea `32c9dc6` で名前付きルート転送の余ったキーをクエリ文字列に(curl実測、テスト37件)。*2RPoRea appends extra keys as a query string (measured, 37 tests).*
 
 - **23:00 追記 / Addendum**: 2RPoRea `2be6b22` でルートパラメーターをクエリ値として正しくエンコード(curl実測、テスト37件)。*2RPoRea encodes route parameters as query values (measured, 37 tests).*
+
+- **23:04 追記 / Addendum**: 2RPoRea `2ef36b6` で `Route::redirect`/`permanentRedirect` を変換(curl実測 302/301、テスト38件)。*2RPoRea converts Route::redirect shortcuts (measured 302/301, 38 tests).*
