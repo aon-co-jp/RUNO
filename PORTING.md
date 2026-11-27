@@ -5911,3 +5911,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: 入れ子の `@foreach` で `{{ $loop->depth }}`(外側1・内側2)と `$loop->parent->…`(外側のループの値)を使えるようにした。実測(curl): `[2:1.1][2:1.2]1;[2:2.1][2:2.2]1;`(Bladeと同じ)。テスト79件成功。未了: withInput(セッション層)、外側の値を内側で回す入れ子。
 **English**: Nested `@foreach` now supports `{{ $loop->depth }}` (outer 1, inner 2) and `$loop->parent->...` (the enclosing loop's values). Measured with curl: `[2:1.1][2:1.2]1;[2:2.1][2:2.2]1;`, matching Blade. 79 tests pass. Open: withInput (session layer), inner loops over the outer item.
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・外側の値を回す入れ子)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
+
+
+## 2026-11-28 08:07 追記: @continue / @break / Update: @continue / @break
+**日本語**: `@foreach` 内の `@continue`・`@break`(引数なし、または `($x == 'v')`・`!=`・`$loop->first|last|odd|even`)に対応。それ以外の条件は501のまま。実測(curl、`['a','b','c','d']`): `@continue($x=='b')`+`@break($x=='c')`で`<i>a</i><i>c</i>`、`@if($loop->first)@continue@endif`で`ab!c!d!`(Bladeと同じ)。テスト80件成功。未了: withInput(セッション層)、外側の値を回す入れ子。
+**English**: `@continue` and `@break` inside `@foreach` now work, bare or with `($x == 'v')`, `!=` or `$loop->first|last|odd|even`; other conditions stay a 501 TODO. Measured with curl: `<i>a</i><i>c</i>` and `ab!c!d!`, matching Blade. 80 tests pass. Open: withInput (session layer), inner loops over the outer item.
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・外側の値を回す入れ子)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
