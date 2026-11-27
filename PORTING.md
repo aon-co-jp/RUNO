@@ -6036,3 +6036,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: 単純な `@if($k)` が偽のとき、前段の処理が `@elseif` を `@else` と取り違えて壊れた文字を出す不具合を確認し修正(偽なら `@elseif` 以降を比較式の @if として後段で解決)。テスト100件成功、実サーバーで `/pz` = `B|A` を実測。未了: `@elseif($k)` のような単純な変数の @elseif、`withInput`(セッション層が必要)。
 **English**: Confirmed and fixed a bug: when a plain `@if($k)` was false, the earlier pass mistook `@elseif` for `@else` and emitted broken text (now the `@elseif` part becomes a comparison @if resolved later). 100 tests pass; measured `/pz` = `B|A` on the real server. Open: `@elseif($k)` with a plain variable, `withInput` (needs a session layer).
 **再開用メッセージ / Resume**: `F:\2RPoRea\PORTING.md` 末尾を読み、php 変換の未了を確認なしで進める(12:00まで)。/ Read the end of `F:\2RPoRea\PORTING.md` and continue the php-conversion open items without asking (until 12:00).
+
+## 2026-11-28 08:40 2RPoRea 単純な変数の @elseif / @elseif with a plain variable
+**日本語**: `@elseif($k)` のような単純な変数の条件を、リテラルデータの PHP の真偽(空文字・'0'・空配列は偽)で解決。テスト101件成功、実サーバーで `/vz` = `C` を実測。未了: `withInput`(セッション層が必要)。
+**English**: Plain-variable conditions such as `@elseif($k)` are resolved with PHP truthiness of the literal data ('' , '0' and empty arrays are false). 101 tests pass; measured `/vz` = `C` on the real server. Open: `withInput` (needs a session layer).
+**再開用メッセージ / Resume**: `F:\2RPoRea\PORTING.md` 末尾を読み、php 変換の未了を確認なしで進める(12:00まで)。/ Read the end of `F:\2RPoRea\PORTING.md` and continue the php-conversion open items without asking (until 12:00).
