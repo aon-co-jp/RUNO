@@ -5707,3 +5707,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **English**: Continuing. 2RPoRea `src/torporea/php.py` (Laravel routes to RPoem) now handles has/filled/missing/boolean, array forms, input and route-param comparisons, parentheses, elseif, abort/redirect/back/route() and Route::view with data; 47 tests. Measure by converting `F:\_fix\lv` and running `F:\_fix\lv2.sh` (WSL Ubuntu-24.04, curl). Open: withInput (needs a session layer), Blade control directives, Route::view with variable values, PHP loose == conversion. Rules: measure before done, no secrets, no new REST, reply in Japanese only.
 
 - **23:27 追記 / Addendum**: 2RPoRea `7f42311` でBladeのコメント除去と `{!! $k !!}`(エスケープなし)を変換(curl実測、テスト48件)。*Blade comments and raw {!! !!} (measured, 48 tests).*
+
+- **23:29 追記 / Addendum**: 2RPoRea `a2e5317` でBladeの `@{{ }}` を文字どおり出力(curl実測、テスト49件)。*Blade @{{ }} escape (measured, 49 tests).*
