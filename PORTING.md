@@ -5735,3 +5735,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 ### 2026-11-28 07:20 再開用メッセージ / Resume message
 **日本語**: 前の続きです。2RPoRea `src/torporea/php.py`(Laravel→RPoem)はテスト54件。Route::view の固定データで `{{ }}`・`{!! !!}`・`{{-- --}}`・`@{{ }}`・`@if`/`@isset`/`@unless`・`@foreach`+`$loop`・整数の`@for`まで。実測は `F:\_fix\lv` を convert し `F:\_fix\lv3.sh`(WSL Ubuntu-24.04)。未了: データ無しビューでの`@for`、`@while`、withInput、変数値のビュー、PHPの緩い==。決まり: 実測してから完了、秘密は書かない、新RESTなし、返答は日本語のみ。
 **English**: Continuing. 2RPoRea `src/torporea/php.py` has 54 tests; Route::view with literal data supports `{{ }}`, `{!! !!}`, `{{-- --}}`, `@{{ }}`, `@if`/`@isset`/`@unless`, `@foreach` with `$loop`, and integer `@for`. Measure via `F:\_fix\lv` and `F:\_fix\lv3.sh`. Open: `@for` in views without data, `@while`, withInput, variable-valued views, PHP loose ==. Rules: measure before done, no secrets, no new REST, Japanese replies.
+
+- **2026-11-28 07:22 追記 / Addendum**: 2RPoRea の `@for` を、データを渡さない `Route::view` でも展開するようにした。curl 実測で `/fr2` が `<b>1</b><b>2</b>`、テスト54件。*`@for` now also unrolls in views without data (measured, 54 tests).*
+
+### 2026-11-28 07:22 再開用メッセージ / Resume message
+**日本語**: 前の続きです。2RPoRea `src/torporea/php.py`(Laravel→RPoem)はテスト54件。Route::view で `{{ }}`・`{!! !!}`・`{{-- --}}`・`@{{ }}`・`@if`/`@isset`/`@unless`・`@foreach`+`$loop`(固定データ)・整数の`@for`(データ有無を問わず)まで。実測は `F:\_fix\lv` を convert し `F:\_fix\lv3.sh`(WSL Ubuntu-24.04)。未了: `@while`、withInput、変数値のビュー、PHPの緩い==。決まり: 実測してから完了、秘密は書かない、新RESTなし、返答は日本語のみ。
+**English**: Continuing. 2RPoRea `src/torporea/php.py` has 54 tests; Route::view supports `{{ }}`, `{!! !!}`, `{{-- --}}`, `@{{ }}`, `@if`/`@isset`/`@unless`, `@foreach` with `$loop` (literal data) and integer `@for` (with or without data). Measure via `F:\_fix\lv` and `F:\_fix\lv3.sh`. Open: `@while`, withInput, variable-valued views, PHP loose ==. Rules: measure before done, no secrets, no new REST, Japanese replies.
