@@ -5827,3 +5827,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `Route::view` のビューで `{{ request('k') }}`・`{{ request('k', '既定') }}` を、入力値をHTMLエスケープして表示できるようにした(新しい部品 `query_esc`)。実測(curl): 未指定=`Hi guest!`、`?name=Ann`=`Hi Ann!`、`<b>&'`=`&lt;b&gt;&amp;&#039;`(Bladeの`e()`と同じ)。テスト48件成功。未了: withInput(セッション層)、`@php` の小数。
 **English**: `{{ request('k') }}` and `{{ request('k', 'default') }}` now work in `Route::view` views, HTML-escaped (new part `query_esc`). Measured with curl: no value gives the default, `Ann` shows as is, `<b>&'` is escaped like Blade's `e()`. 48 tests pass. Open: withInput (session layer), floats in `@php`.
 **再開用メッセージ / Resume**: `F:RPoRea\PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・`@php`の小数)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
+
+
+## 2026-11-28 07:45 追記: @php の小数 / Update: floats in @php
+**日本語**: `@php` の計算で小数を扱えるようにした(小数の値、割り切れない`/`は小数になる)。表示はPHPの`echo`と同じ有効14桁(`precision`)。実測(curl): `7/2`=3.5、`0.1+0.2`=0.3、`1/3`=0.33333333333333、`1.5*2`=3。小数の`%`・1e14以上・1e-4未満は従来どおり501のまま。テスト66件成功。未了: withInput(セッション層)。
+**English**: `@php` arithmetic now handles floats (decimal values, and `/` that does not divide evenly gives a float), printed like PHP `echo` with 14 significant digits. Measured with curl: 3.5, 0.3, 0.33333333333333, 3. Float `%`, values >= 1e14 or < 1e-4 stay a 501 TODO. 66 tests pass. Open: withInput (session layer).
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput ほか)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
