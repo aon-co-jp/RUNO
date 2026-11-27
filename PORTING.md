@@ -5835,85 +5835,91 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput ほか)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
 
 
-## 2026-11-28 07:47 追記: ビューの数値関数 / Update: numeric functions in views
+## 2026-11-28 07:46 追記: ビューの数値関数 / Update: numeric functions in views
 **日本語**: ビューの `{{ }}` で `abs`・`intval`・`floor`・`ceil`・`round`(四捨五入は0から遠い側、PHPと同じ)を、数値の値に使えるようにした。数値でない値は501のまま。実測(curl、`-3.7`と`2.5`): `3.7 -4 -3 -4 -3 3`。テスト67件成功。未了: withInput(セッション層)、`round`の桁数引数。
 **English**: `abs`, `intval`, `floor`, `ceil` and `round` (half away from zero, like PHP) now work on numeric values in view `{{ }}`; non-numeric values stay a 501 TODO. Measured with curl: `3.7 -4 -3 -4 -3 3`. 67 tests pass. Open: withInput (session layer), `round` precision argument.
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・round の桁数)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
 
 
-## 2026-11-28 07:48 追記: round の桁数 / Update: round precision
+## 2026-11-28 07:47 追記: round の桁数 / Update: round precision
 **日本語**: ビューで `round($x, 桁数)`(0〜10桁、0.5は0から遠い側)を使えるようにした。実測(curl): `round('1.955',2)`=1.96、`round('1.955',0)`=2、`round('-2.345',2)`=-2.35、`round('3.10',1)`=3.1(PHPと同じ)。テスト68件成功。未了: withInput(セッション層)、`number_format` の桁数。
 **English**: `round($x, digits)` (0 to 10 digits, half away from zero) now works in views. Measured with curl: 1.96, 2, -2.35, 3.1, matching PHP. 68 tests pass. Open: withInput (session layer), `number_format` decimals.
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・number_format の桁数)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
 
 
-## 2026-11-28 07:50 追記: number_format の小数桁 / Update: number_format decimals
+## 2026-11-28 07:49 追記: number_format の小数桁 / Update: number_format decimals
 **日本語**: ビューで `number_format($x, 桁数)`(0〜10桁、小数の値も可、0.5は0から遠い側、PHP 8と同じく`-0.00`は`0.00`)を使えるようにした。引数1つのリテラル呼び出し(`number_format('1000')`)も対応。実測(curl): `1,234.57 1,235 0.00 1,000`(PHPと同じ)。テスト69件成功。未了: withInput(セッション層)、`number_format` の区切り文字引数(3・4番目)。
 **English**: `number_format($x, decimals)` (0 to 10, decimal values allowed, half away from zero, `-0.00` shown as `0.00` like PHP 8) now works in views, as do single-literal calls such as `number_format('1000')`. Measured with curl: `1,234.57 1,235 0.00 1,000`, matching PHP. 69 tests pass. Open: withInput (session layer), the separator arguments (3rd and 4th) of `number_format`.
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・number_format の区切り文字)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
 
 
-## 2026-11-28 07:52 追記: number_format の区切り文字 / Update: number_format separators
+## 2026-11-28 07:51 追記: number_format の区切り文字 / Update: number_format separators
 **日本語**: `number_format($x, 桁数, 小数点, 桁区切り)`(3番目・4番目の引数、PHP 8のように3引数も可)に対応。実測(curl): `('1234567.891',2,',','.')`=`1.234.567,89`、`('1234.5',1,'.',' ')`=`1 234.5`、`('1234.5',2,',')`=`1,234,50`(PHPと同じ)。テスト70件成功。未了: withInput(セッション層)。
 **English**: `number_format($x, decimals, decimal_point, thousands_sep)` now works, including the 3-argument form of PHP 8. Measured with curl: `1.234.567,89`, `1 234.5`, `1,234,50`, matching PHP. 70 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput ほか)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
 
 
-## 2026-11-28 07:53 追記: ビューの三項演算子 / Update: ternary in views
+## 2026-11-28 07:52 追記: ビューの三項演算子 / Update: ternary in views
 **日本語**: ビューで `{{ $k ? 'a' : 'b' }}` と `{{ $k ?: 'b' }}` を使えるようにした(PHPの真偽: 空文字・`'0'`・空配列は偽、結果はエスケープ)。実測(curl): `$a='x'`・`$z='0'` で `yes no x d`、`'<b>'`は`&lt;b&gt;`。テスト71件成功。未了: withInput(セッション層)、条件が比較式の三項演算子。
 **English**: `{{ $k ? 'a' : 'b' }}` and `{{ $k ?: 'b' }}` now work in views (PHP truthiness: empty string, `'0'` and empty arrays are false; output escaped). Measured with curl: `yes no x d`, and `'<b>'` is escaped. 71 tests pass. Open: withInput (session layer), ternaries with comparison conditions.
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・比較式の三項演算子)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
 
 
-## 2026-11-28 07:55 追記: 比較式の三項演算子 / Update: comparison ternaries
+## 2026-11-28 07:53 追記: 比較式の三項演算子 / Update: comparison ternaries
 **日本語**: ビューで `{{ $k OP 値 ? 'a' : 'b' }}`(`== != === !== < > <= >=`、値は文字列か数値)を使えるようにした。PHP 8と同じく、数値の文字列どうしは数値として比べる。実測(curl、`$n='10'`・`$s='abc'`): `T F T F T F T`(`'10'=='1e1'`は真、`'10'===10`は偽、`'10'<'9'`は偽、PHPと同じ)。テスト72件成功。未了: withInput(セッション層)。
 **English**: `{{ $k OP value ? 'a' : 'b' }}` (`== != === !== < > <= >=`, string or number value) now works in views; numeric strings compare as numbers like PHP 8. Measured with curl: `T F T F T F T`, matching PHP. 72 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput ほか)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
 
 
-## 2026-11-28 07:56 追記: 配列の添字 / Update: list index
+## 2026-11-28 07:54 追記: 配列の添字 / Update: list index
 **日本語**: ビューで `{{ $xs[N] }}`(エスケープ)と `{!! $xs[N] !!}` を、リテラルの配列に使えるようにした。範囲外の添字は501のまま。実測(curl、`['a','<b>']`): `a &lt;b&gt; <b> 2`。テスト73件成功。未了: withInput(セッション層)、連想配列の `$x['k']`。
 **English**: `{{ $xs[N] }}` (escaped) and `{!! $xs[N] !!}` now work on literal lists in views; an out-of-range index stays a 501 TODO. Measured with curl: `a &lt;b&gt; <b> 2`. 73 tests pass. Open: withInput (session layer), associative `$x['k']`.
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・連想配列)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
 
 
-## 2026-11-28 07:58 追記: 連想配列 / Update: associative arrays
+## 2026-11-28 07:56 追記: 連想配列 / Update: associative arrays
 **日本語**: `Route::view` のデータで `'u' => ['name' => 'Ann', ...]` の連想配列を受け取り、ビューで `{{ $u['k'] }}`(エスケープ)と `{!! $u['k'] !!}` を使えるようにした。無いキーは501のまま。実測(curl): `Ann <i>x</i> &lt;i&gt;x&lt;/i&gt;`。テスト74件成功。未了: withInput(セッション層)、連想配列の `@foreach ($u as $k => $v)`。
 **English**: `Route::view` data now accepts associative arrays like `'u' => ['name' => 'Ann', ...]`, and views can use `{{ $u['k'] }}` (escaped) and `{!! $u['k'] !!}`; a missing key stays a 501 TODO. Measured with curl: `Ann <i>x</i> &lt;i&gt;x&lt;/i&gt;`. 74 tests pass. Open: withInput (session layer), `@foreach ($u as $k => $v)` over associative arrays.
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・連想配列の@foreach)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
 
 
-## 2026-11-28 08:00 追記: @foreach のキー / Update: @foreach with keys
+## 2026-11-28 07:57 追記: @foreach のキー / Update: @foreach with keys
 **日本語**: `@foreach ($u as $k => $v)` を、連想配列(キー名)とリスト(0からの番号)の両方で使えるようにした(`$loop`も従来どおり)。実測(curl): `<li>name=Ann</li><li>tag=&lt;i&gt;</li>` と `0:a 1:b`。テスト75件成功。未了: withInput(セッション層)。
 **English**: `@foreach ($u as $k => $v)` now works over associative arrays (key names) and lists (indexes from 0), with `$loop` as before. Measured with curl: `name=Ann`, `tag=&lt;i&gt;`, `0:a 1:b`. 75 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput ほか)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
 
 
-## 2026-11-28 08:01 追記: @forelse / Update: @forelse
+## 2026-11-28 07:59 追記: @forelse / Update: @forelse
 **日本語**: `@forelse(...) ... @empty ... @endforelse` に対応(リテラルの配列が空なら`@empty`側、空でなければ`@foreach`と同じ。キーつき・`$loop`も可)。実測(curl): `['a','b']`は`<i>a</i><i>b</i>`、`[]`は`<p>none</p>`。テスト76件成功。未了: withInput(セッション層)。
 **English**: `@forelse(...) ... @empty ... @endforelse` now works (the `@empty` part for an empty literal array, otherwise like `@foreach`, keys and `$loop` included). Measured with curl: `<i>a</i><i>b</i>` and `<p>none</p>`. 76 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput ほか)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
 
 
-## 2026-11-28 08:02 追記: $loop->odd / even / Update: $loop->odd / even
+## 2026-11-28 08:00 追記: $loop->odd / even / Update: $loop->odd / even
 **日本語**: `@foreach` 内で `@if($loop->odd)`・`@if($loop->even)`(否定 `!` も可)を使えるようにした(Bladeと同じく1件目が奇数)。実測(curl、`['a','b','c']`): `class="o"`・`" e"`・`"o"`。テスト77件成功。未了: withInput(セッション層)、`$loop->depth`・`$loop->parent`(入れ子)。
 **English**: `@if($loop->odd)` and `@if($loop->even)` (also negated with `!`) now work inside `@foreach`, with the first item odd as in Blade. Measured with curl over `['a','b','c']`: o, e, o. 77 tests pass. Open: withInput (session layer), `$loop->depth` and `$loop->parent` (nesting).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・$loop->depth/parent)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
 
 
-## 2026-11-28 08:03 追記: 入れ子の @foreach / Update: nested @foreach
+## 2026-11-28 08:01 追記: 入れ子の @foreach / Update: nested @foreach
 **日本語**: 別々のリテラル配列を回す入れ子の `@foreach` を、内側から順に展開するようにした。実測(curl、行`['1','2']`×列`['a','b']`): `<tr><td>a</td><td>b</td><th>1</th></tr><tr>…<th>2</th></tr>`。テスト78件成功。未了: withInput(セッション層)、外側の値を内側で回す入れ子(`$r->items`等)、`$loop->depth`/`parent`。
 **English**: Nested `@foreach` over separate literal arrays now unrolls, innermost first. Measured with curl over rows `['1','2']` x cols `['a','b']`. 78 tests pass. Open: withInput (session layer), inner loops over the outer item, `$loop->depth`/`parent`.
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・$loop->depth/parent)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
 
 
-## 2026-11-28 08:05 追記: $loop->depth / parent / Update: $loop->depth / parent
+## 2026-11-28 08:02 追記: $loop->depth / parent / Update: $loop->depth / parent
 **日本語**: 入れ子の `@foreach` で `{{ $loop->depth }}`(外側1・内側2)と `$loop->parent->…`(外側のループの値)を使えるようにした。実測(curl): `[2:1.1][2:1.2]1;[2:2.1][2:2.2]1;`(Bladeと同じ)。テスト79件成功。未了: withInput(セッション層)、外側の値を内側で回す入れ子。
 **English**: Nested `@foreach` now supports `{{ $loop->depth }}` (outer 1, inner 2) and `$loop->parent->...` (the enclosing loop's values). Measured with curl: `[2:1.1][2:1.2]1;[2:2.1][2:2.2]1;`, matching Blade. 79 tests pass. Open: withInput (session layer), inner loops over the outer item.
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・外側の値を回す入れ子)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
 
 
-## 2026-11-28 08:07 追記: @continue / @break / Update: @continue / @break
+## 2026-11-28 08:03 追記: @continue / @break / Update: @continue / @break
 **日本語**: `@foreach` 内の `@continue`・`@break`(引数なし、または `($x == 'v')`・`!=`・`$loop->first|last|odd|even`)に対応。それ以外の条件は501のまま。実測(curl、`['a','b','c','d']`): `@continue($x=='b')`+`@break($x=='c')`で`<i>a</i><i>c</i>`、`@if($loop->first)@continue@endif`で`ab!c!d!`(Bladeと同じ)。テスト80件成功。未了: withInput(セッション層)、外側の値を回す入れ子。
 **English**: `@continue` and `@break` inside `@foreach` now work, bare or with `($x == 'v')`, `!=` or `$loop->first|last|odd|even`; other conditions stay a 501 TODO. Measured with curl: `<i>a</i><i>c</i>` and `ab!c!d!`, matching Blade. 80 tests pass. Open: withInput (session layer), inner loops over the outer item.
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・外側の値を回す入れ子)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
+
+
+## 2026-11-28 08:06 追記: 入れ子の配列 / Update: nested arrays
+**日本語**: `Route::view` のデータで入れ子の配列(`'grid' => [['1','2'],['3']]`・`'us' => [['n' => 'A'], …]`)を読めるようにし、`@foreach($grid as $row)@foreach($row as $c)` や `@foreach($us as $u){{ $u['n'] }}` を外側から展開する(外側の本体に `$loop`・`@continue`・`@break` がある場合は501のまま)。実測(curl): `<tr><td>1</td><td>2</td></tr><tr><td>3</td></tr>` と `A;&lt;B&gt;;`。テスト81件成功。あわせて今朝の追記の見出し時刻を、実際のコミット時刻に訂正した。未了: withInput(セッション層)、外側の値を回す入れ子での `$loop`。
+**English**: `Route::view` data now accepts nested arrays, and loops such as `@foreach($grid as $row)@foreach($row as $c)` and `@foreach($us as $u){{ $u['n'] }}` unroll from the outside (still a 501 TODO when the outer body uses `$loop`, `@continue` or `@break`). Measured with curl: the grid table and `A;&lt;B&gt;;`. 81 tests pass. This morning's heading times were also corrected to the real commit times. Open: withInput (session layer), `$loop` in loops over the outer item.
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・外側の値を回す入れ子での$loop)を確認なしで進める。見出しの時刻は必ず`date`で確かめる。実測してから完了と書く、返答は日本語のみ。
