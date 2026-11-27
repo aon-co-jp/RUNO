@@ -5887,3 +5887,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `@foreach ($u as $k => $v)` を、連想配列(キー名)とリスト(0からの番号)の両方で使えるようにした(`$loop`も従来どおり)。実測(curl): `<li>name=Ann</li><li>tag=&lt;i&gt;</li>` と `0:a 1:b`。テスト75件成功。未了: withInput(セッション層)。
 **English**: `@foreach ($u as $k => $v)` now works over associative arrays (key names) and lists (indexes from 0), with `$loop` as before. Measured with curl: `name=Ann`, `tag=&lt;i&gt;`, `0:a 1:b`. 75 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput ほか)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
+
+
+## 2026-11-28 08:01 追記: @forelse / Update: @forelse
+**日本語**: `@forelse(...) ... @empty ... @endforelse` に対応(リテラルの配列が空なら`@empty`側、空でなければ`@foreach`と同じ。キーつき・`$loop`も可)。実測(curl): `['a','b']`は`<i>a</i><i>b</i>`、`[]`は`<p>none</p>`。テスト76件成功。未了: withInput(セッション層)。
+**English**: `@forelse(...) ... @empty ... @endforelse` now works (the `@empty` part for an empty literal array, otherwise like `@foreach`, keys and `$loop` included). Measured with curl: `<i>a</i><i>b</i>` and `<p>none</p>`. 76 tests pass. Open: withInput (session layer).
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput ほか)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
