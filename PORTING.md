@@ -5653,3 +5653,5 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 - **22:33 追記 / Addendum**: Rust版の出力は153件・今回の更新40件・`meta`(`last_cron_refresh`/`last_refresh_count`/`saved_at`)の形でPHP版と同じ構造。PHP版の15:39版は上書きされ控えが無いため、中身の比較は不可(次はPHP版を一時フォルダーへ1回書き出して突き合わせる)。*Rust output: 153 entries, 40 refreshed, same `meta` shape as PHP; the 15:39 PHP cache was overwritten with no copy, so a content diff needs a one-off PHP run into a temp folder.*
 
 - **22:45 追記 / Addendum**: 2RPoRea `10883d2` で `$request->only()/except()` を変換(curl実測、テスト27件)。*2RPoRea converts `$request->only()/except()` (measured with curl, 27 tests).*
+
+- **22:50 追記 / Addendum**: 2RPoRea `401467c` で `$request->all()` 等がJSONの数値・真偽値・入れ子を保持(curl実測、テスト27件)。*2RPoRea keeps JSON types in `$request->all()` etc. (measured, 27 tests).*
