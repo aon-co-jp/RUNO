@@ -5833,3 +5833,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `@php` の計算で小数を扱えるようにした(小数の値、割り切れない`/`は小数になる)。表示はPHPの`echo`と同じ有効14桁(`precision`)。実測(curl): `7/2`=3.5、`0.1+0.2`=0.3、`1/3`=0.33333333333333、`1.5*2`=3。小数の`%`・1e14以上・1e-4未満は従来どおり501のまま。テスト66件成功。未了: withInput(セッション層)。
 **English**: `@php` arithmetic now handles floats (decimal values, and `/` that does not divide evenly gives a float), printed like PHP `echo` with 14 significant digits. Measured with curl: 3.5, 0.3, 0.33333333333333, 3. Float `%`, values >= 1e14 or < 1e-4 stay a 501 TODO. 66 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput ほか)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
+
+
+## 2026-11-28 07:47 追記: ビューの数値関数 / Update: numeric functions in views
+**日本語**: ビューの `{{ }}` で `abs`・`intval`・`floor`・`ceil`・`round`(四捨五入は0から遠い側、PHPと同じ)を、数値の値に使えるようにした。数値でない値は501のまま。実測(curl、`-3.7`と`2.5`): `3.7 -4 -3 -4 -3 3`。テスト67件成功。未了: withInput(セッション層)、`round`の桁数引数。
+**English**: `abs`, `intval`, `floor`, `ceil` and `round` (half away from zero, like PHP) now work on numeric values in view `{{ }}`; non-numeric values stay a 501 TODO. Measured with curl: `3.7 -4 -3 -4 -3 3`. 67 tests pass. Open: withInput (session layer), `round` precision argument.
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・round の桁数)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
