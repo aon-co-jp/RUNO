@@ -6086,3 +6086,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `return redirect('/path')->with('k', '文字列')` を変換(指定パスへ302、`rporea_flash` へフラッシュ)。実測: `/frw` → `302 location: /fwv`、次の表示で `[Moved]<b>Moved</b>`。未了: 変数を渡す with・validate の DB 規則。
 **English**: `return redirect('/path')->with('k', 'literal')` is converted (302 to the path, flashed in `rporea_flash`). Measured: `/frw` gives `302 location: /fwv` and the next view shows `[Moved]<b>Moved</b>`. Open: with() of variables, validate DB rules.
 **再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(変数の with・validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
+
+## 2026-11-28 with() に $request->input() / with() of $request->input()
+**日本語**: `->with('k', $request->input('x'))` を変換(実行時の入力値をフラッシュ)。実測: `/fwi` に `name=Ann<i>` を送ると302、次の表示で `[Ann&lt;i&gt;]<b>Ann&lt;i&gt;</b>`(エスケープ済み)。未了: 他の変数式の with・validate の DB 規則。
+**English**: `->with('k', $request->input('x'))` is converted (the request value is flashed at run time). Measured: posting `name=Ann<i>` to `/fwi` gives 302 and the next view shows it escaped. Open: other variable expressions in with(), validate DB rules.
+**再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(他の変数式の with・validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
