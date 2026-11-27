@@ -5839,3 +5839,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: ビューの `{{ }}` で `abs`・`intval`・`floor`・`ceil`・`round`(四捨五入は0から遠い側、PHPと同じ)を、数値の値に使えるようにした。数値でない値は501のまま。実測(curl、`-3.7`と`2.5`): `3.7 -4 -3 -4 -3 3`。テスト67件成功。未了: withInput(セッション層)、`round`の桁数引数。
 **English**: `abs`, `intval`, `floor`, `ceil` and `round` (half away from zero, like PHP) now work on numeric values in view `{{ }}`; non-numeric values stay a 501 TODO. Measured with curl: `3.7 -4 -3 -4 -3 3`. 67 tests pass. Open: withInput (session layer), `round` precision argument.
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・round の桁数)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
+
+
+## 2026-11-28 07:48 追記: round の桁数 / Update: round precision
+**日本語**: ビューで `round($x, 桁数)`(0〜10桁、0.5は0から遠い側)を使えるようにした。実測(curl): `round('1.955',2)`=1.96、`round('1.955',0)`=2、`round('-2.345',2)`=-2.35、`round('3.10',1)`=3.1(PHPと同じ)。テスト68件成功。未了: withInput(セッション層)、`number_format` の桁数。
+**English**: `round($x, digits)` (0 to 10 digits, half away from zero) now works in views. Measured with curl: 1.96, 2, -2.35, 3.1, matching PHP. 68 tests pass. Open: withInput (session layer), `number_format` decimals.
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput・number_format の桁数)を確認なしで進める。実測してから完了と書く、返答は日本語のみ。
