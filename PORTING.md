@@ -5995,3 +5995,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: ビューで `str_pad`(LEFT/RIGHT/BOTH)と `sprintf`(`%d`・`%03d`・`%.2f`・`%5s`・`%-3s`・`%%`)を変換時に計算するようにした(引数は文字列・数値の定数と既知の `$var`、ASCIIのみ。`$xs[0]` を引数にする形は501のまま)。実測(curl): `002|-ab--|002|3.14/    x/y  |50%`。テスト93件成功。未了: withInput(セッション層)。
 **English**: Views now compute `str_pad` (LEFT/RIGHT/BOTH) and `sprintf` (`%d`, `%03d`, `%.2f`, `%5s`, `%-3s`, `%%`) at convert time (arguments: literals and known `$var`, ASCII only; `$xs[0]` as an argument stays 501). Measured with curl: `002|-ab--|002|3.14/    x/y  |50%`. 93 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput など)を確認なしで進める。見出し時刻は`date`で確認、実測してから完了、返答は日本語のみ。
+
+
+## 2026-11-28 08:27 追記: 関数の引数に配列の要素 / Update: array items as function arguments
+**日本語**: `sprintf`・`str_pad`・`max`/`min` などの引数に `$xs[0]`・`$u['age']` を使えるようにした。実測(curl): `a-009|7|b**`。テスト94件成功。試験用ビューの名前が既存の `/fa` と重なって一度上書きしたため、元の内容に戻し、新しいビューは `/fz` にした(`/fa` は以前と同じ `<p>rust / php 98,000</p>` を確認)。未了: withInput(セッション層)。
+**English**: Arguments of `sprintf`, `str_pad`, `max`/`min` and similar can now be `$xs[0]` or `$u['age']`. Measured with curl: `a-009|7|b**`. 94 tests pass. The test view name clashed with the existing `/fa` and overwrote it once; it was restored (checked: same `<p>rust / php 98,000</p>` as before) and the new view is `/fz`. Open: withInput (session layer).
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput など)を確認なしで進める。試験用ビューは既存名と重ならないか先に確認。見出し時刻は`date`で確認、実測してから完了、返答は日本語のみ。
