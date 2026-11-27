@@ -5941,3 +5941,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: 配列の配列を外側から展開する入れ子の `@foreach` で、内側の `@foreach` の中に置いた `@continue`・`@break` も使えるようになった(外側の展開は入れ子のブロックを除いた最上位の指示だけを見る)。実測(curl): `b|c|`。テスト84件成功。未了: withInput(セッション層)。
 **English**: In nested `@foreach` loops unrolled from the outside, `@continue`/`@break` inside the inner `@foreach` now work too (the outer unroll only looks at top-level directives, masking nested blocks). Measured with curl: `b|c|`. 84 tests pass. Open: withInput (session layer).
 **再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput など)を確認なしで進める。見出し時刻は`date`で確認、実測してから完了、返答は日本語のみ。
+
+
+## 2026-11-28 08:14 追記: @for の刻みと減少 / Update: @for steps and counting down
+**日本語**: `@for` が `$i--`・`$i += N`・`$i -= N` と、条件 `>`・`>=`・`!=` に対応した(整数の定数のみ、1000回で打ち切り)。実測(curl): `5,3,1,|036|321`。テスト85件成功。未了: withInput(セッション層)。
+**English**: `@for` now supports `$i--`, `$i += N`, `$i -= N` and the conditions `>`, `>=`, `!=` (integer constants only, capped at 1000). Measured with curl: `5,3,1,|036|321`. 85 tests pass. Open: withInput (session layer).
+**再開用メッセージ / Resume**: `F:/2RPoRea/PORTING.md` 末尾を読み、2RPoRea php変換の未了(withInput など)を確認なしで進める。見出し時刻は`date`で確認、実測してから完了、返答は日本語のみ。
