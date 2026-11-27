@@ -134,3 +134,5 @@ Inventory of 102 repositories with non-Rust code (GitHub language bytes, not lin
 | pdf-r2l-linux |  public | 7KB | Shell 0KB, PowerShell 0KB |
 
 - **2026-11-27 audiocafe.tokyo 静的ファイル / static files**: 旧PHP(4401)の静的ファイル9フォルダーを Rust(audiocafe-tokyo-rust `a0a0eae`・`fb19c11`)へ移し本番切替。156ファイルがバイト一致、公開要求はPHPに届かない(実測)。残り=`/index.php`・catch-all・`cron.php` 2本。*Nine static folders moved from PHP to Rust and switched live; 156 files byte-identical; left: `/index.php`, catch-all, two `cron.php`.*
+
+- **2026-11-27 aruaru-lady cron**: `aruaru-lady/cron.php` を Rust(audiocafe-tokyo-rust `8faf81f`、`--cron-lady`)へ移し本番の毎朝の処理を切替。PHP版と4ファイル完全一致。残り=`aruaru/cron.php`(--cron-tech: 外部取得・OpenAI・aruaru-llm学習、約1,600行)・`/index.php`(8,382行)・catch-all。*`aruaru-lady/cron.php` ported (identical output, live). Left: `aruaru/cron.php` --cron-tech (~1,600 lines), `/index.php`, catch-all.*
