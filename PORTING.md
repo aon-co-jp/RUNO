@@ -6071,3 +6071,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `validate()` の規則に `email`(簡易判定)と `confirmed`(`<key>_confirmation` と一致)を追加。実測: 不正入力で `[The mail field must be a valid email address.][The password field confirmation does not match.]` を含む4件、正しい入力で `ok`。unique 等DBを使う規則は501のまま。
 **English**: Added `email` (simple check) and `confirmed` (matches `<key>_confirmation`) to `validate()`. Measured: bad input shows four messages including the email and confirmation ones; good input gives `ok`. DB rules such as unique stay 501.
 **再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(validate の DB 規則・一般の session())を確認なしで進めてください。返答は日本語のみ。
+
+## 2026-11-28 back()->with() と session() / back()->with() and session()
+**日本語**: `return back()->with('k', '文字列')` を変換(`rporea_flash` クッキーへ1回だけフラッシュ)。ビューの `{{ session('k') }}` はエスケープして表示し、読んだらクッキーを消す。実測: `/fw` が302でRefererへ戻り、次の表示で `[Saved &lt;ok&gt;]`、クッキーなしでは `[]`。未了: `@if(session('k'))`・`redirect('/x')->with()`・変数を渡す with。
+**English**: `return back()->with('k', 'literal')` is converted (flashed once in the `rporea_flash` cookie); `{{ session('k') }}` in a view shows it escaped and expires the cookie. Measured: `/fw` redirects back (302) and the next view shows `[Saved &lt;ok&gt;]`, `[]` without the cookie. Open: `@if(session('k'))`, `redirect('/x')->with()`, with() of variables.
+**再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(@if(session())・redirect()->with()・validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
