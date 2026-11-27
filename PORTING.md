@@ -5747,3 +5747,9 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 ### 2026-11-28 07:24 再開用メッセージ / Resume message
 **日本語**: 前の続きです。2RPoRea `src/torporea/php.py`(Laravel→RPoem)はテスト55件。Route::view で `{{ }}`・`{!! !!}`・`{{-- --}}`・`@{{ }}`・`@if`/`@isset`/`@unless`・`@switch`・`@foreach`+`$loop`(固定データ)・整数の`@for`まで。実測は `F:\_fix\lv` を convert し `F:\_fix\lv3.sh`(WSL Ubuntu-24.04)。未了: `@case` の二重引用符、`@while`/`@php`、withInput、変数値のビュー、PHPの緩い==。決まり: 実測してから完了、秘密は書かない、新RESTなし、返答は日本語のみ。
 **English**: Continuing. 2RPoRea `src/torporea/php.py` has 55 tests; Route::view supports `{{ }}`, `{!! !!}`, `{{-- --}}`, `@{{ }}`, `@if`/`@isset`/`@unless`, `@switch`, `@foreach` with `$loop` (literal data) and integer `@for`. Measure via `F:\_fix\lv` and `F:\_fix\lv3.sh`. Open: double-quoted `@case`, `@while`/`@php`, withInput, variable-valued views, PHP loose ==. Rules: measure before done, no secrets, no new REST, Japanese replies.
+
+- **2026-11-28 07:27 追記 / Addendum**: 2RPoRea の `@case` が二重引用符の文字列(`$` を含まないもの)にも対応。curl 実測で `/swx` が `<p>X</p>`、テスト55件。*Double-quoted `@case` labels (without `$`) supported; measured, 55 tests.*
+
+### 2026-11-28 07:27 再開用メッセージ / Resume message
+**日本語**: 前の続きです。2RPoRea `src/torporea/php.py`(Laravel→RPoem)はテスト55件。Route::view で `{{ }}`・`{!! !!}`・`{{-- --}}`・`@{{ }}`・`@if`/`@isset`/`@unless`・`@switch`(単一/二重引用符)・`@foreach`+`$loop`(固定データ)・整数の`@for`まで。実測は `F:\_fix\lv` を convert し `F:\_fix\lv3.sh`(WSL Ubuntu-24.04)。未了: `@while`/`@php`、withInput、変数値のビュー、PHPの緩い==。決まり: 実測してから完了、秘密は書かない、新RESTなし、返答は日本語のみ。
+**English**: Continuing. 2RPoRea `src/torporea/php.py` has 55 tests; Route::view supports `{{ }}`, `{!! !!}`, `{{-- --}}`, `@{{ }}`, `@if`/`@isset`/`@unless`, `@switch` (single or double quotes), `@foreach` with `$loop` and integer `@for`. Measure via `F:\_fix\lv` and `F:\_fix\lv3.sh`. Open: `@while`/`@php`, withInput, variable-valued views, PHP loose ==. Rules: measure before done, no secrets, no new REST, Japanese replies.
