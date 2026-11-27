@@ -6081,3 +6081,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: ビューの `@if(session('k')) ... [@else ...] @endif`(本文は文字と `{{ session('k') }}` だけ)を変換。真偽はPHPと同じ(無い・空・"0" は偽)。実測: フラッシュありで `<b>Saved &lt;ok&gt;</b>`、なしで ` none`。未了: `redirect('/x')->with()`・変数を渡す with・validate の DB 規則。
 **English**: `@if(session('k')) ... [@else ...] @endif` in views (bodies of plain text and `{{ session('k') }}`) is converted with PHP truthiness (missing, empty, "0" are false). Measured: with the flash `<b>Saved &lt;ok&gt;</b>`, without it ` none`. Open: `redirect('/x')->with()`, with() of variables, validate DB rules.
 **再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(redirect()->with()・変数の with・validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
+
+## 2026-11-28 redirect('/path')->with() / redirect('/path')->with()
+**日本語**: `return redirect('/path')->with('k', '文字列')` を変換(指定パスへ302、`rporea_flash` へフラッシュ)。実測: `/frw` → `302 location: /fwv`、次の表示で `[Moved]<b>Moved</b>`。未了: 変数を渡す with・validate の DB 規則。
+**English**: `return redirect('/path')->with('k', 'literal')` is converted (302 to the path, flashed in `rporea_flash`). Measured: `/frw` gives `302 location: /fwv` and the next view shows `[Moved]<b>Moved</b>`. Open: with() of variables, validate DB rules.
+**再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(変数の with・validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
