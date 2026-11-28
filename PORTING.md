@@ -6106,3 +6106,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: ビューの `{{ session('k', '既定') }}` を変換(フラッシュが無いとき既定値)。実測: `who` を渡した `/fwm` は `Bo`、渡さない `/fw`・`/fwi`・`/fwp` とクッキーなしは `nobody`。未了: 計算式の with・validate の DB 規則。
 **English**: `{{ session('k', 'default') }}` in views uses the default when nothing was flashed. Measured: `/fwm` (flashes `who`) shows `Bo`; the others and no cookie show `nobody`. Open: computed expressions in with(), validate DB rules.
 **再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(計算式の with・validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
+
+## 2026-11-28 with() に文字列の連結 / with() of concatenated strings
+**日本語**: `->with('k', '文字' . $id . $request->input('x'))` のような `.` 連結(文字列・ルート引数・入力値)を変換。実測: `/fwc/7` に `n=Cy` を送ると302、次の表示で `[Item 7 by Cy]`。他の計算式(関数呼び出し等)は501のまま。未了: validate の DB 規則。
+**English**: `.` concatenation of literals, route parameters and request values in `->with()` is converted. Measured: posting `n=Cy` to `/fwc/7` gives 302 and the next view shows `[Item 7 by Cy]`. Other expressions (function calls etc.) stay 501. Open: validate DB rules.
+**再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(validate の DB 規則・with の関数呼び出し)を確認なしで進めてください。返答は日本語のみ。
