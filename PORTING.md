@@ -6184,3 +6184,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: Laravel 11 の `bootstrap/app.php` の `validateCsrfTokens(except: [...])` と Laravel 10 の `VerifyCsrfToken::$except` を読み、`fsx/*` などのパスは CSRF 照合を省く(`*` は `$request->is()` と同じ扱い、完全URLは対象外)。Perl 変換では Laravel 固有の CSRF・`_method` を無効化。実測: トークンなしで `/fsx/a` POST=200、他は 419 のまま。テスト113件成功。未了: unique 等のDB検証、@method+@csrf の通しフォーム試験。
 **English**: Reads `validateCsrfTokens(except: [...])` (Laravel 11) and `VerifyCsrfToken::$except` (Laravel 10); matching paths skip the CSRF check (`*` as in `$request->is()`, full URLs ignored). Perl output no longer gets Laravel-only CSRF/`_method`. Measured: tokenless POST to `/fsx/a` = 200, others still 419; 113 tests pass. Open: DB rules such as unique, an end-to-end form test with @method + @csrf.
 **再開 / Resume**: `F:\runo\PORTING.md` 末尾を読み、2RPoRea php変換の未了(unique 等、通しフォーム試験)を確認なしで続ける。
+
+## 2026-11-28 追記: @csrf+@method の通しフォーム試験 / End-to-end form test
+**日本語**: `@csrf @method('PUT')` を含むフォームを GET で取得し、クッキーとフォーム内のトークンをそのまま使って POST(`_method=PUT`)すると `PUT 9 5 [200]`、トークンを外すと 419 を実測(CSRF有効のサーバー)。未了: unique 等のDB検証ルール。
+**English**: Fetched a form with `@csrf @method('PUT')`, then posted it back with its cookie and token (`_method=PUT`): `PUT 9 5 [200]`; without the token: 419 (CSRF on). Open: DB validation rules such as unique.
+**再開 / Resume**: `F:\runo\PORTING.md` 末尾を読み、2RPoRea php変換の未了(unique 等)を確認なしで続ける。
