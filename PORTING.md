@@ -6305,3 +6305,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `{{ trans_choice('k', 数) }}`・`@choice('k', 数)`(数は固定値)に対応。`{0}`・`[1,4]`・`[5,*]` の区分と、区分なしの「1つ|複数」(1なら前、ほかは後)、`:count` の差し込み(Laravel と同じ)。実測: `/lngc` → `[none|few 3|many 9|one cat|2 cats]`、TODO 1件(意図どおり)、pytest 113件成功。未了: 変数の数・変数の差し込み・実行時の言語切替、DB と `@auth` は方式の決定待ち。
 **English**: `{{ trans_choice('k', n) }}` and `@choice('k', n)` with a literal count: `{0}`, `[1,4]`, `[5,*]` segments, plain "one|many" (1 picks the first), and `:count`, as in Laravel. Measured: `/lngc` gives `[none|few 3|many 9|one cat|2 cats]`, 1 intended TODO, 113 tests pass. Open: variable counts and values, runtime locale switching; DB and `@auth` await a design choice.
 **再開用メッセージ / Resume**: `F:\runo\PORTING.md` 末尾を読み、2RPoRea の php 変換の未了を確認なしで進める(試験: lv3.sh・envt.sh・pytest)。/ Read the end of `F:\runo\PORTING.md` and continue 2RPoRea php conversion without asking.
+
+## 2026-11-28 2RPoRea: `trans_choice`・`@choice` の数に変数 / Variable counts
+**日本語**: 数に `$n` のような変数も使えるようにした(ビューに渡された整数の値。整数でなければ置き換えずに残す)。実測: `Route::view('/lngv', 'lngv', ['n' => 7])` → `[7 cats|many 7]`、TODO 1件(意図どおり)、pytest 113件成功。未了: 差し込み値の変数・実行時の言語切替・リクエストから来る数、DB と `@auth` は方式の決定待ち。
+**English**: The count may now be a variable such as `$n` (an integer passed to the view; anything else is left untouched). Measured: `/lngv` with `['n' => 7]` gives `[7 cats|many 7]`, 1 intended TODO, 113 tests pass. Open: variable replacement values, runtime locale switching, counts from the request; DB and `@auth` await a design choice.
+**再開用メッセージ / Resume**: `F:\runo\PORTING.md` 末尾を読み、2RPoRea の php 変換の未了を確認なしで進める(試験: lv3.sh・envt.sh・pytest)。/ Read the end of `F:\runo\PORTING.md` and continue 2RPoRea php conversion without asking.
