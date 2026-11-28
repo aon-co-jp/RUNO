@@ -6189,3 +6189,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `@csrf @method('PUT')` を含むフォームを GET で取得し、クッキーとフォーム内のトークンをそのまま使って POST(`_method=PUT`)すると `PUT 9 5 [200]`、トークンを外すと 419 を実測(CSRF有効のサーバー)。未了: unique 等のDB検証ルール。
 **English**: Fetched a form with `@csrf @method('PUT')`, then posted it back with its cookie and token (`_method=PUT`): `PUT 9 5 [200]`; without the token: 419 (CSRF on). Open: DB validation rules such as unique.
 **再開 / Resume**: `F:\runo\PORTING.md` 末尾を読み、2RPoRea php変換の未了(unique 等)を確認なしで続ける。
+
+## 2026-11-28 13:20 追記: DBを使わない検証ルールの追加 / More validation rules (no database)
+**日本語**: `$request->validate` に `boolean`・`accepted`(未入力でもエラー)・`url`・`lowercase`・`uppercase`・`size:N`・`digits:N`・`digits_between:a,b`・`same:x`・`different:x`・`starts_with:`・`ends_with:`・`not_in:` を追加(Laravel の既定の英語メッセージ)。実サーバーで誤った入力に12件のメッセージ全てが正しく出て(302+`rporea_err`)、正しい入力は `ok3` を実測。テスト113件成功。未了: `unique`・`exists`(変換器にDB層が無いため未着手。RPoem(aruaru-db)経由か `.env` の直接接続かの判断待ち。現状は 501 TODO のまま=検証を飛ばして通すことはしない)。
+**English**: Added `boolean`, `accepted` (also fails when missing), `url`, `lowercase`, `uppercase`, `size:N`, `digits:N`, `digits_between:a,b`, `same:x`, `different:x`, `starts_with:`, `ends_with:` and `not_in:` to `$request->validate` (Laravel's default English messages). Measured on the real server: bad input yields all 12 correct messages (302 + `rporea_err`), good input returns `ok3`; 113 tests pass. Open: `unique` and `exists` (no database layer in the converter yet; waiting for the choice between RPoem (aruaru-db) and a direct `.env` connection; such routes stay 501 TODO, never silently passing).
+**再開 / Resume**: `F:\runo\PORTING.md` 末尾を読み、2RPoRea php変換の未了を確認なしで続ける。
