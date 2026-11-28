@@ -6121,3 +6121,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: Laravel 11 の `@session('k') ... {{ $value }} ... @endsession` を変換(`@if(session('k'))` と同じ扱い)。実測: フラッシュありで `<p>Moved</p>|`、なしで `|`。また `between:3,5` の失敗(`code=ab`)が `The code field must be between 3 and 5 characters.` になることも実測。未了: validate の DB 規則・with の関数呼び出し。
 **English**: Laravel 11 `@session('k') ... {{ $value }} ... @endsession` is converted (same as `@if(session('k'))`). Measured: `<p>Moved</p>|` with the flash, `|` without. Also measured the `between:3,5` failure message. Open: validate DB rules, function calls in with().
 **再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(validate の DB 規則・with の関数呼び出し)を確認なしで進めてください。返答は日本語のみ。
+
+## 2026-11-28 with() に strtoupper・strtolower・trim・ucfirst / string functions in with()
+**日本語**: `with()` の値で、入力値・ルート引数を `strtoupper`・`strtolower`・`trim`・`ucfirst` で包む形を変換(連結とも組み合わせ可)。実測: `/fwf/xyz` に `n=dee&w=  ann  ` を送ると302、次の表示で `[DEE-Xyz]`・`ann`。他の関数は501のまま。未了: validate の DB 規則。
+**English**: `strtoupper`, `strtolower`, `trim` and `ucfirst` around a request value or route parameter in `with()` are converted (also inside concatenation). Measured: `/fwf/xyz` with `n=dee&w=  ann  ` gives `[DEE-Xyz]` and `ann`. Other functions stay 501. Open: validate DB rules.
+**再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
