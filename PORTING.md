@@ -6346,3 +6346,7 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **再開用メッセージ / Resume**: `F:\runo\PORTING.md` 末尾を読み、2RPoRea の php 変換の未了を確認なしで進める(試験: lv3.sh〈/root/rpb の RPoem を使用〉・envt.sh・pytest)。/ Read the end of `F:\runo\PORTING.md` and continue 2RPoRea php conversion without asking (lv3.sh uses RPoem at /root/rpb).
 
 - **2026-11-28 追記 / Update**: VPSのopen-easy-web-appクローン2つ(`/root/repository/open-easy-web-app`・`/root/open-easy-web-app`)を`merge --ff-only`で最新化(5遅れ→0、未コミット差分なし)。稼働中のバイナリは入れ替えていない(mainの`.v1`削除`69f288e`は呼び出し側と同時に切り替えるため)。*Both VPS open-easy-web-app clones fast-forwarded (5 behind to 0, no local diff); running binary unchanged because `69f288e` (.v1 removal) must switch together with its callers.*
+
+## 2026-11-28 x-tenant の実トラフィック観測 / x-tenant observed in real traffic
+**日本語**: 本番 aruaru-llm(127.0.0.1:4600)の版なし `AdmissionStats` を1回だけ読み取りました(負荷なし)。テナントは `maid-cafe-vsc`(受付4・拒否0・タイムアウト0)だけで、`anonymous` は0件でした。**実際の呼び出し側が `x-tenant` を付けていることを初めて観測**しました。旧 `aruaru_llm.v1.Llm/AdmissionStats` は404で、`.v1` は削除済みです。再起動後の件数なので、ほかの呼び出し側(open-cg-cad・open-koumuten・sftp-git)はまだ観測していません。
+**English**: One read-only call to the versionless `AdmissionStats` on production aruaru-llm (127.0.0.1:4600) shows only the tenant `maid-cafe-vsc` (4 admitted, 0 rejected, 0 timeouts) and no `anonymous`. **This is the first observation of a real caller sending `x-tenant`.** The old `aruaru_llm.v1.Llm/AdmissionStats` returns 404, so `.v1` is gone. Counts reset at restart, so the other callers (open-cg-cad, open-koumuten, sftp-git) are not yet observed.

@@ -80,15 +80,15 @@ Japanese and English are always the newest. Other languages are not translated e
 
 ## README.md
 
-- 日本語 / ja: 2026-11-26 (latest)
-- English / en: 2026-11-26
-- 简体中文 / zh-Hans: 2026-11-21 (older than 2026-11-26)
-- 繁體中文 / zh-Hant: 2026-11-21 (older than 2026-11-26)
-- 한국어 / ko: 2026-11-21 (older than 2026-11-26)
-- Deutsch / de: 2026-11-21 (older than 2026-11-26)
-- Français / fr: 2026-11-21 (older than 2026-11-26)
-- Español / es: 2026-11-21 (older than 2026-11-26)
-- Português / pt: 2026-11-21 (older than 2026-11-26)
-- Русский / ru: 2026-11-21 (older than 2026-11-26)
-- العربية / ar: 2026-11-21 (older than 2026-11-26)
-- فارسی / fa: 2026-11-21 (older than 2026-11-26)
+- 日本語 / ja: 2026-11-28 (latest)
+- English / en: 2026-11-26 (older than 2026-11-28)
+- 简体中文 / zh-Hans: 2026-11-21 (older than 2026-11-28)
+- 繁體中文 / zh-Hant: 2026-11-21 (older than 2026-11-28)
+- 한국어 / ko: 2026-11-21 (older than 2026-11-28)
+- Deutsch / de: 2026-11-21 (older than 2026-11-28)
+- Français / fr: 2026-11-21 (older than 2026-11-28)
+- Español / es: 2026-11-21 (older than 2026-11-28)
+- Português / pt: 2026-11-21 (older than 2026-11-28)
+- Русский / ru: 2026-11-21 (older than 2026-11-28)
+- العربية / ar: 2026-11-21 (older than 2026-11-28)
+- فارسی / fa: 2026-11-21 (older than 2026-11-28)
