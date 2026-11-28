@@ -6111,3 +6111,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `->with('k', '文字' . $id . $request->input('x'))` のような `.` 連結(文字列・ルート引数・入力値)を変換。実測: `/fwc/7` に `n=Cy` を送ると302、次の表示で `[Item 7 by Cy]`。他の計算式(関数呼び出し等)は501のまま。未了: validate の DB 規則。
 **English**: `.` concatenation of literals, route parameters and request values in `->with()` is converted. Measured: posting `n=Cy` to `/fwc/7` gives 302 and the next view shows `[Item 7 by Cy]`. Other expressions (function calls etc.) stay 501. Open: validate DB rules.
 **再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(validate の DB 規則・with の関数呼び出し)を確認なしで進めてください。返答は日本語のみ。
+
+## 2026-11-28 validate() に alpha・alpha_num・in・between / more validate() rules
+**日本語**: `validate()` に `alpha`・`alpha_num`・`in:a,b`・`between:N,M` を追加(Laravel既定の英語メッセージ)。実測: `/vd2` に不正値で302→`[The code field must only contain letters and numbers.][The selected kind is invalid.][The nick field must only contain letters.]`、正しい値で `ok2`。未了: unique 等 DB を使う規則。
+**English**: Added `alpha`, `alpha_num`, `in:a,b` and `between:N,M` to `validate()` (Laravel's default English messages). Measured: bad values on `/vd2` give 302 and the three messages; good values give `ok2`. Open: DB rules such as unique.
+**再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(validate の DB 規則・with の関数呼び出し)を確認なしで進めてください。返答は日本語のみ。
