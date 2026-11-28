@@ -6131,3 +6131,7 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `with('status', strtolower($request->input('n')))` を実サーバーで確認(`n=HeLLo` → `[hello]`)。これで with() の4関数はすべて実測済み。未了: validate の DB 規則。
 **English**: `strtolower` in `with()` measured on a real server (`n=HeLLo` gives `[hello]`); all four with() functions are now measured. Open: validate DB rules.
 **再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
+
+## 2026-11-28 2RPoRea @method / @method directive
+**日本語**: Blade の `@method('PUT')` を Laravel と同じ隠し入力 `<input type="hidden" name="_method" value="PUT">` に変換(GET/POST/PUT/PATCH/DELETE)。`/fmt` で実測一致、テスト113件成功。ルーター側の `_method` による振り分けは未対応。`@unless($k)` は既に対応済みと確認。**再開用メッセージ**: `F:\runo\PORTING.md` 末尾を読み、2RPoRea php 変換の未了(`_method` の振り分け、`@csrf`、`@switch`、`@checked`/`@selected`、`@json`、`@class`、unique 等の DB 検証)を確認なしで進めてください。返答は日本語のみ。
+**English**: Blade `@method('PUT')` now becomes Laravel's hidden field `<input type="hidden" name="_method" value="PUT">` (GET/POST/PUT/PATCH/DELETE). Measured identical at `/fmt`; 113 tests pass. Router-side `_method` dispatch is not done yet. `@unless($k)` was already supported. Resume: read the end of `F:\runo\PORTING.md` and continue the open 2RPoRea php items (`_method` dispatch, `@csrf`, `@switch`, `@checked`/`@selected`, `@json`, `@class`, DB rules like unique) without asking.
