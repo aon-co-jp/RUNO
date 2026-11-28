@@ -6101,3 +6101,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `->with('a', ...)->with('b', ...)` の連結を変換(各値は文字列・`$request->input()`・ルート引数)。実測: `/fwm` に `n=Bo` を送ると302、次の表示で `[A]<b>A</b>Bo`。既存の `/fw`・`/frw`・`/fwi`・`/fwp` も同じ出力のまま。未了: 計算式の with・validate の DB 規則。
 **English**: Chained `->with('a', ...)->with('b', ...)` is converted (each value a literal, `$request->input()` or a route parameter). Measured: posting `n=Bo` to `/fwm` gives 302 and the next view shows `[A]<b>A</b>Bo`; the earlier routes still give the same output. Open: computed expressions in with(), validate DB rules.
 **再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(計算式の with・validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
+
+## 2026-11-28 session('k', '既定値') / session() default
+**日本語**: ビューの `{{ session('k', '既定') }}` を変換(フラッシュが無いとき既定値)。実測: `who` を渡した `/fwm` は `Bo`、渡さない `/fw`・`/fwi`・`/fwp` とクッキーなしは `nobody`。未了: 計算式の with・validate の DB 規則。
+**English**: `{{ session('k', 'default') }}` in views uses the default when nothing was flashed. Measured: `/fwm` (flashes `who`) shows `Bo`; the others and no cookie show `nobody`. Open: computed expressions in with(), validate DB rules.
+**再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(計算式の with・validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
