@@ -6126,3 +6126,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `with()` の値で、入力値・ルート引数を `strtoupper`・`strtolower`・`trim`・`ucfirst` で包む形を変換(連結とも組み合わせ可)。実測: `/fwf/xyz` に `n=dee&w=  ann  ` を送ると302、次の表示で `[DEE-Xyz]`・`ann`。他の関数は501のまま。未了: validate の DB 規則。
 **English**: `strtoupper`, `strtolower`, `trim` and `ucfirst` around a request value or route parameter in `with()` are converted (also inside concatenation). Measured: `/fwf/xyz` with `n=dee&w=  ann  ` gives `[DEE-Xyz]` and `ann`. Other functions stay 501. Open: validate DB rules.
 **再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
+
+## 2026-11-28 strtolower の実測 / strtolower measured
+**日本語**: `with('status', strtolower($request->input('n')))` を実サーバーで確認(`n=HeLLo` → `[hello]`)。これで with() の4関数はすべて実測済み。未了: validate の DB 規則。
+**English**: `strtolower` in `with()` measured on a real server (`n=HeLLo` gives `[hello]`); all four with() functions are now measured. Open: validate DB rules.
+**再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
