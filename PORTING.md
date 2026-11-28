@@ -6155,3 +6155,7 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 ## 2026-11-28 2RPoRea @class / @style
 **日本語**: Blade の `@class(['p-4', 'font-bold' => $on, 'x' => true])` と `@style(['color: red;', 'top: 0' => $on])`(ビューのデータか true/false)を、Laravel の `Arr::toCssClasses`/`toCssStyles` と同じ `class="p-4 font-bold x"`・`style="color: red; top: 0;"` に変換。`/fcl` で実測、テスト113件成功。条件に比較式を書く形は未対応。**再開用メッセージ**: `F:\runo\PORTING.md` 末尾を読み、2RPoRea php 変換の未了(`@class` の比較式、入れ子配列データ、`_method` の振り分け、`@csrf`、unique 等)を確認なしで進めてください。返答は日本語のみ。
 **English**: Blade `@class([...])` and `@style([...])` with view-data or true/false conditions now emit the same output as Laravel's `Arr::toCssClasses` / `toCssStyles`. Measured at `/fcl`; 113 tests pass. Comparison conditions are not done yet. Resume: read the end of `F:\runo\PORTING.md` and continue the open items without asking.
+
+## 2026-11-28 2RPoRea @class の比較式 / @class comparisons
+**日本語**: `@class(['big' => $n > 5, 'jp' => $c == 'jp'])` のように、`@class`/`@style` の条件へ比較式(ビューのデータとリテラル)を書けるようにした。`/fcl2` で `<p class="big jp">a</p>` を実測、テスト113件成功。**再開用メッセージ**: `F:\runo\PORTING.md` 末尾を読み、2RPoRea php 変換の未了(入れ子配列データ、`_method` の振り分け、`@csrf`、unique 等)を確認なしで進めてください。返答は日本語のみ。
+**English**: `@class` / `@style` conditions now accept comparisons over view data and literals, e.g. `'big' => $n > 5`. Measured at `/fcl2` (`<p class="big jp">a</p>`); 113 tests pass. Resume: read the end of `F:\runo\PORTING.md` and continue the open items without asking.
