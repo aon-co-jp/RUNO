@@ -6091,3 +6091,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `->with('k', $request->input('x'))` を変換(実行時の入力値をフラッシュ)。実測: `/fwi` に `name=Ann<i>` を送ると302、次の表示で `[Ann&lt;i&gt;]<b>Ann&lt;i&gt;</b>`(エスケープ済み)。未了: 他の変数式の with・validate の DB 規則。
 **English**: `->with('k', $request->input('x'))` is converted (the request value is flashed at run time). Measured: posting `name=Ann<i>` to `/fwi` gives 302 and the next view shows it escaped. Open: other variable expressions in with(), validate DB rules.
 **再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(他の変数式の with・validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
+
+## 2026-11-28 with() にルート引数 / with() of a route parameter
+**日本語**: `->with('k', $id)`(`$id` はルート引数)を変換。実測: `/fwp/42` → 302、次の表示で `[42]<b>42</b>`。ルート引数でない変数は501のまま。未了: 計算式の with・validate の DB 規則。
+**English**: `->with('k', $id)` with a route parameter is converted. Measured: `/fwp/42` gives 302 and the next view shows `[42]<b>42</b>`. Other variables stay 501. Open: computed expressions in with(), validate DB rules.
+**再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(計算式の with・validate の DB 規則)を確認なしで進めてください。返答は日本語のみ。
