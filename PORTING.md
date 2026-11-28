@@ -6159,3 +6159,7 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 ## 2026-11-28 2RPoRea @class の比較式 / @class comparisons
 **日本語**: `@class(['big' => $n > 5, 'jp' => $c == 'jp'])` のように、`@class`/`@style` の条件へ比較式(ビューのデータとリテラル)を書けるようにした。`/fcl2` で `<p class="big jp">a</p>` を実測、テスト113件成功。**再開用メッセージ**: `F:\runo\PORTING.md` 末尾を読み、2RPoRea php 変換の未了(入れ子配列データ、`_method` の振り分け、`@csrf`、unique 等)を確認なしで進めてください。返答は日本語のみ。
 **English**: `@class` / `@style` conditions now accept comparisons over view data and literals, e.g. `'big' => $n > 5`. Measured at `/fcl2` (`<p class="big jp">a</p>`); 113 tests pass. Resume: read the end of `F:\runo\PORTING.md` and continue the open items without asking.
+
+## 2026-11-28 2RPoRea 入れ子配列データ・整数 / nested arrays and integers in view data
+**日本語**: `Route::view` のデータで、入れ子の配列(`['a' => ['x' => '...', 'l' => ['p','q']]]`)と整数(`'n' => 1`)を扱えるようにした(`_php_array` が整数を int で返す。文字列だけを扱う箇所は従来どおり変換を見送る)。`/fj2` で `@json` が `{"n":1,"x":"\u003Ca\/b\u003E","l":["p","q"],"u":"\u3042"}` を出すことを実測、既存の全チェックに退行なし、テスト113件成功。**再開用メッセージ**: `F:\runo\PORTING.md` 末尾を読み、2RPoRea php 変換の未了(`_method` の振り分け、`@csrf`、unique 等の DB 検証、`@switch` の数値比較)を確認なしで進めてください。返答は日本語のみ。
+**English**: `Route::view` data now supports nested arrays and integer literals (`_php_array` returns ints; string-only paths still skip them). Measured at `/fj2`: `@json` emits `{"n":1,"x":"\u003Ca\/b\u003E","l":["p","q"],"u":"\u3042"}`; no regression in the existing checks; 113 tests pass. Resume: read the end of `F:\runo\PORTING.md` and continue the open items without asking.
