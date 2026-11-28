@@ -6310,3 +6310,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: 数に `$n` のような変数も使えるようにした(ビューに渡された整数の値。整数でなければ置き換えずに残す)。実測: `Route::view('/lngv', 'lngv', ['n' => 7])` → `[7 cats|many 7]`、TODO 1件(意図どおり)、pytest 113件成功。未了: 差し込み値の変数・実行時の言語切替・リクエストから来る数、DB と `@auth` は方式の決定待ち。
 **English**: The count may now be a variable such as `$n` (an integer passed to the view; anything else is left untouched). Measured: `/lngv` with `['n' => 7]` gives `[7 cats|many 7]`, 1 intended TODO, 113 tests pass. Open: variable replacement values, runtime locale switching, counts from the request; DB and `@auth` await a design choice.
 **再開用メッセージ / Resume**: `F:\runo\PORTING.md` 末尾を読み、2RPoRea の php 変換の未了を確認なしで進める(試験: lv3.sh・envt.sh・pytest)。/ Read the end of `F:\runo\PORTING.md` and continue 2RPoRea php conversion without asking.
+
+## 2026-11-28 2RPoRea: 翻訳の差し込みに変数 / Variable placeholder values
+**日本語**: `__('k', ['name' => $who])`・`@lang` の差し込み値に、ビューへ渡された文字列や数の変数を使えるようにした(それ以外の型は置き換えずに残す)。実測: `/lngw`(`['who' => 'hanako', 'n' => 5]`)→ `[Hi hanako, Hanako, HANAKO|Hi 5, 5, 5]`、TODO 1件(意図どおり)、pytest 113件成功。未了: 実行時の言語切替・リクエストから来る値、DB と `@auth` は方式の決定待ち。
+**English**: Placeholder values in `__('k', [...])` and `@lang` may now be view variables holding a string or a number (other types are left untouched). Measured: `/lngw` gives `[Hi hanako, Hanako, HANAKO|Hi 5, 5, 5]`, 1 intended TODO, 113 tests pass. Open: runtime locale switching, values from the request; DB and `@auth` await a design choice.
+**再開用メッセージ / Resume**: `F:\runo\PORTING.md` 末尾を読み、2RPoRea の php 変換の未了を確認なしで進める(試験: lv3.sh・envt.sh・pytest)。/ Read the end of `F:\runo\PORTING.md` and continue 2RPoRea php conversion without asking.
