@@ -6116,3 +6116,8 @@ Continuing from before. Read the 2026-11-25 and 2026-11-26 sections at the end o
 **日本語**: `validate()` に `alpha`・`alpha_num`・`in:a,b`・`between:N,M` を追加(Laravel既定の英語メッセージ)。実測: `/vd2` に不正値で302→`[The code field must only contain letters and numbers.][The selected kind is invalid.][The nick field must only contain letters.]`、正しい値で `ok2`。未了: unique 等 DB を使う規則。
 **English**: Added `alpha`, `alpha_num`, `in:a,b` and `between:N,M` to `validate()` (Laravel's default English messages). Measured: bad values on `/vd2` give 302 and the three messages; good values give `ok2`. Open: DB rules such as unique.
 **再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(validate の DB 規則・with の関数呼び出し)を確認なしで進めてください。返答は日本語のみ。
+
+## 2026-11-28 @session ... @endsession と between の失敗 / @session directive and between failure
+**日本語**: Laravel 11 の `@session('k') ... {{ $value }} ... @endsession` を変換(`@if(session('k'))` と同じ扱い)。実測: フラッシュありで `<p>Moved</p>|`、なしで `|`。また `between:3,5` の失敗(`code=ab`)が `The code field must be between 3 and 5 characters.` になることも実測。未了: validate の DB 規則・with の関数呼び出し。
+**English**: Laravel 11 `@session('k') ... {{ $value }} ... @endsession` is converted (same as `@if(session('k'))`). Measured: `<p>Moved</p>|` with the flash, `|` without. Also measured the `between:3,5` failure message. Open: validate DB rules, function calls in with().
+**再開用メッセージ**: 前の続きです。`F:\2RPoRea\PORTING.md` 末尾を読み、未了(validate の DB 規則・with の関数呼び出し)を確認なしで進めてください。返答は日本語のみ。
